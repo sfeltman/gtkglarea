@@ -2,7 +2,7 @@
 
 EXTRA_DIST = makefile.mingw makefile.mingw.in gdkgl-win32.c
 
-AM_CFLAGS = @GTK_CFLAGS@ @GL_CFLAGS
+AM_CFLAGS = @GTK_CFLAGS@ @GL_CFLAGS@
 INCLUDES= -I$(top_srcdir)
 
 gtkglincludedir = $(includedir)/gtkgl
