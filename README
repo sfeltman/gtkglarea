@@ -65,23 +65,14 @@ INSTALLATION
 WIN32
 -----
 
- There is now a working windows port. autoconfig is not used, but you
- probably don't want to use it anyway. Makefiles are supplied only for
- gcc compilation (for mingw), sorry. But it shouldn't be hard to build
- this with MSVC, either.
+ There is now a working windows port. There are old hand-written
+ makefiles (makefile.mingw) but those are out-of-date. Autoconfigurated
+ build should work OK. If you cannot get it to work, the makefile.mingw files
+ should be pretty straightforward to modify.
 
- You will of course need win32 gtk+ packages, too:
-
-   glib-dev-*.zip
-   gtk+-dev-*.zip
-
- (insert latest timestamp in place of the *)
-
- you can get these from http://www.iki.fi/tml/gimp/win32/ installation
- instructions (README.win32) are not as long as they usedf to be
- earlier.  It should be simpler now to get a correct gcc setup. You
- will also want to have cygwin installed, for instance the DLLs are
- built with a shell script.
+ Prebuilt Win32 packages of GLib 2.0 and GTK+ 2.0 can be downloaded
+ from www.gimp.org/win32. Also a prebuilt GtkGLArea package might
+ eventually be available from there.
 
  OpenlGL headers are also needed, either use those from the
  PlatformSDK (freely downloadable from Microsoft, even if you have to
@@ -101,28 +92,7 @@ WIN32
 
  Unzip these packages to some directory.
 
- Then modify the OPENGL definition in the build/win32/module.defs file
- to point to the directory where you have the GL subdirectory with
- OpenGL headers (gl.h, glaux.h and glu.h). Now you should be all set
- to compile. Go to the gtkgl directory, and do:
-
-   make -f makefile.mingw
-
- This should produce gtkgl-<VERSION>.dll and libgtkgl-<VERSION>.a, and
- perhaps gtkgl-<VERSION>.lib, where <VERSION> will be replaced by the
- version number of GtkGLArea. Move the dll to some directory in your
- PATH, or keep a copy of it in the same directory as the executable
- that will use it. The .lib file (import library for MSVC) is produced
- only if you have the Microsoft linker, link, available.
-
- Then go to the examples directory, and do a make there, too. This
- should produce three examples: simple.exe, viewlw.exe and
- zktor.exe. The Windows version of viewlw is a bit shaky but should
- show the sample *.lwo objects if their file names are given on the
- command line. The other examples do not compile at this
- time. (Pixmaps and fonts are unsupported in win32).
-
- Inner workings of win32 gtkglarea is quite different form glx
+ The Inner workings of win32 gtkglarea is quite different form glx
  version, therefore you should only use GtkGLArea widget (gtk_gl_*)
  functions, no gdk_gl_* functions.
 

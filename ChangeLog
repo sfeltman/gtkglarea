@@ -2,6 +2,8 @@
 
 	Updates for Win32, (autoconfiscated) build. Examples seem to work OK.
 
+	* README: Edit Win32 text.
+
 	* configure.in: Set and substitute LT_CURRENT_MINUS_AGE like GLib
 	et al. Use AC_LIBTOOL_WIN32_DLL. Check for Win32. Check for MS
 	lib.exe. Use -lglu32 and -lopengl32.
