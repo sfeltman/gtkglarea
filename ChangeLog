@@ -1,3 +1,8 @@
+Sun Jul 30 21:04:09 2000  Janne Löf  <jlof@val24.oulu.fi>
+
+	* gtkgl.m4: AM_PATH_GTKGL has been completely reworked
+	by Branden N. McDaniel
+
 2000-07-21  Tor Lillqvist  <tml@iki.fi>
 
 	Improvements for Win32 build, make it use the current setup
