@@ -1,3 +1,7 @@
+Sat Feb 20 03:47:36 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkglarea.spec: RPM spec file, contributed by Ray Glendenning
+
 Wed Feb 17 13:36:19 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* configure.in: Library version number bumped up.
