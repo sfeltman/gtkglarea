@@ -1,3 +1,7 @@
+1999-09-28  Janne Löf  <jlof@val334.oulu.fi>
+
+	* examples/*.c: added color buffer sizes to attribute lists.
+
 1999-09-25  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkgl/gdkgl.c (gdk_gl_make_current):

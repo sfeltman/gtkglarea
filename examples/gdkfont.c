@@ -145,7 +145,13 @@ int main(int argc, char **argv)
   gtk_quit_add_destroy(1, GTK_OBJECT(window));
 
   /* Create new OpenGL widget. */
-  glarea = GTK_WIDGET(gtk_gl_area_new_vargs(NULL, GDK_GL_RGBA, GDK_GL_NONE));
+  glarea = GTK_WIDGET(gtk_gl_area_new_vargs(NULL,
+					    GDK_GL_RGBA,
+					    GDK_GL_RED_SIZE,1,
+					    GDK_GL_GREEN_SIZE,1,
+					    GDK_GL_BLUE_SIZE,1,
+					    GDK_GL_DEPTH_SIZE,1,
+					    GDK_GL_NONE));
 
   gtk_widget_set_events(GTK_WIDGET(glarea),
 			GDK_EXPOSURE_MASK|

@@ -300,8 +300,11 @@ gint show_lwobject(char *lwobject_name)
   /* create new OpenGL widget */
   glarea = gtk_gl_area_new_vargs(NULL, /* no sharing */
 				 GDK_GL_RGBA,
-				 GDK_GL_DOUBLEBUFFER,
+				 GDK_GL_RED_SIZE,1,
+				 GDK_GL_GREEN_SIZE,1,
+				 GDK_GL_BLUE_SIZE,1,
 				 GDK_GL_DEPTH_SIZE,1,
+				 GDK_GL_DOUBLEBUFFER,
 				 GDK_GL_NONE);  /* last argument must be GDK_GL_NONE */
   if (glarea == NULL) {
     lw_object_free(lwobject);
