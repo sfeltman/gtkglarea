@@ -158,15 +158,16 @@ GdkGLContext *gdk_gl_context_new(GdkVisual *visual)
 GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
 {
   GdkGLContextPrivate *private;
-
+  
   g_return_val_if_fail ( visual != NULL, NULL );
-
+  
   private = g_new ( GdkGLContextPrivate, 1 );
   private->initialised = FALSE;
   private->hglrc   = NULL;
   private->hdc     = NULL;
   private->hwnd    = NULL;
-  private->share = (GdkGLContextPrivate*)sharelist;
+  private->share   = sharelist ? (GdkGLContextPrivate*)gdk_gl_context_ref(sharelist) : NULL;
+
 
   memset ( &(private->pfd), 0, sizeof(PIXELFORMATDESCRIPTOR) );
 

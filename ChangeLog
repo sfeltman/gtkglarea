@@ -1,3 +1,7 @@
+Wed Apr 26 19:59:18 2000  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gdkgl-win32.c (gdk_gl_context_share_new): forgot to ref the shared contex
+
 Tue Apr 25 23:12:17 2000  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkgl/gdkgl-win32.c:
