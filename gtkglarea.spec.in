@@ -17,8 +17,8 @@ Requires: Mesa => 3.0, gtk+ => 1.1.5
 
 %description
 Just as GTK+ is build on top of GDK, GtkGLArea is built on top of gdkgl which
-is basically wrapper around GLX functions. The widget itself is very similar
-to GtkDrawinigArea widget and adds only few extra functions.
+is basically wrapper around GLX functions. The widget itself is derived from
+GtkDrawinigArea widget and adds only few extra functions.
 
 %package devel
 Summary: GtkGLArea OpenGL widget for GTK+.  Development libs and headers.

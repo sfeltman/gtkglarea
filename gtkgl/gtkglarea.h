@@ -22,18 +22,18 @@
 
 #include <gdk/gdk.h>
 #include <gtkgl/gdkgl.h>
-#include <gtk/gtkwidget.h>
+#include <gtk/gtkdrawingarea.h>
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-
-#define GTK_GL_AREA(obj)          GTK_CHECK_CAST (obj, gtk_gl_area_get_type (), GtkGLArea)
-#define GTK_GL_AREA_CLASS(klass)  GTK_CHECK_CLASS_CAST (klass, gtk_gl_area_get_type (), GtkGLAreaClass)
-#define GTK_IS_GL_AREA(obj)       GTK_CHECK_TYPE (obj, gtk_gl_area_get_type ())
-
+#define GTK_TYPE_GL_AREA          (gtk_gl_area_get_type())
+#define GTK_GL_AREA(obj)          (GTK_CHECK_CAST ((obj), GTK_TYPE_GL_AREA, GtkGLArea))
+#define GTK_GL_AREA_CLASS(klass)  (GTK_CHECK_CLASS_CAST (klass, GTK_TYPE_GL_AREA, GtkGLAreaClass))
+#define GTK_IS_GL_AREA(obj)       (GTK_CHECK_TYPE ((obj), GTK_TYPE_GL_AREA))
+#define GTK_IS_GL_AREA_CLASS      (GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_GL_AREA))
 
 typedef struct _GtkGLArea       GtkGLArea;
 typedef struct _GtkGLAreaClass  GtkGLAreaClass;
@@ -41,17 +41,16 @@ typedef struct _GtkGLAreaClass  GtkGLAreaClass;
 
 struct _GtkGLArea
 {
-  GtkWidget    widget;
+  GtkDrawingArea  darea;
   GdkGLContext *glcontext;
 };
 
 struct _GtkGLAreaClass
 {
-  GtkWidgetClass parent_class;
+  GtkDrawingAreaClass parent_class;
 };
 
-guint      gtk_gl_area_get_type   (void);
-
+GtkType    gtk_gl_area_get_type   (void);
 GtkWidget* gtk_gl_area_new        (int       *attrList);
 GtkWidget* gtk_gl_area_share_new  (int       *attrList,
                                    GtkGLArea *share);
@@ -66,7 +65,7 @@ void       gtk_gl_area_endgl      (GtkGLArea *glarea); /* deprecated */
 
 void       gtk_gl_area_swapbuffers(GtkGLArea *glarea);
 
-void       gtk_gl_area_size       (GtkGLArea *glarea,
+void       gtk_gl_area_size       (GtkGLArea *glarea,  /* deprecated, use gtk_drawing_area_size() */
 				   gint width,
 				   gint height);
 

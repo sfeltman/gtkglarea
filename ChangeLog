@@ -1,3 +1,13 @@
+Wed Feb 24 17:41:35 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+	
+	* gtkgl/gtkglarea.h, gtkgl/gtkglarea.c:
+	Big change in achitecture, GtkGLArea is now derived from GtkDrawingArea
+	widget.
+
+	* README, gtkglarea.spec, docs/gtkglarea.txt:
+	similar to GtkDrawingArea -> derived from GtkDrawingArea
+
+
 Wed Feb 24 14:13:41 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkglarea.spec.in: Copyright is LGPL not GPL

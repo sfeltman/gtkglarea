@@ -1,6 +1,4 @@
-
-GtkGLArea widget is very much like GtkDrawingArea widget, actually most
-of the glarea code closely follows the drawingarea code. 
+GtkGLArea widget is derived from GtkDrawingArea widget.
 
 examples/simple.c is a good starting point.
 
