@@ -68,11 +68,11 @@ typedef struct _GdkGLContext GdkGLContext;
 
 gint          gdk_gl_query(void);
 
-GdkVisual    *gdk_gl_choose_visual(int *attrList);
+GdkVisual    *gdk_gl_choose_visual(int *attrlist);
 int           gdk_gl_get_config(GdkVisual *visual, int attrib);
 
 GdkGLContext *gdk_gl_context_new(GdkVisual *visual);
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct);
+GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct, int *attrlist);
 
 GdkGLContext *gdk_gl_context_ref(GdkGLContext *context);
 void          gdk_gl_context_unref(GdkGLContext *context);

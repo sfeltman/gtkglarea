@@ -61,19 +61,18 @@ gint gdk_gl_query(void)
   return (glXQueryExtension(GDK_DISPLAY(),NULL,NULL) == True) ? TRUE : FALSE;
 }
 
-GdkVisual *gdk_gl_choose_visual(int *attrList)
+GdkVisual *gdk_gl_choose_visual(int *attrlist)
 {
   Display *dpy;
   XVisualInfo *vi;
   GdkVisual  *visual;
 
-  g_return_val_if_fail(attrList != NULL, NULL);
+  g_return_val_if_fail(attrlist != NULL, NULL);
 
   dpy = GDK_DISPLAY();
-  /* TODO:  translate GDK_GL_ to GLX_ */
-  if ((vi = glXChooseVisual(dpy,DefaultScreen(dpy), attrList)) == NULL) {
+  if ((vi = glXChooseVisual(dpy,DefaultScreen(dpy), attrlist)) == NULL)
     return NULL;
-  }
+  
   visual = gdkx_visual_get(vi->visualid);
   XFree(vi);
   return visual;
@@ -92,11 +91,11 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
  
   vi = get_xvisualinfo(visual);
 
-  /* TODO:  translate GDK_GL_ to GLX_ */
-  if (glXGetConfig(dpy, vi, attrib, &value) == 0) {
-    XFree(vi);
-    return value;
-  }
+  if (glXGetConfig(dpy, vi, attrib, &value) == 0)
+    {
+      XFree(vi);
+      return value;
+    }
   XFree(vi);
   return -1;
 }
@@ -104,10 +103,11 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
 
 GdkGLContext *gdk_gl_context_new(GdkVisual *visual)
 {
-  return gdk_gl_context_share_new(visual, NULL, FALSE);
+  return gdk_gl_context_share_new(visual, NULL, FALSE, NULL);
 }
 
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
+/* note that attrlist is not used - it is for Win32 (lazy evaluation) */
+GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct, int *attrlist)
 {
   Display *dpy;
   XVisualInfo *vi;
@@ -120,21 +120,20 @@ GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelis
 
   vi = get_xvisualinfo(visual);
 
-  if (sharelist) {
+  if (sharelist)
     glxcontext = glXCreateContext(dpy, vi, ((GdkGLContextPrivate*)sharelist)->glxcontext, direct ? True : False);
-  } else {
+  else
     glxcontext = glXCreateContext(dpy, vi, 0, direct ? True : False);
-  }
+  
   XFree(vi);
-  if (glxcontext == NULL) {
+  if (glxcontext == NULL)
     return NULL;
-  }
-
+  
   private = g_new(GdkGLContextPrivate, 1);
   private->xdisplay = dpy;
   private->glxcontext = glxcontext;
   private->ref_count = 1;
-
+  
   return (GdkGLContext*)private;
 }
 
@@ -154,15 +153,18 @@ void gdk_gl_context_unref(GdkGLContext *context)
 
   g_return_if_fail(context != NULL);
 
-  if (private->ref_count > 1) {
-    private->ref_count -= 1;
-  } else {
-    if (private->glxcontext == glXGetCurrentContext())
-      glXMakeCurrent(private->xdisplay, None, NULL);
-    glXDestroyContext(private->xdisplay, private->glxcontext);
-    memset(context, 0, sizeof(GdkGLContextPrivate));
-    g_free(context);
-  }
+  if (private->ref_count > 1)
+    {
+      private->ref_count -= 1;
+    }
+  else
+    {
+      if (private->glxcontext == glXGetCurrentContext())
+	glXMakeCurrent(private->xdisplay, None, NULL);
+      glXDestroyContext(private->xdisplay, private->glxcontext);
+      memset(context, 0, sizeof(GdkGLContextPrivate));
+      g_free(context);
+    }
 }
 
 gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
@@ -258,16 +260,19 @@ void gdk_gl_pixmap_unref(GdkGLPixmap *glpixmap)
 
   g_return_if_fail(glpixmap != NULL);
 
-  if (private->ref_count > 1) {
-    private->ref_count -= 1;
-  } else {
-    glXDestroyGLXPixmap(private->xdisplay, private->glxpixmap);
-    glXWaitGL();
-    gdk_pixmap_unref(private->front_left);
-    glXWaitX();
-    memset(glpixmap, 0, sizeof(GdkGLPixmapPrivate));
-    g_free(glpixmap);
-  }
+  if (private->ref_count > 1)
+    {
+      private->ref_count -= 1;
+    }
+  else
+    {
+      glXDestroyGLXPixmap(private->xdisplay, private->glxpixmap);
+      glXWaitGL();
+      gdk_pixmap_unref(private->front_left);
+      glXWaitX();
+      memset(glpixmap, 0, sizeof(GdkGLPixmapPrivate));
+      g_free(glpixmap);
+    }
 }
 
 gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)

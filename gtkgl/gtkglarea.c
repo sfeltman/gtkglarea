@@ -77,7 +77,7 @@ gtk_gl_area_new_vargs(GtkGLArea *share, ...)
   GtkWidget *glarea;
   va_list ap;
   int i;
-  gint *attrList;
+  gint *attrlist;
 
   va_start(ap, share);
   i=1;
@@ -85,29 +85,29 @@ gtk_gl_area_new_vargs(GtkGLArea *share, ...)
     i++;
   va_end(ap);
 
-  attrList = g_new(int,i);
+  attrlist = g_new(int,i);
 
   va_start(ap,share);
   i=0;
-  while ( (attrList[i] = va_arg(ap, int)) != GDK_GL_NONE) /* copy args to list */
+  while ( (attrlist[i] = va_arg(ap, int)) != GDK_GL_NONE) /* copy args to list */
     i++;
   va_end(ap);
   
-  glarea = gtk_gl_area_share_new(attrList, share);
+  glarea = gtk_gl_area_share_new(attrlist, share);
 
-  g_free(attrList);
+  g_free(attrlist);
 
   return glarea;
 }
 
 GtkWidget*
-gtk_gl_area_new (int *attrList)
+gtk_gl_area_new (int *attrlist)
 {
-  return gtk_gl_area_share_new(attrList, NULL);
+  return gtk_gl_area_share_new(attrlist, NULL);
 }
 
 GtkWidget*
-gtk_gl_area_share_new (int *attrList, GtkGLArea *share)
+gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 {
   GdkVisual *visual;
   GdkGLContext *glcontext;
@@ -115,11 +115,11 @@ gtk_gl_area_share_new (int *attrList, GtkGLArea *share)
 
   g_return_val_if_fail(share == NULL || GTK_IS_GL_AREA(share), NULL);
 
-  visual = gdk_gl_choose_visual(attrList);
+  visual = gdk_gl_choose_visual(attrlist);
   if (visual == NULL)
     return NULL;
 
-  glcontext = gdk_gl_context_share_new(visual, share ? share->glcontext : NULL , TRUE);
+  glcontext = gdk_gl_context_share_new(visual, share ? share->glcontext : NULL , TRUE, attrlist);
   if (glcontext == NULL)
     return NULL;
 

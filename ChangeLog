@@ -1,3 +1,11 @@
+Sun May 30 14:15:40 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gdkgl.c, gtkgl/gdkgl.h, gtkgl/gtkglarea.c:
+	attrlist is now passed to gdk_gl_context_share_new
+	* gtkgl/win32:
+	beginnings of windows port
+	
+
 Thu Apr 29 13:34:58 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkgl/gdkgl.c (gdk_gl_pixmap_new): buffer size test fixed.
