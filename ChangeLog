@@ -1,3 +1,8 @@
+
+Mon Oct 22 19:55:22 2001  Janne Löf <jlof@paju.oulu.fi>
+
+	* gtkgl.m4: fixed a bug in prefix detection code.
+
 Sun Jul 30 21:04:09 2000  Janne Löf  <jlof@val24.oulu.fi>
 
 	* gtkgl.m4: AM_PATH_GTKGL has been completely reworked
