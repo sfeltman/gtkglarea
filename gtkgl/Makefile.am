@@ -2,18 +2,12 @@
 
 if OS_WIN32
 export_symbols = -export-symbols gtkgl.def
-no_undefined = -no-undefined
-
-gdkgl = gdkgl-win32.c
 
 install-libtool-import-lib:
 	$(INSTALL) .libs/libgtkgl-2.0.dll.a $(DESTDIR)$(libdir)
 uninstall-libtool-import-lib:
 	-rm $(DESTDIR)$(libdir)/libgtkgl-2.0.dll.a
 else
-
-gdkgl = gdkgl.c
-
 install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
@@ -31,6 +25,12 @@ install-ms-lib:
 uninstall-ms-lib:
 endif
 
+if WINDOWING_WIN32
+gdkgl = gdkgl-win32.c
+else
+gdkgl = gdkgl.c
+endif
+
 EXTRA_DIST = makefile.mingw makefile.mingw.in gdkgl-win32.c gtkgl.def
 
 AM_CFLAGS = $(GTK_CFLAGS) $(GL_CFLAGS)
@@ -42,7 +42,7 @@ lib_LTLIBRARIES= libgtkgl-2.0.la
 
 gtkglinclude_HEADERS= gdkgl.h gtkglarea.h
 libgtkgl_2_0_la_SOURCES = $(gdkgl) gtkglarea.c
-libgtkgl_2_0_la_LDFLAGS = -version-info $(GTKGL_LIBRARY_VERSION) $(export_symbols) $(no_undefined)
+libgtkgl_2_0_la_LDFLAGS = -version-info $(GTKGL_LIBRARY_VERSION) $(export_symbols) -no-undefined
 libgtkgl_2_0_la_LIBADD = $(GTK_LIBS) $(GL_LIBS)
 
 gtkgl-2.0.lib: libgtkgl-2.0.la gtkgl.def

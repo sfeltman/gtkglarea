@@ -53,6 +53,8 @@ AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 
 dnl Check for GTK libraries
 AM_PATH_GTK_2_0(2.0.0)
+gdk_target=`$PKG_CONFIG --variable=target gtk+-2.0`
+AM_CONDITIONAL(WINDOWING_WIN32, test x$gdk_target = xwin32)
 
 dnl Check for GL/MesaGL libraries
 AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])

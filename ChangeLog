@@ -1,3 +1,16 @@
+2003-05-04  Masahiro Sakai  <sakai@tom.sfc.keio.ac.jp>
+
+	* configure.in: check `$PKG_CONFIG --variable=target gtk+-2.0` and
+	define a conditional: WINDOWING_WIN32.
+
+	* gtkgl/Makefile.am:
+	(libgtkgl_2_0_la_LDFLAGS): use -no-undefined unconditionaly. I think
+	that no problem is caused by having -no-undefined on all
+	platforms, since examples in libtool tarball use -no-undefined
+	unconditionally.
+	(gdkgl): use WINDOWING_WIN32 to determine which of gdkgl.c and
+	gdkgl_win32.c to use.
+
 2002-01-16  Xavier Ordoquy  <xordoquy@wanadoo.fr>
 
 	* autogen.sh: added libtool
