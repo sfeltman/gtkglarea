@@ -2,17 +2,16 @@ GtkGLArea
 ---------
 
 
-AUTHORS
--------
+AUTHOR
+------
  Janne Löf <jlof@mail.student.oulu.fi>
 
-OTHER PEOPLE WORTH MENTIONING
------------------------------
- Karl Nelson   <kenelson@ece.ucdavis.edu>          (original autoconf, ideas)
- Daniel Skarda <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
- Jussi Löf     <jussi.lof@pirko.fi>                (LightWave objects)
- 
-
+CONTRIBUTORS
+------------
+ Karl Nelson     <kenelson@ece.ucdavis.edu>          (original autoconf, gtkglarea--)
+ Daniel Skarda   <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
+ Jussi Löf       <jussi.lof@pirko.fi>                (LightWave objects)
+ Andrew Marriott <raytrace@lillee.cs.curtin.edu.au>  (original win32 port)
 
 
 LICENSE
@@ -52,8 +51,8 @@ INTRODUCTION
 INSTALLATION
 ------------
 
- You need GTK+ and either OpenGL or Mesa, if you have both you can choose which one to
- use by giving --with-lib-GL or --with-lib-MesaGL option to configure.
+ You need GTK+ and either OpenGL or Mesa, if you have both you can choose which
+ one to use by giving --with-lib-GL or --with-lib-MesaGL option to configure.
 
  Run './configure --help' to see all options you may give at configuration stage.
  Run './configure' and 'make' to build. You may now test programs in examples
@@ -63,14 +62,57 @@ INSTALLATION
  Library files go to PREFIX/lib/
 
 
+WIN32
+-----
+
+ There is now a working windows port. autoconfig is not used, but you probably
+ don't want to use it anyway. It has only been tested with mingw32.
+
+ You will of course need win32 gtk+ packages in addition to mingw32.
+
+   glib-dev-19991218.zip
+   gtk+-dev-20000104.zip
+   extralibs-dev-19991218.zip
+
+ you can get these from http://www.iki.fi/tml/gimp/win32/ installation
+ instructions (README.win32) are long and complicated, but you can
+ ingnore about half of them (I did).
+
+ OpenlGL headers and (dev) libraries for mingw32 are also needed, grab
+
+   Mingw32_OpenGL.zip
+
+ from ftp://ftp.teleport.com/pub/users/pgarceau/
+
+ or alternatively you may use
+
+  glut-cygwin.zip
+
+ from http://www.cim.pe.u-tokyo.ac.jp/~kawachi/software/cygwin_glut-e.html
+
+ Unzip these packages to some directory, then modify GTKDIR and OGLDIR
+ in makefile.cygwin to point to correct directories. Now you should be all
+ set to compile with
+
+   make -f makefile.cygwin
+
+ This should produce libgtkgl.a in gtkgl directory and two examples simple.exe
+ and viewlw.exe in examples directory. Windows version of viewlw is a bit shaky
+ but should show example *.lwo objects if their file names are given from
+ command line. Other examples do not compile at this time. (Pixmaps and fonts are
+ unsupported in win32).
+
+ Inner workings of win32 gtkglarea is quite different form glx version, therefore
+ you should only use GtkGLArea widget (gtk_gl_*) functions, no gdk_gl_* functions.
+
+
 DOCUMENTATION
 -------------
 
- docs/gtkglara.txt	documents GtkGLArea widget
- docs/gtkgl.txt		documents gtk_gl_* functions
+ docs/gtkglarea.txt	documents GtkGLArea widget (needs updating)
+ docs/gtkgl.txt		documents gtk_gl_* functions (needs updating)
  docs/HOWTO.txt		good advice
 
- It is a good idea to read GLX manpages too!
 
 LINKS
 -----

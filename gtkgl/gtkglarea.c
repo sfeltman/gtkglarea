@@ -109,6 +109,9 @@ gtk_gl_area_new (int *attrlist)
 GtkWidget*
 gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 {
+
+#if !defined(WIN32)
+
   GdkVisual *visual;
   GdkGLContext *glcontext;
   GtkGLArea *gl_area;
@@ -119,7 +122,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   if (visual == NULL)
     return NULL;
 
-  glcontext = gdk_gl_context_share_new(visual, share ? share->glcontext : NULL , TRUE, attrlist);
+  glcontext = gdk_gl_context_share_new(visual, share ? share->glcontext : NULL, TRUE);
   if (glcontext == NULL)
     return NULL;
 
@@ -134,8 +137,25 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   gtk_widget_pop_visual();
   gtk_widget_pop_colormap();
 
+#else
+
+  GdkGLContext *glcontext;
+  GtkGLArea *gl_area;
+
+  g_return_val_if_fail(share == NULL || GTK_IS_GL_AREA(share), NULL);
+
+  glcontext = gdk_gl_context_attrlist_share_new(attrlist, share ? share->glcontext : NULL, TRUE);
+  if (glcontext == NULL)
+    return NULL;
+
+  gl_area = gtk_type_new (gtk_gl_area_get_type());
+  gl_area->glcontext = glcontext;
+
+#endif
+
   return GTK_WIDGET(gl_area);
 }
+
 
 static void
 gtk_gl_area_destroy(GtkObject *object)

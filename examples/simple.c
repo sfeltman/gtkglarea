@@ -16,12 +16,10 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <math.h>
 #include <gtk/gtk.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <gtkgl/gtkglarea.h>
+#include <GL/gl.h>
 
 gint init(GtkWidget *widget)
 {
@@ -31,7 +29,7 @@ gint init(GtkWidget *widget)
       glViewport(0,0, widget->allocation.width, widget->allocation.height);
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
-      gluOrtho2D(0,100, 100,0);
+      glOrtho(0,100, 100,0, -1,1);
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
     }

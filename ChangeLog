@@ -1,5 +1,9 @@
-Wed Dec 22 22:22:14 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+Fri Jan  7 14:42:33 2000  Janne Löf  <jlof@mail.student.oulu.fi>
 
+	* : rewrote windows port. It actually works now.
+
+Wed Dec 22 22:22:14 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+	
 	* gtkgl/gdkgl.c (gdk_gl_make_current): context switching tried to be too smart.
 
 1999-09-28  Janne Löf  <jlof@val334.oulu.fi>

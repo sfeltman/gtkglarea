@@ -103,11 +103,11 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
 
 GdkGLContext *gdk_gl_context_new(GdkVisual *visual)
 {
-  return gdk_gl_context_share_new(visual, NULL, FALSE, NULL);
+  return gdk_gl_context_share_new(visual, NULL, FALSE);
 }
 
-/* note that attrlist is not used - it is for Win32 (lazy evaluation) */
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct, int *attrlist)
+
+GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
 {
   Display *dpy;
   XVisualInfo *vi;
@@ -137,6 +137,15 @@ GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelis
   return (GdkGLContext*)private;
 }
 
+GdkGLContext *gdk_gl_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
+{
+  GdkVisual *visual = gdk_gl_choose_visual(attrlist);
+  if (visual)
+    return gdk_gl_context_share_new(visual, sharelist, direct);
+  return NULL;
+}
+
+
 GdkGLContext *gdk_gl_context_ref(GdkGLContext *context)
 {
   GdkGLContextPrivate *private = (GdkGLContextPrivate*)context;
@@ -161,9 +170,10 @@ void gdk_gl_context_unref(GdkGLContext *context)
     {
       if (private->glxcontext == glXGetCurrentContext())
 	glXMakeCurrent(private->xdisplay, None, NULL);
+
       glXDestroyContext(private->xdisplay, private->glxcontext);
-      memset(context, 0, sizeof(GdkGLContextPrivate));
-      g_free(context);
+
+      g_free(private);
     }
 }
 
@@ -173,7 +183,6 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 
   g_return_val_if_fail(drawable != NULL, FALSE);
   g_return_val_if_fail(context  != NULL, FALSE);
-
 
   return (glXMakeCurrent(private->xdisplay, GDK_WINDOW_XWINDOW(drawable), private->glxcontext) == True) ? TRUE : FALSE;
 /*   if (private->glxcontext != None && private->glxcontext == glXGetCurrentContext()) */

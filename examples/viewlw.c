@@ -19,9 +19,11 @@
 
 #include <math.h>
 #include <gtk/gtk.h>
+#include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <gtkgl/gtkglarea.h>
+
+
 #include "trackball.h"
 #include "lw.h"
 
@@ -174,7 +176,10 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
   mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget), "mesh_info");
 
   if (event->is_hint) {
+    // fix this!
+#if !defined(WIN32)
     gdk_window_get_pointer(event->window, &x, &y, &state);
+#endif
   } else {
     x = event->x;
     y = event->y;

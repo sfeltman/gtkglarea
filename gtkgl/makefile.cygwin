@@ -1,0 +1,25 @@
+CC=gcc
+
+INCLUDE= -I$(GTKDIR)/glib \
+	 -I$(GTKDIR)/gtk+ \
+	 -I$(GTKDIR)/gtk+/gdk \
+	 -I$(OGLDIR)/include \
+	 -I..
+
+CFLAGS= -Wall -mwindows -mno-cygwin $(INCLUDE)
+
+TARGET = libgtkgl.a
+OBJS   = gdkgl-win32.o gtkglarea.o
+
+$(TARGET) : $(OBJS)
+	$(AR) rs $(TARGET) $(OBJS)
+
+clean:
+	$(RM) $(OBJS) $(TARGET) *~
+
+
+gtkglarea.o : gtkglarea.c gtkglarea.h gdkgl.h
+
+gdkgl-win32.o : gdkgl-win32.c gdkgl.h
+
+

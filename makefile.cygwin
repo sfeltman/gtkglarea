@@ -1,0 +1,14 @@
+
+export GTKDIR=/devel/src
+#export OGLDIR=/devel/glut-cygwin
+export OGLDIR=/devel/ogl
+
+all:
+	$(MAKE) -f makefile.cygwin -C gtkgl
+	$(MAKE) -f makefile.cygwin -C examples 
+
+clean:
+	$(MAKE) -f makefile.cygwin -C gtkgl clean
+	$(MAKE) -f makefile.cygwin -C examples clean
+	$(RM) *~
+

@@ -19,9 +19,11 @@
 
 #include <math.h>
 #include <gtk/gtk.h>
+#include <gtkgl/gtkglarea.h>
+
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <gtkgl/gtkglarea.h>
+
 #include <string.h>
 
 GLuint fontbase;       /* display list base for fonts */

@@ -26,10 +26,14 @@
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <gtkgl/gtkglarea.h>
+#ifndef M_PI
+#define M_PI 3.14
+#endif
+
 
 /* #define FULLSCREEN_MESA_3DFX    /* uncomment this to get 3DFX acceleration */
 

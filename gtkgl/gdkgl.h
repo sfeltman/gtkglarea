@@ -19,8 +19,30 @@
 #ifndef __GDK_GL_H__
 #define __GDK_GL_H__
 
-#include <gdk/gdk.h>
+#if defined(_WIN32) || defined(_WIN32_) || defined(WIN32)
 
+ /* gl/gl.h needs WIN32 defined */
+ #ifndef WIN32
+  #define WIN32
+ #endif
+
+ /* win32 gl/gl.h needs APIENTRY and WINGDIAPI defined properly */
+ #if defined(i386) && defined(__GNUC__)
+  #define STDCALL     __attribute__ ((stdcall))
+  #define CDECL       __cdecl
+  #define CALLBACK    WINAPI
+  #define PASCAL      WINAPI
+  #define WINAPI      STDCALL
+  #define APIENTRY    STDCALL
+  #define WINGDIAPI
+ #else
+  #include <windows.h>
+ #endif
+
+#endif
+
+
+#include <gdk/gdk.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -72,7 +94,8 @@ GdkVisual    *gdk_gl_choose_visual(int *attrlist);
 int           gdk_gl_get_config(GdkVisual *visual, int attrib);
 
 GdkGLContext *gdk_gl_context_new(GdkVisual *visual);
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct, int *attrlist);
+GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct);
+GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct);
 
 GdkGLContext *gdk_gl_context_ref(GdkGLContext *context);
 void          gdk_gl_context_unref(GdkGLContext *context);
