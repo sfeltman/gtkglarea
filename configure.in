@@ -114,14 +114,15 @@ AC_C_CONST
 
 dnl Checks for library functions.
 
-
 AC_OUTPUT(
   Makefile
   gtkgl-2.0.pc
   gtkglarea.spec
   gtkgl/Makefile
+  gtkgl/makefile.mingw
   docs/Makefile
   examples/Makefile
+  examples/makefile.mingw
   build/Makefile
   build/win32/Makefile
   build/win32/dirent/Makefile

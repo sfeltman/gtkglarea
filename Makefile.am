@@ -1,5 +1,9 @@
 ## top diretory
 
+# use the ACLOCAL_FLAGS env var when rerunning aclocal
+ACLOCAL_FLAGS =
+ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
+
 SUBDIRS= gtkgl examples docs build
 
 pkgconfigdir = $(libdir)/pkgconfig

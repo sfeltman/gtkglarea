@@ -14,6 +14,3 @@ libgtkgl_2_0_la_SOURCES = gdkgl.c gtkglarea.c
 libgtkgl_2_0_la_LDFLAGS = -version-info $(GTKGL_LIBRARY_VERSION)
 libgtkgl_2_0_la_LIBADD = $(GTK_LIBS) $(GL_LIBS)
 
-makefile.mingw: $(top_builddir)/config.status $(top_srcdir)/gtkgl/makefile.mingw.in
-	cd $(top_builddir) && CONFIG_FILES=gtkgl/$@ CONFIG_HEADERS= $(SHELL) ./config.status
-
