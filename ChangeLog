@@ -1,3 +1,7 @@
+2002-01-16  Xavier Ordoquy  <xordoquy@wanadoo.fr>
+
+	* autogen.sh: added libtool
+
 2002-12-01  Xavier Ordoquy  <xordoquy@wanadoo.fr>
 
 	* MAINTAINER: updated

@@ -57,6 +57,8 @@ esac
 
 aclocal $ACLOCAL_FLAGS
 
+libtoolize --force
+
 # optionally feature autoheader
 #(autoheader --version)  < /dev/null > /dev/null 2>&1 && autoheader
 
