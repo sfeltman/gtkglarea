@@ -1,3 +1,13 @@
+Wed Feb 17 01:58:41 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* configure.in:
+	* gtkgl.m4:
+	fixed a slight bug in library detection code
+
+	* glutil.h:
+	* glutil.c:
+	How did these get to CVS? They don't belong here.
+	
 Tue Feb  2 13:21:04 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* autogen.sh: New file

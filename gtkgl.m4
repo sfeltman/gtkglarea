@@ -1,5 +1,5 @@
 # configure paths for GtkGLArea
-#¤Janne Löf 1999-1-2
+#¤Janne Löf 1999-17-2
 
 
 # AM_PATH_GTKGL([ACTION-IF-FOUND [,ACTION-IF-NOT-FOUND]])
@@ -34,7 +34,7 @@ saved_CFLAGS="$CFLAGS"
 # test for plain OpenGL
 AC_MSG_CHECKING([GL])
 LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL -lGLU"
-AC_TRY_LINK( ,[ char glBegin(); int main() { glBegin(); return 0; } ], have_GL=yes, have_GL=no)
+AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, have_GL=no)
 AC_MSG_RESULT($have_GL)
 
 if test x$have_GL = xyes; then
@@ -46,7 +46,7 @@ else
  # test for Mesa
  AC_MSG_CHECKING([Mesa])
  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lMesaGLU"
- AC_TRY_LINK( ,[ char glBegin(); int main() { glBegin(); return 0; } ], have_Mesa=yes, have_Mesa=no)
+ AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_Mesa=yes, have_Mesa=no)
  AC_MSG_RESULT($have_Mesa)
 
  if test x$have_Mesa = xyes; then
@@ -58,7 +58,7 @@ else
   # test for Mesa with threads
   AC_MSG_CHECKING([Mesa with pthreads])
   LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lMesaGLU -lpthread"
-  AC_TRY_LINK( ,[ char glBegin(); int main() { glBegin(); return 0; } ], have_Mesa_pthread=yes, have_Mesa_pthread=no)
+  AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_Mesa_pthread=yes, have_Mesa_pthread=no)
   AC_MSG_RESULT($have_Mesa_pthread)
 
   if test x$have_Mesa_pthread = xyes; then
@@ -90,7 +90,7 @@ fi
 
 AC_MSG_CHECKING([GtkGLArea])
 LIBS="$save_LIBS $GTK_LIBS $GL_LDOPTS $GL_LIBS $GTKGL_LDOPTS -lgtkgl"
-AC_TRY_LINK( ,[ char gtk_gl_area_new(); int main() { gtk_gl_area_new(); return 0; } ], have_gtkgl=yes, have_gtkgl=no)
+AC_TRY_LINK( ,[ char gtk_gl_area_new(); gtk_gl_area_new(); ], have_gtkgl=yes, have_gtkgl=no)
 AC_MSG_RESULT($have_gtkgl)
 
 if test x$have_gtkgl = xyes; then
