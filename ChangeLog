@@ -1,0 +1,10 @@
+Tue Feb  2 13:21:04 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* autogen.sh: New file
+
+	* gtkgl.m4: New file, provides AM_PATH_GTKGL autoconf macro
+
+	* Makefile.am: installs gtkgl.m4 to $(datadir)/aclocal
+
+	* examples/Makefile.am: LDADD path now uses $top_builddir instead of $top_srcdir
+
