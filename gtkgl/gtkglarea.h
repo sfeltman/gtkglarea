@@ -58,8 +58,12 @@ GtkWidget* gtk_gl_area_share_new  (int       *attrList,
 GtkWidget* gtk_gl_area_new_vargs  (GtkGLArea *share,
 				   ...);
 
-gint       gtk_gl_area_begingl    (GtkGLArea *glarea);
-void       gtk_gl_area_endgl      (GtkGLArea *glarea);
+
+gint       gtk_gl_area_make_current(GtkGLArea *glarea);
+
+gint       gtk_gl_area_begingl    (GtkGLArea *glarea); /* deprecated, use gtk_gl_area_make_current */
+void       gtk_gl_area_endgl      (GtkGLArea *glarea); /* deprecated */
+
 void       gtk_gl_area_swapbuffers(GtkGLArea *glarea);
 
 void       gtk_gl_area_size       (GtkGLArea *glarea,

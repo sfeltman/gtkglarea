@@ -31,7 +31,7 @@ char *fontname;
 
 gint init(GtkWidget *widget)
 {
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
     GdkFont *font;
 
     /* set viewport */
@@ -54,7 +54,6 @@ gint init(GtkWidget *widget)
     fontheight = font->ascent+font->descent;
     gdk_font_unref(font);
 
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
   }
   return TRUE;
 }
@@ -68,7 +67,7 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
     return TRUE;
   }
 
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
     int i,j;
 
     /* clear screen */
@@ -90,7 +89,6 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
     glListBase(fontbase);
     glCallLists(strlen(fontname), GL_UNSIGNED_BYTE, fontname);
 
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
   }
   return TRUE;
 }
@@ -98,7 +96,7 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
 /* When glarea widget size changes, viewport size is set to match the new size */
 gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 {
-   if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+   if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
 
     glViewport(0,0, widget->allocation.width, widget->allocation.height);
     glMatrixMode(GL_PROJECTION);
@@ -107,7 +105,6 @@ gint reshape(GtkWidget *widget, GdkEventConfigure *event)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-     gtk_gl_area_endgl(GTK_GL_AREA(widget));
   }
   return TRUE;
 }

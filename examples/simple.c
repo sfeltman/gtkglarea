@@ -25,17 +25,16 @@
 
 gint init(GtkWidget *widget)
 {
-  /* OpenGL functions can be called only if begingl returns true */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
-    glViewport(0,0, widget->allocation.width, widget->allocation.height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0,100, 100,0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    /* end opengl calls by calling endgl */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
-  }
+  /* OpenGL functions can be called only if make_current returns true */
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+    {
+      glViewport(0,0, widget->allocation.width, widget->allocation.height);
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      gluOrtho2D(0,100, 100,0);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+    }
   return TRUE;
 }
 
@@ -44,46 +43,39 @@ gint init(GtkWidget *widget)
 gint draw(GtkWidget *widget, GdkEventExpose *event)
 {
   /* Draw only last expose. */
-  if (event->count > 0) {
+  if (event->count > 0)
     return TRUE;
-  }
 
-  /* OpenGL functions can be called only if gtk_gl_area_begingl
-     returns true, you can't call gl* functions anywhere except
-     inside gtk_gl_area_begingl()/gtk_gl_area_endgl() pairs.
-  */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+  /* OpenGL functions can be called only if make_current returns true */
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+    {
 
-    /* Draw simple triangle */
-    glClearColor(0,0,0,1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1,1,1);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(10,10);
-    glVertex2f(10,90);
-    glVertex2f(90,90);
-    glEnd();
+      /* Draw simple triangle */
+      glClearColor(0,0,0,1);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glColor3f(1,1,1);
+      glBegin(GL_TRIANGLES);
+      glVertex2f(10,10);
+      glVertex2f(10,90);
+      glVertex2f(90,90);
+      glEnd();
 
-   /* Opengl rendering is done for now. */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
-  }
+      /* Swap backbuffer to front */
+      gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
+        
+    }
 
-  /* Swap backbuffer to front */
-  gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
-  
   return TRUE;
 }
 
 /* When glarea widget size changes, viewport size is set to match the new size */
 gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 {
-  /* OpenGL functions can be called only if begingl returns true */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
-
-    glViewport(0,0, widget->allocation.width, widget->allocation.height);
-    /* end opengl calls by calling endgl */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
-  }
+  /* OpenGL functions can be called only if make_current returns true */
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+    {
+      glViewport(0,0, widget->allocation.width, widget->allocation.height);
+    }
   return TRUE;
 }
 
@@ -107,7 +99,7 @@ int main(int argc, char **argv)
   /* initialize gtk */
   gtk_init(&argc, &argv);
 
-  /* Check if OpenGL (GLX extension) is supported. */
+  /* Check if OpenGL is supported. */
   if (gdk_gl_query() == FALSE) {
     g_print("OpenGL not supported\n");
     return 0;

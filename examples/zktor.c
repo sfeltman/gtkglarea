@@ -31,6 +31,12 @@
 
 #include <gtkgl/gtkglarea.h>
 
+/* #define FULLSCREEN_MESA_3DFX    /* uncomment this to get 3DFX acceleration */
+
+#ifdef FULLSCREEN_MESA_3DFX
+#include <GL/xmesa.h>
+#endif 
+
 
 
 typedef struct {
@@ -67,6 +73,7 @@ Entity e_bullet[20];
 Entity particle[60];
 
 GLuint fontbase = 0;
+
 
 float rnd()
 {
@@ -658,12 +665,60 @@ void game_render()
 /* --------------------------------------- */
 
 
+#ifdef FULLSCREEN_MESA_3DFX
+
+gint switch_fullscreen(GtkWidget *gl_area)
+{
+  static GtkWidget *fullscreenwidget = NULL;
+
+  if (!fullscreenwidget)
+    {
+      /* Grab keybaord and pointer so that user does not wander off the game
+	 window while in fullscreen mode.
+      */
+      if (gdk_keyboard_grab(gl_area->window, FALSE, GDK_CURRENT_TIME) == 0)
+	{
+	  if (gdk_pointer_grab(gl_area->window, FALSE, 0, NULL, NULL, GDK_CURRENT_TIME) == 0)
+	    {
+	      gtk_widget_grab_focus(gl_area);
+	      if (gtk_gl_area_make_current(GTK_GL_AREA(gl_area)))
+		{
+		  if (XMesaSetFXmode((XMESA_FX_FULLSCREEN)))
+		    {
+		      fullscreenwidget = gl_area;
+		      return TRUE;
+		    }
+		}
+	      gdk_pointer_ungrab(GDK_CURRENT_TIME);
+	    }
+	  gdk_keyboard_ungrab(GDK_CURRENT_TIME);
+	}
+      return FALSE;
+    }
+
+  if (fullscreenwidget == gl_area)
+    {
+      if (gtk_gl_area_make_current(GTK_GL_AREA(gl_area)))
+	XMesaSetFXmode(XMESA_FX_WINDOW);
+      
+      gdk_keyboard_ungrab(GDK_CURRENT_TIME);
+      gdk_pointer_ungrab(GDK_CURRENT_TIME);
+      fullscreenwidget = NULL;
+      return TRUE;
+    }
+  
+  return FALSE;
+}
+
+#endif
+
+
 
 
 gint init(GtkWidget *widget)
 {
-  /* OpenGL functions can be called only if begingl returns true */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+  /* OpenGL functions can be called only if makecurrent returns true */
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
     GdkFont *font;
 
     /* set viewport */
@@ -676,10 +731,6 @@ gint init(GtkWidget *widget)
       gdk_gl_use_gdk_font(font, 0, 128, fontbase);
       gdk_font_unref(font);
     }
-
-
-    /* end opengl calls by calling endgl */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
   }
   return TRUE;
 }
@@ -689,21 +740,11 @@ gint init(GtkWidget *widget)
 gint draw(GtkWidget *widget, GdkEventExpose *event)
 {
   /* Draw only last expose. */
-  if (event->count > 0) {
+  if (event->count > 0)
     return TRUE;
-  }
 
-  /* OpenGL functions can be called only if gtk_gl_area_begingl
-     returns true, you can't call gl* functions anywhere except
-     inside gtk_gl_area_begingl()/gtk_gl_area_endgl() pairs.
-  */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
-
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
     game_render();
-
-   /* Opengl rendering is done for now. */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
-  }
 
   /* Swap backbuffer to front */
   gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
@@ -714,13 +755,11 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
 /* When glarea widget size changes, viewport size is set to match the new size */
 gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 {
-  /* OpenGL functions can be called only if begingl returns true */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
-
-    glViewport(0,0, widget->allocation.width, widget->allocation.height);
-    /* end opengl calls by calling endgl */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
-  }
+  /* OpenGL functions can be called only if make_current returns true */
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+    {
+      glViewport(0,0, widget->allocation.width, widget->allocation.height);
+    }
   return TRUE;
 }
 
@@ -747,6 +786,13 @@ gint key_press_event(GtkWidget *widget, GdkEventKey *event)
   case GDK_q:
     gtk_main_quit();
     break;
+
+#ifdef FULLSCREEN_MESA_3DFX
+  case GDK_f:
+    switch_fullscreen(widget);
+    break;
+#endif
+
   case GDK_d:
     draw_fast = (!draw_fast);
     break;
@@ -801,6 +847,11 @@ int main(int argc, char **argv)
     GDK_GL_DOUBLEBUFFER,
     GDK_GL_NONE
   };
+
+#ifdef FULLSCREEN_MESA_3DFX
+  setenv("MESA_GLX_FX", "", 1);
+  setenv("FX_GLIDE_NO_SPLASH", "", 1);
+#endif
 
   /* initialize gtk */
   gtk_init(&argc, &argv);

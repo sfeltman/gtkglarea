@@ -42,10 +42,10 @@
 	direct context.
 
 
-4. What happens if I use gdk_gl stuff and GtkGLArea widget in the same program?
+4. Can I use gdk_gl functions and GtkGLArea widget in the same program?
 
-	It is OK as long as you remeber that gtk_gl_area_begingl/gtk_gl_area_endgl
-	makes internal context of GtkGLArea widget current context (and leaves it so).
+	Yes, just remember that gtk_gl_area_make_current makes internal context of GtkGLArea
+	widget current context (and leaves it so).
 
 
 5. I can't capture keypress events for GtkGLArea widget, why?
@@ -59,4 +59,30 @@
 
 	- Both of the above
 
+
+6. I noticed that gtk_gl_area_begingl() and gtk_gl_area_endgl() are deprecated?
+
+	- they are still there, but you should use gtk_gl_area_make_current() instead
+	  then you can avoid calling matching gtk_gl_area_endgl().
+
+	- just formalizing what has been true for a long time, gtk_gl_area_endgl is
+	  no longer necessary and gtk_gl_area_begingl() just makes widgets context
+	  current.
+
+	- to convert your code you can replace them with following functions.
+
+	   gtk_gl_area_begingl() =>  gtk_gl_area_make_current()
+	   gtk_gl_area_endgl()   =>  glFlush() or nothing
+
+
+
+7. Help, ./configure does not find Mesa, I do have Mesa libaries installed.
+
+	- Mesa may need additional libraries to link with, depending on what
+	  options were used while compiling Mesa libraries. Currently configure tries
+	  to link Mesa with whatever libraries GTK needs and if this fails it tries
+	  Mesa+needed by GTK+pthreads libraries. Try passing extra libraries to
+	  ./configure in LIBS envinronment variable.
+
+	- configure scripts are still a bit flaky, patches are gratefully accepted.
 

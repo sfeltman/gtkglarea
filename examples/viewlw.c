@@ -102,8 +102,8 @@ gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
     return TRUE;
   }
 
-  /* OpenGL calls can be done only if begingl returns true */
-  if (gtk_gl_area_begingl(glarea)) {
+  /* OpenGL calls can be done only if make_current returns true */
+  if (gtk_gl_area_make_current(glarea)) {
     /* basic initialization */
     if (info->do_init == TRUE) {
       initgl();
@@ -126,24 +126,19 @@ gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
     glMultMatrixf(&m[0][0]);
 
     lw_object_show(info->lwobject);
-  
-    /* opengl rendering done for now */
-    gtk_gl_area_endgl(glarea);
+
+    /* swap backbuffer to front */
+    gtk_gl_area_swapbuffers(glarea);
   }
-  /* swap backbuffer to front */
-  gtk_gl_area_swapbuffers(glarea);
 
   return TRUE;
 }
 
 gint glarea_configure(GtkWidget *widget, GdkEventConfigure *event)
 {
-  /* OpenGL calls can be done only if begingl returns true */
-  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+  /* OpenGL calls can be done only if make_current returns true */
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
     glViewport(0,0, widget->allocation.width, widget->allocation.height);
-
-    /* end opengl calls by calling endgl */
-    gtk_gl_area_endgl(GTK_GL_AREA(widget));
   }
   return TRUE;
 }

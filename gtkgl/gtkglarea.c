@@ -232,7 +232,7 @@ gtk_gl_area_size_allocate (GtkWidget     *widget,
 }
 
 
-gint gtk_gl_area_begingl(GtkGLArea *gl_area)
+gint gtk_gl_area_make_current(GtkGLArea *gl_area)
 {
 	g_return_val_if_fail(gl_area != NULL, FALSE);
 	g_return_val_if_fail(GTK_IS_GL_AREA (gl_area), FALSE);
@@ -240,6 +240,14 @@ gint gtk_gl_area_begingl(GtkGLArea *gl_area)
 
 	return gdk_gl_make_current(GTK_WIDGET(gl_area)->window, gl_area->glcontext);
 }
+
+/* deprecated, use gtk_gl_area_make_current */
+gint gtk_gl_area_begingl(GtkGLArea *gl_area)
+{
+  return gtk_gl_area_make_current(gl_area);
+}
+
+/* deprecated, use glFlush if needed */
 void gtk_gl_area_endgl(GtkGLArea *gl_area)
 {
 	g_return_if_fail(gl_area != NULL);

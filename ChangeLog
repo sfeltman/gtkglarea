@@ -1,3 +1,22 @@
+Wed Feb 17 13:36:19 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* configure.in: Library version number bumped up.
+
+	* gtkgl/gtkglarea.h, gtkgl/gtkglarea.c:
+	API change, use of gtk_gl_area_begingl()/gtk_gl_area_endgl() is now
+	discouraged altough they are still there, gtk_gl_area_make_current()
+	should be used instead.
+	
+	* README, docs/HOWTO.txt, docs/gtkglarea.txt, examples/README:
+	New API changes are now documented.
+	
+	* examples/gdkfont.c, examples/simple.c, examples/viewlw.c, examples/zktor.c:
+	Examples now use gtk_gl_area_make_current, zktor.c has rudimentary support for
+	3DFX acceleration, but this is #ifdef'ed out by default.
+	
+	* examples/object3d.h, examples/object3d.c:
+	Removed, I must have checked in some experimental version, these files dont belong here.
+	
 Wed Feb 17 01:58:41 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* configure.in:
