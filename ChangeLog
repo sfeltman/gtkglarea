@@ -1,3 +1,8 @@
+2002-06-09  Shane Blackett
+
+	* gtkgl/gdkgl-win32.c:
+	Win32 fixes.
+
 2002-06-09  James Henstridge  <james@daa.com.au>
 
 	* gtkgl/gtkglarea.c (gtk_gl_area_destroy): use g_object_unref on

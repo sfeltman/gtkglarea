@@ -39,6 +39,7 @@ static void fill_pfd(PIXELFORMATDESCRIPTOR *pfd, int *attriblist)
   pfd->iPixelType = PFD_TYPE_COLORINDEX;
   pfd->cColorBits = 32;
   pfd->cDepthBits = 0;
+  pfd->cAccumBits = 0;
   
   while (*p) {
     switch (*p) {
@@ -97,9 +98,8 @@ static void fill_pfd(PIXELFORMATDESCRIPTOR *pfd, int *attriblist)
 	 when returning info about the accumulation buffer precision.
 	 Only cAccumBits is used for requesting an accumulation
 	 buffer. */
-      pfd->cAccumBits = 1;
-      ++p;
-      break;
+      pfd->cAccumBits += *(++p);
+		break;
     }
     ++p;
   }
@@ -280,6 +280,7 @@ gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint d
 
 gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 {
+
   g_return_val_if_fail (GDK_IS_DRAWABLE(drawable), FALSE );
   g_return_val_if_fail (GDK_IS_GL_CONTEXT(context), FALSE );
 
@@ -302,7 +303,7 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 	{
 	  if ( context->share->hglrc )
 	    wglShareLists ( context->share->hglrc, context->hglrc );
-	  gdk_gl_context_unref ( (GdkGLContext*)context->share );
+	  g_object_unref ( context->share );
 	}
 
     context->initialised = TRUE;
@@ -400,8 +401,8 @@ gdk_gl_pixmap_finalize(GObject *object)
   pixmap = GDK_GL_PIXMAP(object);
 
   glFinish ();
-  SelectObject ( private->hdc, private->hbitmap );
-  gdk_pixmap_unref ( private->pixmap );
+  SelectObject ( pixmap->hdc, pixmap->hbitmap );
+  gdk_pixmap_unref ( pixmap->pixmap );
 
   (* glcontext_parent_class->finalize)(object);
 }
@@ -421,29 +422,31 @@ GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
 {
   GdkGLPixmap *glpixmap;
 
+  g_return_val_if_fail(GDK_IS_VISUAL(visual), NULL);
+  g_return_val_if_fail(GDK_IS_PIXMAP(pixmap), NULL);
+
   glpixmap = g_object_new(GDK_TYPE_GL_PIXMAP, NULL);
   if (!glpixmap) return NULL;
 
-  context->initialised = FALSE;
-  context->hdc = NULL;
-  context->hbitmap = NULL;
-  context->pixmap = gdk_pixmap_ref ( pixmap );
-  context->ref_count = 1;
+  glpixmap->initialised = FALSE;
+  glpixmap->hdc = NULL;
+  glpixmap->hbitmap = NULL;
+  glpixmap->pixmap = gdk_pixmap_ref ( pixmap );
 
-  return context;
+  return glpixmap;
 }
 
 gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 {
-  g_return_val_if_fail (GDK_IS_GL_PIXMAP(pixmap), FALSE );
-  g_return_val_if_fail (GDK_IS_GL_CONTEXTcontext), FALSE );
+  g_return_val_if_fail (GDK_IS_GL_PIXMAP(glpixmap), FALSE );
+  g_return_val_if_fail (GDK_IS_GL_CONTEXT(context), FALSE );
 
   if ( !context->initialised )
   {
     int pf;
 
     context->hdc = CreateCompatibleDC ( NULL );
-	glpixmap->hdc = context->hdc;
+    glpixmap->hdc = context->hdc;
     glpixmap->hbitmap = SelectObject ( context->hdc, (HBITMAP) gdk_win32_drawable_get_handle ( glpixmap->pixmap ) );
 
     pf = ChoosePixelFormat ( context->hdc, &context->pfd );
