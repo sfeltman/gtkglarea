@@ -33,37 +33,37 @@ saved_CFLAGS="$CFLAGS"
 
 # test for plain OpenGL
 AC_MSG_CHECKING([GL])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL -lGLU"
+LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGLU -lGL"
 AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, have_GL=no)
 AC_MSG_RESULT($have_GL)
 
 if test x$have_GL = xyes; then
 
- GL_LIBS="-lGL -lGLU"
+ GL_LIBS="-lGLU -lGL"
 
 else
 
  # test for Mesa
  AC_MSG_CHECKING([Mesa])
- LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lMesaGLU"
+ LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGLU -lMesaGL"
  AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_Mesa=yes, have_Mesa=no)
  AC_MSG_RESULT($have_Mesa)
 
  if test x$have_Mesa = xyes; then
 
-  GL_LIBS="-lMesaGL -lMesaGLU"
+  GL_LIBS="-lMesaGLU -lMesaGL"
 
  else
 
   # test for Mesa with threads
   AC_MSG_CHECKING([Mesa with pthreads])
-  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lMesaGLU -lpthread"
+  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGLU -lMesaGL -lpthread"
   AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_Mesa_pthread=yes, have_Mesa_pthread=no)
   AC_MSG_RESULT($have_Mesa_pthread)
 
   if test x$have_Mesa_pthread = xyes; then
     
-    GL_LIBS="-lMesaGL -lMesaGLU -lpthread"
+    GL_LIBS="-lMesaGLU -lMesaGL -lpthread"
 
   else
 
@@ -89,7 +89,7 @@ else
 fi
 
 AC_MSG_CHECKING([GtkGLArea])
-LIBS="$save_LIBS $GTK_LIBS $GL_LDOPTS $GL_LIBS $GTKGL_LDOPTS -lgtkgl"
+LIBS="$save_LIBS -lgtkgl $GTK_LIBS $GL_LDOPTS $GL_LIBS $GTKGL_LDOPTS"
 AC_TRY_LINK( ,[ char gtk_gl_area_new(); gtk_gl_area_new(); ], have_gtkgl=yes, have_gtkgl=no)
 AC_MSG_RESULT($have_gtkgl)
 
