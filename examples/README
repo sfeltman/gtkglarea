@@ -1,0 +1,51 @@
+
+simple
+------
+
+Well commented and easy to understand example.
+
+
+gdkfont
+-------
+
+Usage: gdkfont [fontname]
+
+Shows how to turn GdkFont to display lists using gdk_gl_use_gdk_font
+function.
+
+
+glpixmap
+--------
+
+GL rendering to pixmaps test.
+
+
+
+viewlw
+------
+
+Usage: viewlw [FILE]...
+
+viewlw is a nifty little utility for viewing LightWave 3D objects.
+Try viewing included alien.lwo and penguin.lwo objects.
+
+In the program:
+Mouse button 1 + drag           spin (virtual trackball)
+Mouse button 2 + drag           zoom
+Mouse button 3                  popup menu
+
+
+zktor
+-----
+
+Ingame keys:
+
+cursor left             turn left
+cursor right            turn right
+cursor down             thrust
+cursor up,space         fire
+r                       restart
+d                       detail
+
+Keyboard handling is buggy and needs to be fixed.
+

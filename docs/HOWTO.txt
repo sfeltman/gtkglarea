@@ -1,0 +1,62 @@
+
+
+
+1. How do I make any widget opengl widget?
+
+	Your widget needs OpenGL capable visual and
+	you also need to set colormap for it.
+
+	/* get visual using gdk_gl_choose_visual */
+	visual = gdk_gl_choose_visual(visual_attributes);
+
+	/* set visual and colormap */
+	gtk_widget_push__colormap(gdk_colormap_new(visual, TRUE));
+	gtk_widget_push_visual(visual);
+
+	/* create your widget */
+	widget = gtk_foobar_new();
+
+	/* restore old values */
+	gtk_widget_pop_visual();
+	gtk_widget_pop_colormap();
+
+
+
+2. How do I render to such widget?
+
+	Create gl context and connect it to widgets GdkDrawable.
+
+	context = gdk_gl_context(visual);
+ 
+	/* connect to gdk window of widget */
+	if (gdk_gl_make_current(widget->window, context)) {
+		do opengl stuff...
+
+	}
+
+
+
+3. How do I render to off screen pixmap?
+
+	See examples/glpixmap.c, remember that pixmaps can not be rendered to with
+	direct context.
+
+
+4. What happens if I use gdk_gl stuff and GtkGLArea widget in the same program?
+
+	It is OK as long as you remeber that gtk_gl_area_begingl/gtk_gl_area_endgl
+	makes internal context of GtkGLArea widget current context (and leaves it so).
+
+
+5. I can't capture keypress events for GtkGLArea widget, why?
+
+	- You forgot to set event mask:
+		 gtk_widget_set_events(glarea, GDK_KEY_PRESS_MASK);
+
+	- You forgot to grab focus:
+		GTK_WIDGET_SET_FLAGS(glarea, GTK_CAN_FOCUS);
+		gtk_widget_grab_focus(GTK_WIDGET(glarea));
+
+	- Both of the above
+
+

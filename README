@@ -1,0 +1,90 @@
+GtkGLArea
+---------
+
+
+AUTHORS
+-------
+ Janne Löf <jlof@mail.student.oulu.fi>
+
+OTHER PEOPLE WORTH MENTIONING
+-----------------------------
+ Karl Nelson   <kenelson@ece.ucdavis.edu>          (original autoconf, ideas)
+ Daniel Skarda <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
+ Jussi Löf     <jussi.lof@pirko.fi>                (LightWave objects)
+ 
+
+
+
+LICENSE
+-------
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public
+    License along with this library; if not, write to the Free
+    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+INTRODUCTION
+------------
+
+ GtkGLArea is an OpenGL widget for GTK+ GUI toolkit.
+
+ Just as GTK+ is build on top of GDK, GtkGLArea is built on top of gdkgl which
+ is basically wrapper around GLX functions. The widget itself is very similar
+ to GtkDrawinigArea widget and adds only three extra functions. 
+
+ Lower level gdkgl functions make it easy to render on any widget that has
+ OpenGL capable visual, rendering to off-screen pixmaps is also supported. 
+
+ Related project which may iterest those who use GTK-- is GtkGLArea--. It is a
+ C++ wrapper for gtkglarea written by Karl Nelson <kenelson@ece.ucdavis.edu>. 
+
+
+INSTALLATION
+------------
+
+ You need GTK+ and either OpenGL or Mesa, if you have both you can choose which one to
+ use by giving --with-lib-GL or --with-lib-MesaGL option to configure.
+
+ Run './configure --help' to see all options you may give at configuration stage.
+ Run './configure' and 'make' to build. You may now test programs in examples
+ directory. Run 'make install' to install.
+
+ Include files go to PREFIX/include/gtkgl/
+ Library files go to PREFIX/lib/
+
+
+DOCUMENTATION
+-------------
+
+ docs/gtkglara.txt	documents GtkGLArea widget
+ docs/gtkgl.txt		documents gtk_gl_* functions
+ docs/HOWTO.txt		good advice
+
+ It is a good idea to read GLX manpages too!
+
+LINKS
+-----
+
+ GtkGLArea home page http://www.student.oulu.fi/~jlof/gtkglarea/
+ Gtk-- wrapper http://www.ece.ucdavis.edu/~kenelson/gtk-glarea/
+
+
+TODO
+----
+
+ - rewrite documentation in texinfo format
+ - weed out bugs from autoconfigure scripts
+ - overlays
+
+---
+Trademarks are owned by trademark owners.

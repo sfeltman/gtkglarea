@@ -1,0 +1,14 @@
+## examples directory
+
+EXTRA_DIST = README penguin.lwo alien.lwo
+
+noinst_PROGRAMS = simple zktor viewlw glpixmap gdkfont
+
+INCLUDES = -I$(top_srcdir)
+LDADD = $(top_srcdir)/gtkgl/libgtkgl.la @GTK_LIBS@ @GL_LIBS@
+
+simple_SOURCES   = simple.c
+zktor_SOURCES    = zktor.c
+glpixmap_SOURCES = glpixmap.c
+viewlw_SOURCES   = viewlw.c lw.h lw.c trackball.h trackball.c
+gdkfont_SOURCES    = gdkfont.c

@@ -1,0 +1,9 @@
+.deps
+.libs
+Makefile
+Makefile.in
+glpixmap
+gdkfont
+simple
+viewlw
+zktor

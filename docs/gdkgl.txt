@@ -1,0 +1,380 @@
+
+gdk_gl_* functions
+	Quite straightforward wrapper around few necessary GLX calls and
+	should be easy to understand if you already know GLX.
+
+gdk_gl_pixmap_* functions
+	Latest addition, not very well tested yet, enables rendering
+	to off-screen pixmaps. See examples/glpixmap.c.
+
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_query - query for OpenGL capability
+
+C SPECIFICATION
+	gint gdk_gl_query( void )
+
+DESCRIPTION
+	gdk_gl_query returns TRUE if OpenGL is supported.
+
+SEE ALSO
+	glXQueryExtension
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_choose_visual - return visual that matches given attributes
+
+C SPECIFICATION
+	GdkVisual *gdk_gl_choose_visual( int *attrList )
+
+PARAMETERS
+
+attrList
+	Specifies a list of Boolean attributes and enum/integer
+	attribute/value pairs. The last attribute must be NULL
+
+
+DESCRIPTION
+	gtk_gl_choose_visual returns pointer to a GdkVisual matching
+	given attributes. If no match is found NULL is returned.
+	For explanation of attributes see glXChooseVisual man page.
+	Note that GLX_ prefix of attributes is changed to GDK_GL_ .
+
+SEE ALSO
+	glXChooseVisual
+	gdk_gl_context_share_new
+	
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_get_config - return information about visuals
+
+C SPECIFICATION
+	gint gdk_gl_get_config( GdkVisual *visual, int attrib )
+
+PARAMETERS
+
+visual
+	Specifies visual to be queried.
+
+attrib
+	Specifies visual attribute to be returned
+
+DESCRIPTION
+	gdk_gl_get_config return value of attrib of windows or
+	gl pixmap created with respect to visual. gdk_gl_get_config
+	returns -1 if it fails. For explanation of attributes see
+	glXGetConfig man page. Note that GLX_ prefix is changed to
+	GDK_GL_.
+
+SEE ALSO
+	glXGetConfig
+
+
+---------------------------------------------------------------
+
+
+NAME
+	gdk_gl_context_new - create new OpenGL rendering context
+
+C SPECIFICATION
+	GdkGLContext *gdk_gl_context_new( GdkVisual *visual )
+
+PARAMETERS
+
+visual
+	Specifies the visual that defines the frame buffer
+	resources available. It is a pointer to GdkVisual.
+
+DESCRIPTION
+	This is backwards compatability/convinence
+	function equal to gdk_gl_context_share_new(visual, NULL, FALSE).
+
+SEE ALSO
+	glXCreateContext
+	gdk_gl_choosevisual
+	gdk_gl_context_share_new
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_context_share_new - create new rendering context
+
+C SPECIFICATION
+	GdkGLContext *gdk_gl_context_share_new( GdkVisual *visual,
+	                                        GdkGLContext *sharelist,
+	                                        gint direct )
+
+
+PARAMETERS
+
+visual
+	Pointer to GdkVisual that defines the frame buffer resources
+	available to the rendering context.
+
+shareList
+	Context with which to share display lists and textures.
+	NULL indicates no sharing.
+
+direct
+	TRUE  if direct connection to graphics system.
+	FALSE if connection through X server.
+
+
+DESCRIPTION
+	gdk_gl_context_share_new creates new rendering context
+	with reference count of 1 and returns pointer to it.
+	If context creation fails NULL is returned.
+
+SEE ALSO
+	glXCreateContext
+	gdk_gl_context_new
+	gdk_gl_choose_visual
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_context_ref - increase reference count
+
+C SPECIFICATION
+	GdkGLContext *gdk_gl_context_ref( GdkGLContext *context )
+
+PARAMETERS
+
+context
+	Pointer to a GdkGLContext.
+
+DESCRIPTION
+	Increases reference count of context by one, returns context.
+
+SEE ALSO
+	gdk_gl_context_new
+	gdk_gl_context_share_new
+	gdk_gl_context_unref
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_context_unref - decrease reference count
+
+C SPECIFICATION
+	void gdk_gl_context_unref( GdkGLContext *context )
+
+
+PARAMETERS
+
+context	Pointer to a GdlGLContext.
+
+DESCRIPTION
+	gdk_gl_context_unref decreases reference count by 1 and
+	deletes context if it count drops to 0.
+
+
+SEE ALSO
+	glXDestroyContext
+	gdk_gl_context_new
+	gdk_gl_context_share_new
+	gdk_gl_context_ref
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_make_current - attach context to drawable
+
+C SPECIFICATION
+	gint gdk_gl_make_current( GdkDrawable *drawable,
+	                          GdkGLContext *context )
+DESCRIPTION
+	gdk_gl_make_current makes context current OpenGL rendering
+	context, and it attaches context to gdk drawable. Drawable
+	must have underlying X window and be created with the same
+	visual as context. gdk_gl_make_current returns TRUE if
+	successful.
+
+SEE ALSO
+	glXMakeCurrent
+	gdk_gl_pixmap_make_current
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_swap_buffers - exchange front and back buffers
+
+C SPECIFICATION
+	void gdk_gl_swap_buffers( GdkDrawable *drawable )
+
+DESCRIPTION
+	Promotes back buffer of drawable to front.
+
+SEE ALSO
+	glXSwapBuffers
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_wait_gdk - complete gdk execution
+
+C SRECIFICATION
+	void gdk_gl_wait_gdk( void )
+
+DESCRIPTION
+	Gdk rendering calls made prior to gtk_gl_wait_gdk are
+	guarateed to be executed before OpenGL calls made
+	after gdk_gl_wait_gdk.
+
+SEE ALSO
+	glXWaitX
+	gdk_gl_wait_gl
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_wait_gl - complete OpenGL execution
+
+C SRECIFICATION
+	void gdk_gl_wait_gl( void )
+
+DESCRIPTION
+	OpenGL rendering calls made prior to gtk_gl_wait_gdk are
+	are guarateed to be executed before OpenGL calls made
+	after gdk_gl_wait_gdk.
+
+SEE ALSO
+	glXWaitGL
+	gdk_gl_wait_gdk
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_pixmap_new - create an off screen rendering area
+
+C SPECIFICATION
+
+	GdkGLPixmap *gdk_gl_pixmap_new( GdkVisual *visual,
+	                                GdkPixmap *pixmap )
+
+DESCRIPTION
+	gdk_gl_pixmap_new returns pointer to new GdkGLPixmap with
+	reference count of 1. pixmap will become front left buffer
+	of GdkGLPixmap.
+
+SEE ALSO
+	glXCreateGLXPixmap
+	gdk_gl_pixmap_ref
+	gdk_gl_pixmap_unref
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_pixmap_ref - increase glpixmap reference count
+
+C SPECIFICATION
+	GdkGLPixmap *gdk_gl_pixmap_ref( GdkGLPixmap *glpixmap )
+
+PARAMETERS
+
+glpixmap
+	a pointer to GdkGLPixmap
+
+DESCRIPTION
+
+SEE ALSO
+	gdk_gl_pixmap_new
+	gdk_gl_pixmap_unref
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_pixmap_unref - decrease glpixmap reference count
+
+C SPECIFICATION
+	void gdk_gl_pixmap_unref( GdkGLPixmap *glpixmap )
+
+PARAMETERS
+
+glpixmap
+	a pointer to GdkGLPixmap
+
+DESCRIPTION
+	gdk_gl_pixmap_unref decreases reference count of
+	GdkGLPixmap by 1 and deletes pixmap if reference count
+	reaches 0.
+
+SEE ALSO
+	glXDestroyGLXPixmap
+	gdk_gl_pixmap_new
+	gdk_gl_pixmap_ref
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_pixmap_make_current - attach context to glpixmap
+
+C SPECIFICATION
+	gint gdk_gl_pixmap_make_current( GdkGLPixmap *glpixmap,
+	                                 GdkGLContext *context )
+
+PARAMETERS
+
+glpixmap
+	a pointer to GdkGLPixmap
+
+context
+	a pointer to GdkGLContext
+
+DESCRIPTION
+	gdk_gl_pixmap_make_current make context current OpenGL
+	rendering context, and it attaches context to glpixmap.
+	gdk_gl_pixmap_make_current returns TRUE of successful.
+
+SEE ALSO
+	glXMakeCurrent
+	gdk_gl_make_current
+
+
+
+---------------------------------------------------------------
+
+NAME
+	gdk_gl_use_gdk_font
+
+C SPECIFICATION
+	void gdk_gl_use_gdk_font( GdkFont *font,
+                                  int first,
+                                  int count,
+                                  int list_base )
+
+
+PARAMETERS
+
+font
+	Pointer to GdkFont structure, font type must be GDK_FONT_FONT.
+
+first
+	Specifies the index of the first font glyph to be taken
+
+count
+	 Specifies the number of glyphs to be taken.
+
+list_base
+	Specifies the index of the first display list to be generated.
+
+DESCRIPTION
+	gdk_gl_use_gdk_font generates count display lists, named list_base
+	through list_base+count-1, each containing a single glBitmap command.
+
+	gdk_gl_use_gdk_font is ignored if there is no current context.
+
+
+SEE ALSO
+	glXUseXFont

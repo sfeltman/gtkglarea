@@ -1,0 +1,71 @@
+
+GtkGLArea widget is very much like GtkDrawingArea widget, actually most
+of the glarea code closely follows the drawingarea code. 
+
+examples/simple.c is a good starting point.
+
+
+---------------------------------------------------------
+C SPECIFICATION
+
+GtkWidget* gtk_gl_area_new(int *attrList)
+GtkWidget* gtk_gl_area_share_new(int *attrList, GtkGLArea *share)
+GtkWidget* gtk_gl_area_new_vargs(GtkGLArea *share, ...)
+
+PARAMETERS
+
+attrList
+	Specifies a list of Boolean attributes and enum/integer
+	attribute/value pairs. The last attribute must be zero or
+	GDK_GL_NONE.
+
+share
+	Specifies the widget with which to share display lists and
+	texture objects. NULL indicates that no sharing is to take
+	place.
+
+DESCRIPTION
+	Make an OpenGL widget, attrList is passed to glXChooseVisual
+	GLX call. See glXChooseVisual man page for explanation of
+	attrList. Widget is created with visual and colormap of the
+	requested type and GLX context is created for this widget. You
+	can't do opengl calls on widget until it has X window. X window
+	is not created until widget is realized.
+	gtk_gl_area_new_vargs takes attrList as variable arguments,
+	last argument must still be zero.
+
+---------------------------------------------------------
+
+C SPECIFICATION
+
+gint gtk_gl_area_begingl(GtkGLArea *gl_area)
+void gtk_gl_area_endgl(GtkGLArea *gl_area)
+
+PARAMETERS
+
+gl_area
+	Specifies a gtkglarea widget.
+
+DESCRIPTION
+	gtk_gl_area_begingl must be called before rendering into
+	OpenGL widget, it returns TRUE if rendering to widget is
+	possible. Rendering is not possible if widget is not
+	GtkGLArea widget or widget is not realized. gtk_gl_area_endgl
+	is called to end opengl rendering.
+
+---------------------------------------------------------
+
+C SPECIFICATION
+void gtk_gl_area_swapbuffers(GtkGLArea *gl_area)
+
+PARAMETERS
+
+gl_area
+	Specifies a GtkGLArea widget.
+
+DESCRIPTION
+	Wrapper around gdk_gl_swapbuffers. Promotes contents of back buffer
+	of widget to front buffer. The contents of front buffer become
+	undefined.
+
+---------------------------------------------------------

@@ -1,0 +1,895 @@
+/* 
+ * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+/* Zktor is a word that does not mean anything and is difficult to pronounce. */
+/* I apologize for horrible coding. */
+
+
+#include <math.h>
+#include <stdlib.h>
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkkeysyms.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#include <gtkgl/gtkglarea.h>
+
+
+
+typedef struct {
+  int   state; /* zero state means dead */
+  float timer;
+  float pos_x,pos_y;
+  float vel_x,vel_y;
+  float dir;
+  float radius;
+} Entity;
+
+/* game state */
+
+double game_time;
+double game_tick;
+int draw_fast = 0;
+
+int wave_cnt;
+double wave_time;
+double vortex_time;
+
+int control_speed;
+int control_spin;
+int control_fire;
+
+int score = 0;
+int highscore = 0;
+
+Entity player;
+Entity enemy[10];
+Entity vortex[10];
+Entity p_bullet[20];
+Entity e_bullet[20];
+Entity particle[60];
+
+GLuint fontbase = 0;
+
+float rnd()
+{
+  return (1.0*rand()/(RAND_MAX+1.0));
+}
+int collision(const Entity *a, const Entity *b)
+{
+  if (a->state && b->state) { 
+    float dx = a->pos_x  - b->pos_x;
+    float dy = a->pos_y  - b->pos_y;
+    float r  = a->radius + b->radius;
+    if (dx*dx+dy*dy < r*r)
+      return TRUE;
+  }
+  return FALSE;
+}
+
+void gCircle(float radius, int points)
+{
+  float a,step = 360.0/points;
+  for (a = 0; a < 360.0; a += step) {
+    float dx = -sin(a*M_PI/180);
+    float dy =  cos(a*M_PI/180);
+    glVertex2f(dx*radius,dy*radius);
+  }
+}
+
+
+void game_init()
+{
+  int i;
+
+  game_time = gdk_time_get() / 1000.0;
+  game_tick  = 1.0 / 60;
+
+  wave_cnt = 0;
+  wave_time = game_time + 5; /* give 5 secs before start of waves */
+  vortex_time = game_time + 3; /* give 3 secs before 1st vortex */
+
+
+  control_speed = 0;
+  control_spin  = 0;
+  control_fire  = 0;
+
+  score = 0;
+
+  player.state = 1;
+  player.timer = game_time;
+  player.pos_x = 0;
+  player.pos_y = 0;
+  player.vel_x = 0;
+  player.vel_y = 0;
+  player.dir   = 0;
+  player.radius= 5;
+
+
+  for (i=0; i<sizeof(enemy)/sizeof(Entity); i++)
+    enemy[i].state = 0;
+
+  for (i=0; i<sizeof(vortex)/sizeof(Entity); i++)
+    vortex[i].state = 0;
+
+  for (i=0; i<sizeof(p_bullet)/sizeof(Entity); i++)
+    p_bullet[i].state = 0;
+
+  for (i=0; i<sizeof(e_bullet)/sizeof(Entity); i++)
+    e_bullet[i].state = 0;
+}
+void game_play()
+{
+  int i;
+  double time_now,tick_now;
+
+  /* timing */
+  time_now = gdk_time_get() / 1000.0;
+  tick_now = time_now - game_time;
+  if (tick_now < 0.001) tick_now = 0.001;
+  if (tick_now > 0.2  ) tick_now = 0.2;
+  game_tick = (tick_now + 4*game_tick)/5; /* average */
+  game_time = time_now;
+  
+
+  /* is it time for next wave? */
+  if (player.state && wave_time <= game_time) {
+    wave_time = game_time + 20; /* 20 second waves */
+    wave_cnt++;
+    for (i=0; i<wave_cnt; i++) {
+      int j;
+      for (j=0; j<sizeof(enemy)/sizeof(Entity); j++) {
+	if (!enemy[j].state) {
+	  enemy[j].radius = 50;
+	  do {
+	    enemy[j].pos_x = rnd()*200 - 100;
+	    enemy[j].pos_y = rnd()*200 - 100;
+	  } while (collision(&enemy[j], &player));
+	  enemy[j].state = 1;
+	  enemy[j].timer = game_time;
+	  enemy[j].vel_x = 0;
+	  enemy[j].vel_y = 0;
+	  enemy[j].dir = 360*rnd()-180;
+	  enemy[j].radius = 5;
+	  break;
+	}
+      }
+    }
+  }
+
+
+
+  /* player */
+  if (player.state) {
+    float dx,dy;
+
+    /* turn to direction given by spin control */
+    player.dir   += 180 * control_spin  * game_tick;
+    while (player.dir > 180) player.dir -= 360;
+    while (player.dir <-180) player.dir += 360;
+    /* unit direction vector */
+    dx = -sin(player.dir*(M_PI/180));
+    dy =  cos(player.dir*(M_PI/180));
+    /* accelerate if speed control is pressed */
+    player.vel_x += 50 * control_speed * dx * game_tick;
+    player.vel_y += 50 * control_speed * dy * game_tick;
+    /* move */
+    player.pos_x += player.vel_x * game_tick;
+    player.pos_y += player.vel_y * game_tick;
+    /* collision to border */
+    if (player.pos_x < -100) {
+      player.pos_x = -100;
+      player.vel_x = 0;
+    }
+    if (player.pos_x > 100) {
+      player.pos_x = 100;
+      player.vel_x = 0;
+    }
+    if (player.pos_y < -100) {
+      player.pos_y = -100;
+      player.vel_y = 0;
+    }
+    if (player.pos_y > 100) {
+      player.pos_y = 100;
+      player.vel_y = 0;
+    }
+    /* if fire is pressed and 0.2 secs has elapsed since last bullet fired */
+    if (control_fire && (game_time - player.timer) > 0.2  ) {
+      for (i=0; i<sizeof(p_bullet)/sizeof(Entity); i++) {
+	if (!p_bullet[i].state) {
+	  player.timer = game_time;
+	  p_bullet[i].state = 1;
+	  p_bullet[i].timer = game_time;
+	  p_bullet[i].pos_x = player.pos_x + player.radius*dx;
+	  p_bullet[i].pos_y = player.pos_y + player.radius*dy;
+	  p_bullet[i].vel_x = player.vel_x + dx*100;
+	  p_bullet[i].vel_y = player.vel_y + dy*100;
+	  p_bullet[i].dir   = player.dir;
+	  p_bullet[i].radius= .5;
+	  break;
+	}
+      }
+    }
+
+    /* if speed control is pressed create more particles */
+    if (control_speed) {
+      for (i=0; i<sizeof(particle)/sizeof(Entity); i++) {
+	if (!particle[i].state) {
+	  float spread = rnd()*15 - 7.5;
+	  particle[i].state = 1;
+	  particle[i].timer = game_time + rnd()*.8 + .2;
+	  particle[i].pos_x = player.pos_x - player.radius*dx;
+	  particle[i].pos_y = player.pos_y - player.radius*dy;
+	  particle[i].vel_x = player.vel_x - dx*25 - dy * spread;
+	  particle[i].vel_y = player.vel_y - dy*25 + dx * spread;
+	  particle[i].dir   = player.dir;
+	  particle[i].radius= .1;
+	  break;
+	}
+      }
+    }
+
+
+  } else {
+    /* enemies continue to chase player position even if player is dead
+       - make it center of screen if player is dead */
+    player.pos_x = 0;
+    player.pos_y = 0;
+  }
+
+
+  /* enemy */
+  for (i=0; i<sizeof(enemy)/sizeof(Entity); i++) {
+    if (enemy[i].state) {
+      float x,y,dx,dy,a;
+      int j;
+
+      /* distance to player */
+      x = player.pos_x - enemy[i].pos_x;
+      y = player.pos_y - enemy[i].pos_y;
+      /* calculate signed angle to player */
+      a = enemy[i].dir + atan2(x,y) * 180/M_PI;
+      while (a > 180) a-=360;
+      while (a <-180) a+=360;
+      /* turn towards player */
+      if (a < -3) {
+	enemy[i].dir += 90 * game_tick;
+	while (enemy[i].dir > 180) enemy[i].dir -= 360;
+      }
+      if (a > 3) {
+	enemy[i].dir -= 90 * game_tick;
+	while (enemy[i].dir <-180) enemy[i].dir += 360;
+      }
+      /* unit direction vector */
+      dx = -sin(enemy[i].dir*(M_PI/180));
+      dy =  cos(enemy[i].dir*(M_PI/180));
+      /* accelerate if player is ahead */
+      if (fabs(a) < 10) {
+	enemy[i].vel_x += 20*dx * game_tick;
+	enemy[i].vel_y += 20*dy * game_tick;
+      }
+      /* move */
+      enemy[i].pos_x += enemy[i].vel_x * game_tick;
+      enemy[i].pos_y += enemy[i].vel_y * game_tick;
+      /* collision to border */
+      if (enemy[i].pos_x < -100) {
+	enemy[i].pos_x = -100;
+	enemy[i].vel_x = 0;
+      }
+      if (enemy[i].pos_x > 100) {
+	enemy[i].pos_x = 100;
+	enemy[i].vel_x = 0;
+      }
+      if (enemy[i].pos_y < -100) {
+	enemy[i].pos_y = -100;
+	enemy[i].vel_y = 0;
+      }
+      if (enemy[i].pos_y > 100) {
+	enemy[i].pos_y = 100;
+	enemy[i].vel_y = 0;
+      }
+      /* fire if player is alive and ahead */
+      if (player.state && (fabs(a) < 20) && (game_time - enemy[i].timer) > .6) {
+	for (j=0; j<sizeof(e_bullet)/sizeof(Entity); j++) {
+	  if (!e_bullet[j].state) {
+	    enemy[i].timer = game_time;
+	    e_bullet[j].state = 1;
+	    e_bullet[j].timer = game_time;
+	    e_bullet[j].pos_x = enemy[i].pos_x + enemy[i].radius*dx;
+	    e_bullet[j].pos_y = enemy[i].pos_y + enemy[i].radius*dy;
+	    e_bullet[j].vel_x = enemy[i].vel_x + dx*60;
+	    e_bullet[j].vel_y = enemy[i].vel_y + dy*60;
+	    e_bullet[j].dir   = enemy[i].dir;
+	    e_bullet[j].radius= .5;
+	    break;
+	  }
+	}
+      }
+    }
+  }
+
+
+  /* vortex */
+  for (i=0; i<sizeof(vortex)/sizeof(Entity); i++) {
+    if (vortex[i].state) {
+      int j;
+      /* kill this vortex, time is up */
+      if (vortex[i].timer < game_time) {
+	vortex[i].state = 0;
+	continue;
+      }
+      /* move */
+      vortex[i].dir   += 60  * game_tick;
+      vortex[i].pos_x += vortex[i].vel_x * game_tick;
+      vortex[i].pos_y += vortex[i].vel_y * game_tick;
+      /* collision to border */
+      if (vortex[i].pos_x < -100) {
+	vortex[i].pos_x = -200 - vortex[i].pos_x;
+	vortex[i].vel_x = -vortex[i].vel_x;
+      }
+      if (vortex[i].pos_x > 100) {
+	vortex[i].pos_x = 200 - vortex[i].pos_x;
+	vortex[i].vel_x = -vortex[i].vel_x;
+      }
+      if (vortex[i].pos_y < -100) {
+	vortex[i].pos_y = -200 - vortex[i].pos_y;
+	vortex[i].vel_y = -vortex[i].vel_y;
+      }
+      if (vortex[i].pos_y > 100) {
+	vortex[i].pos_y =  200 - vortex[i].pos_y;
+	vortex[i].vel_y = -vortex[i].vel_y;
+      }
+
+      /* shake player */
+      if (collision(&vortex[i], &player)) {
+	player.vel_x += (rnd()*500 - 250) * game_tick;
+	player.vel_y += (rnd()*500 - 250) * game_tick;
+	player.dir   += (rnd()*180 -  90) * game_tick;
+      }
+      /* shake enemy */
+      for (j=0; j<sizeof(enemy)/sizeof(Entity); j++) {
+	if (collision(&vortex[i], &enemy[j])) {
+	  enemy[j].vel_x += (rnd()*500 - 250) * game_tick;
+	  enemy[j].vel_y += (rnd()*500 - 250) * game_tick;
+	  enemy[i].dir   += (rnd()*180 -  90) * game_tick;
+	}
+      }
+
+    } else if (vortex_time < game_time) {
+      vortex_time = game_time + rnd()*10 + 5;
+      do {
+	vortex[i].pos_x  = 200*rnd()-100;
+	vortex[i].pos_y  = 200*rnd()-100;
+	vortex[i].radius = rnd()*10 + 10;
+      } while (collision(&vortex[i], &player));
+      vortex[i].state = 1;
+      vortex[i].timer = game_time + rnd()*15 + 5;
+      do vortex[i].vel_x = rnd()*30 - 15; while (fabs(vortex[i].vel_x) < 10);
+      do vortex[i].vel_y = rnd()*30 - 15; while (fabs(vortex[i].vel_y) < 10);
+      vortex[i].dir = 0;      
+    }
+  }
+
+
+  /* p_bullet */
+  for (i=0; i<sizeof(p_bullet)/sizeof(Entity); i++) {
+    if (p_bullet[i].state) {
+      int j;
+      /* move */
+      p_bullet[i].pos_x += p_bullet[i].vel_x * game_tick;
+      p_bullet[i].pos_y += p_bullet[i].vel_y * game_tick;
+      /* collision to border kills bullet */
+      if (p_bullet[i].pos_x < -115 ||
+	  p_bullet[i].pos_x >  115 ||
+	  p_bullet[i].pos_y < -115 ||
+	  p_bullet[i].pos_y >  115) {
+	p_bullet[i].state = 0;
+      }
+      /* collision to enemy. kills bullet and kills enemy */
+      /* and adds 100 to score */
+      for (j=0; j<sizeof(enemy)/sizeof(Entity); j++) {
+	if (collision(&p_bullet[i],&enemy[j])) {
+	  score += 100;
+	  if (score > highscore) highscore = score;
+	  p_bullet[i].state = 0;
+	  enemy[j].state = 0;
+	}
+      }
+      /* collision to vortex shakes bullet */
+      for (j=0; j<sizeof(vortex)/sizeof(Entity); j++) {
+	if (collision(&p_bullet[i], &vortex[j])) {
+	  p_bullet[i].vel_x += (rnd()*600 - 300) * game_tick;
+	  p_bullet[i].vel_y += (rnd()*600 - 300) * game_tick;
+	  p_bullet[i].dir = rnd()*360-180;
+	}
+      }
+    }
+  }
+
+  /* e_bullet */
+  for (i=0; i<sizeof(e_bullet)/sizeof(Entity); i++) {
+    if (e_bullet[i].state) {
+      int j;
+      /* move */
+      e_bullet[i].pos_x += e_bullet[i].vel_x * game_tick;
+      e_bullet[i].pos_y += e_bullet[i].vel_y * game_tick;
+      /* collision to border kills bullet */
+      if (e_bullet[i].pos_x < -115 ||
+	  e_bullet[i].pos_x >  115 ||
+	  e_bullet[i].pos_y < -115 ||
+	  e_bullet[i].pos_y >  115)
+	e_bullet[i].state = 0;
+      /* collision to player kills bullet and kills player */
+      if (collision(&e_bullet[i], &player)) {
+	e_bullet[i].state = 0;
+	player.state = 0;
+      }
+      /* collision to vortex shakes bullet */
+      for (j=0; j<sizeof(vortex)/sizeof(Entity); j++) {
+	if (collision(&p_bullet[i], &vortex[j])) {
+	  e_bullet[i].vel_x += (rnd()*600 - 300) * game_tick;
+	  e_bullet[i].vel_y += (rnd()*600 - 300) * game_tick;
+	  e_bullet[i].dir = rnd()*360-180;
+	}
+      }
+    }
+  }
+
+  /* particle */
+  for (i=0; i<sizeof(particle)/sizeof(Entity); i++) {
+    if (particle[i].state) {
+      /* time elapsed, kill particle */
+      if (particle[i].timer < game_time) {
+	particle[i].state = 0;
+	continue;
+      }
+      /* move */
+      particle[i].pos_x += particle[i].vel_x * game_tick;
+      particle[i].pos_y += particle[i].vel_y * game_tick;
+    }
+  }
+
+}
+
+void game_render()
+{
+  int i;
+
+  /* drawmode */
+  if (draw_fast) {
+    glDisable(GL_LINE_SMOOTH);
+    glDisable(GL_POINT_SMOOTH);
+    glDisable(GL_BLEND);
+  } else {
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  }
+
+
+  /* view */
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(-115,115,-115,115);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  /* clear background */
+  glClearColor(0,0,0,1);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  /* frame around image */
+  glBegin(GL_LINE_LOOP);
+  glColor3f(1,1,0);
+  glVertex2f(-110, 110);
+  glVertex2f( 110, 110);
+  glVertex2f( 110,-110);
+  glVertex2f(-110,-110);
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+  glColor3f(1,0,0);
+  glVertex2f(-105, 105);
+  glVertex2f( 105, 105);
+  glVertex2f( 105,-105);
+  glVertex2f(-105,-105);
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+  glColor3f(0,0,1);
+  glVertex2f(-100, 100);
+  glVertex2f( 100, 100);
+  glVertex2f( 100,-100);
+  glVertex2f(-100,-100);
+  glEnd();
+
+
+  /* player */
+  if (player.state) {
+    glPushMatrix();
+    glTranslatef(player.pos_x, player.pos_y, 0);
+    glRotatef(player.dir, 0,0,1);
+
+    glColor3f(.5,.5,1);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(-4,-4);
+    glVertex2f( 0, 5);
+    glVertex2f( 4,-4);
+    glEnd();
+    glColor3f(1,1,1);
+    glBegin(GL_LINE_STRIP);
+    glVertex2f(-2,-5);
+    glVertex2f(-4,-2);
+    glVertex2f(-2, 2);
+    glVertex2f( 2, 2);
+    glVertex2f( 4,-2);
+    glVertex2f( 2,-5);
+    glEnd();
+
+    glPopMatrix();
+  }
+
+  /* enemy */
+  for (i=0; i<sizeof(enemy)/sizeof(Entity); i++) {
+    if (enemy[i].state) {
+      glPushMatrix();
+      glTranslatef(enemy[i].pos_x, enemy[i].pos_y, 0);
+
+      glRotatef(enemy[i].dir, 0,0,1);
+
+      glColor3f(1,0,0);
+      glBegin(GL_LINE_STRIP);
+      glVertex2f(-3,-4);
+      glVertex2f(-5, 0);
+      glVertex2f( 0, 5);
+      glVertex2f( 5, 0);
+      glVertex2f( 3,-4);
+      glEnd();
+      glColor3f(1,1,0);
+      glBegin(GL_LINE_LOOP);
+      glVertex2f( 0, 5);
+      glVertex2f( 3,-4);
+      glVertex2f(-3,-4);
+      glEnd();
+
+      glPopMatrix();
+    }
+  }
+
+  /* vortex */
+  for (i=0; i<sizeof(vortex)/sizeof(Entity); i++) {
+    if (vortex[i].state) {
+      
+      glPushMatrix();
+      glTranslatef(vortex[i].pos_x, vortex[i].pos_y, 0);
+      glRotatef(vortex[i].dir, 0,0,1);
+
+      glBegin(GL_LINE_LOOP);
+      glColor3f(0,.5,1);
+      gCircle(vortex[i].radius,6);
+      glEnd();
+      glBegin(GL_LINE_LOOP);
+      glColor3f(0,0,1);
+      gCircle(vortex[i].radius*.7, 6);
+      glEnd();
+      glBegin(GL_LINE_LOOP);
+      glColor3f(0,0,.5);
+      gCircle(vortex[i].radius*.4, 6);
+      glEnd();
+
+      glPopMatrix();
+    }
+  }
+
+  /* p_bullet */
+  for (i=0; i<sizeof(p_bullet)/sizeof(Entity); i++) {
+    if (p_bullet[i].state) {
+      glPushMatrix();
+      glTranslatef(p_bullet[i].pos_x, p_bullet[i].pos_y, 0);
+      glRotatef(p_bullet[i].dir, 0,0,1);
+
+      glBegin(GL_LINES);
+      glColor3f(1,1,1);
+      glVertex2f(0, 1);
+      glVertex2f(0,-1);
+      glEnd();
+
+      glPopMatrix();
+    }
+  }
+
+  /* e_bullet */
+  for (i=0; i<sizeof(e_bullet)/sizeof(Entity); i++) {
+    if (e_bullet[i].state) {
+      glPushMatrix();
+      glTranslatef(e_bullet[i].pos_x, e_bullet[i].pos_y, 0);
+      glRotatef(e_bullet[i].dir, 0,0,1);
+
+      glBegin(GL_LINES);
+      glColor3f(1,1,0);
+      glVertex2f(0, 1);
+      glVertex2f(0,-1);
+      glEnd();
+
+      glPopMatrix();
+    }
+  }
+
+  /* particles */
+  glColor3f(.5,.7,1);
+  glBegin(GL_POINTS);
+  for (i=0; i<sizeof(particle)/sizeof(Entity); i++) {
+    if (particle[i].state)
+      glVertex2f(particle[i].pos_x, particle[i].pos_y);
+  }
+  glEnd();  
+
+  /* textual info */
+  if (fontbase) {
+    char s[200];
+    g_snprintf(s, sizeof(s), "wave %d score %d highscore %d", wave_cnt, score, highscore);
+    
+    glColor3f(.8,.8,.8);
+    glRasterPos2f(-90, 90);
+    glListBase(fontbase);
+    glCallLists(strlen(s), GL_UNSIGNED_BYTE, s);
+
+  }
+}
+
+
+
+/* --------------------------------------- */
+
+
+
+
+gint init(GtkWidget *widget)
+{
+  /* OpenGL functions can be called only if begingl returns true */
+  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+    GdkFont *font;
+
+    /* set viewport */
+    glViewport(0,0, widget->allocation.width, widget->allocation.height);
+
+    /* generate font display lists */
+    font = gdk_font_load("-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*");
+    if (font) {
+      fontbase = glGenLists( 128 );
+      gdk_gl_use_gdk_font(font, 0, 128, fontbase);
+      gdk_font_unref(font);
+    }
+
+
+    /* end opengl calls by calling endgl */
+    gtk_gl_area_endgl(GTK_GL_AREA(widget));
+  }
+  return TRUE;
+}
+
+
+/* When widget is exposed it's contents are redrawn. */
+gint draw(GtkWidget *widget, GdkEventExpose *event)
+{
+  /* Draw only last expose. */
+  if (event->count > 0) {
+    return TRUE;
+  }
+
+  /* OpenGL functions can be called only if gtk_gl_area_begingl
+     returns true, you can't call gl* functions anywhere except
+     inside gtk_gl_area_begingl()/gtk_gl_area_endgl() pairs.
+  */
+  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+
+    game_render();
+
+   /* Opengl rendering is done for now. */
+    gtk_gl_area_endgl(GTK_GL_AREA(widget));
+  }
+
+  /* Swap backbuffer to front */
+  gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
+  
+  return TRUE;
+}
+
+/* When glarea widget size changes, viewport size is set to match the new size */
+gint reshape(GtkWidget *widget, GdkEventConfigure *event)
+{
+  /* OpenGL functions can be called only if begingl returns true */
+  if (gtk_gl_area_begingl(GTK_GL_AREA(widget))) {
+
+    glViewport(0,0, widget->allocation.width, widget->allocation.height);
+    /* end opengl calls by calling endgl */
+    gtk_gl_area_endgl(GTK_GL_AREA(widget));
+  }
+  return TRUE;
+}
+
+
+gint key_press_event(GtkWidget *widget, GdkEventKey *event)
+{
+  switch (event->keyval) {
+  case GDK_Left:
+    control_spin = 1;
+    break;
+  case GDK_Right:
+    control_spin = -1;
+    break;
+  case GDK_Up:
+  case GDK_space:
+    control_fire = 1;
+    break;
+  case GDK_Down:
+    control_speed = 1;
+    break;
+  case GDK_r:
+    game_init();
+    break;
+  case GDK_q:
+    gtk_main_quit();
+    break;
+  case GDK_d:
+    draw_fast = (!draw_fast);
+    break;
+  }
+  /* prevent the default handler from being run */
+  gtk_signal_emit_stop_by_name(GTK_OBJECT(widget),"key_press_event");
+  return TRUE;
+}
+
+gint key_release_event(GtkWidget *widget, GdkEventKey *event)
+{
+  switch (event->keyval) {
+  case GDK_Left:
+    if (control_spin == 1) control_spin = 0;
+    break;
+  case GDK_Right:
+    if (control_spin == -1) control_spin = 0;
+    break;
+  case GDK_Up:
+  case GDK_space:
+    control_fire = 0;
+    break;
+  case GDK_Down:
+    control_speed = 0;
+    break;
+  }
+  /* prevent the default handler from being run */
+  gtk_signal_emit_stop_by_name(GTK_OBJECT(widget),"key_release_event");
+  return TRUE;
+}
+
+gint animate(GtkWidget *glarea)
+{
+  game_play();
+  gtk_widget_draw(GTK_WIDGET(glarea), NULL);
+  return TRUE;
+}
+
+
+int main(int argc, char **argv)
+{
+  GtkWidget *window,*vbox,*logo,*glarea;
+
+  /* Attribute list for gtkglarea widget. Specifies a
+     list of Boolean attributes and enum/integer
+     attribute/value pairs. The last attribute must be
+     GDK_GL_NONE. See glXChooseVisual manpage for further
+     explanation.
+  */
+  int attrlist[] = {
+    GDK_GL_RGBA,
+    GDK_GL_DOUBLEBUFFER,
+    GDK_GL_NONE
+  };
+
+  /* initialize gtk */
+  gtk_init(&argc, &argv);
+
+  /* Check if OpenGL (GLX extension) is supported. */
+  if (gdk_gl_query() == FALSE) {
+    g_print("OpenGL not supported\n");
+    return 0;
+  }
+
+  /* Create new top level window. */
+  window = gtk_window_new( GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title(GTK_WINDOW(window), "Zktor");
+
+  /* Quit form main if got delete event */
+  gtk_signal_connect(GTK_OBJECT(window), "delete_event",
+		     GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+
+
+  /* You should always delete gtk_gl_area widgets before exit or else
+     GLX contexts are left undeleted, this may cause problems (=core dump)
+     in some systems.
+     Destroy method of objects is not automatically called on exit.
+     You need to manually enable this feature. Do gtk_quit_add_destroy()
+     for all your top level windows unless you are certain that they get
+     destroy signal by other means.
+  */
+  gtk_quit_add_destroy(1, GTK_OBJECT(window));
+
+
+  vbox = GTK_WIDGET(gtk_vbox_new(FALSE, 0));
+  gtk_container_border_width(GTK_CONTAINER(vbox), 10);
+
+
+  logo = gtk_label_new("Zktor");
+
+ 
+  /* Create new OpenGL widget. */
+  glarea = GTK_WIDGET(gtk_gl_area_new(attrlist));
+  /* Events for widget must be set before X Window is created */
+  gtk_widget_set_events(GTK_WIDGET(glarea),
+			GDK_EXPOSURE_MASK|
+			GDK_KEY_PRESS_MASK|
+			GDK_KEY_RELEASE_MASK);
+  /* set minimum size */
+  /*  gtk_widget_set_usize(GTK_WIDGET(glarea), 200,200); */
+  /* set default size */
+  gtk_gl_area_size(GTK_GL_AREA(glarea), 640,400);
+
+  
+  /* Connect signal handlers */
+  /* Redraw image when exposed. */
+  gtk_signal_connect(GTK_OBJECT(glarea), "expose_event",
+		     GTK_SIGNAL_FUNC(draw), NULL);
+  /* When window is resized viewport needs to be resized also. */
+  gtk_signal_connect(GTK_OBJECT(glarea), "configure_event",
+		     GTK_SIGNAL_FUNC(reshape), NULL);
+  /* Do initialization when widget has been realized. */
+  gtk_signal_connect(GTK_OBJECT(glarea), "realize",
+		     GTK_SIGNAL_FUNC(init), NULL);
+  /* Capture keypress events */
+  gtk_signal_connect(GTK_OBJECT(glarea), "key_press_event",
+		     GTK_SIGNAL_FUNC(key_press_event), NULL);
+  gtk_signal_connect(GTK_OBJECT(glarea), "key_release_event",
+		     GTK_SIGNAL_FUNC(key_release_event), NULL);
+
+  /* construct widget hierarchy  */
+  gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(vbox));
+  gtk_box_pack_start(GTK_BOX(vbox),   logo, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), glarea,  TRUE,  TRUE, 0);
+
+
+
+  /* show all widgets */
+  gtk_widget_show(GTK_WIDGET(glarea));
+  gtk_widget_show(GTK_WIDGET(logo));
+  gtk_widget_show(GTK_WIDGET(vbox));
+  gtk_widget_show(window);
+
+  /* set focus to glarea widget */
+  GTK_WIDGET_SET_FLAGS(glarea, GTK_CAN_FOCUS);
+  gtk_widget_grab_focus(GTK_WIDGET(glarea));
+
+  /* animating */
+  gtk_idle_add((GtkFunction)animate, glarea);
+
+  game_init();
+  gtk_main();
+
+
+  return 0;
+}
