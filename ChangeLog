@@ -1,3 +1,7 @@
+Sun Jun 11 15:27:46 2000  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gtkglarea.c (gtk_gl_area_init): disable double buffering.
+
 Wed Apr 26 19:59:18 2000  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkgl/gdkgl-win32.c (gdk_gl_context_share_new): forgot to ref the shared contex

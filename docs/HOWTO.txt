@@ -29,6 +29,9 @@
 	/* create your widget */
 	widget = gtk_foobar_new();
 
+	/* disable backing store (only in GTK-1.4) */
+	gtk_widget_set_double_buffered(widget, FALSE);
+
 	/* restore old values */
 	gtk_widget_pop_visual();
 	gtk_widget_pop_colormap();

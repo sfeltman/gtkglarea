@@ -282,7 +282,7 @@ gint window_destroy(GtkWidget *widget)
 
 gint show_lwobject(char *lwobject_name)
 {
-  GtkWidget *window, *frame, *glarea;
+  GtkWidget *window, *glarea;
   mesh_info *info;
   lwObject *lwobject;
 
@@ -298,9 +298,6 @@ gint show_lwobject(char *lwobject_name)
   }
   lw_object_scale(lwobject, 10.0 / lw_object_radius(lwobject));
 
-
-  /* create aspect frame */
-  frame = gtk_aspect_frame_new(NULL, 0.5,0.5, VIEW_ASPECT, FALSE);
 
   /* create new OpenGL widget */
   glarea = gtk_gl_area_new_vargs(NULL, /* no sharing */
@@ -361,10 +358,9 @@ gint show_lwobject(char *lwobject_name)
 
 
   /* put glarea into window and show it all */
-  gtk_container_add(GTK_CONTAINER(window), frame);
-  gtk_container_add(GTK_CONTAINER(frame),glarea);
+  gtk_container_add(GTK_CONTAINER(window), glarea);
+
   gtk_widget_show(glarea);
-  gtk_widget_show(frame);
   gtk_widget_show(window);
 
   return TRUE;

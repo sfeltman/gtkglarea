@@ -515,22 +515,24 @@ void game_render()
   glClear(GL_COLOR_BUFFER_BIT);
 
   /* frame around image */
-  glBegin(GL_LINE_LOOP);
   glColor3f(1,1,0);
+  glBegin(GL_LINE_LOOP);
   glVertex2f(-110, 110);
   glVertex2f( 110, 110);
   glVertex2f( 110,-110);
   glVertex2f(-110,-110);
   glEnd();
-  glBegin(GL_LINE_LOOP);
+
   glColor3f(1,0,0);
+  glBegin(GL_LINE_LOOP);
   glVertex2f(-105, 105);
   glVertex2f( 105, 105);
   glVertex2f( 105,-105);
   glVertex2f(-105,-105);
   glEnd();
-  glBegin(GL_LINE_LOOP);
+
   glColor3f(0,0,1);
+  glBegin(GL_LINE_LOOP);
   glVertex2f(-100, 100);
   glVertex2f( 100, 100);
   glVertex2f( 100,-100);
@@ -550,6 +552,7 @@ void game_render()
     glVertex2f( 0, 5);
     glVertex2f( 4,-4);
     glEnd();
+
     glColor3f(1,1,1);
     glBegin(GL_LINE_STRIP);
     glVertex2f(-2,-5);
@@ -598,16 +601,18 @@ void game_render()
       glTranslatef(vortex[i].pos_x, vortex[i].pos_y, 0);
       glRotatef(vortex[i].dir, 0,0,1);
 
-      glBegin(GL_LINE_LOOP);
       glColor3f(0,.5,1);
+      glBegin(GL_LINE_LOOP);
       gCircle(vortex[i].radius,6);
       glEnd();
-      glBegin(GL_LINE_LOOP);
+
       glColor3f(0,0,1);
+      glBegin(GL_LINE_LOOP);
       gCircle(vortex[i].radius*.7, 6);
       glEnd();
-      glBegin(GL_LINE_LOOP);
+
       glColor3f(0,0,.5);
+      glBegin(GL_LINE_LOOP);
       gCircle(vortex[i].radius*.4, 6);
       glEnd();
 
@@ -622,8 +627,8 @@ void game_render()
       glTranslatef(p_bullet[i].pos_x, p_bullet[i].pos_y, 0);
       glRotatef(p_bullet[i].dir, 0,0,1);
 
-      glBegin(GL_LINES);
       glColor3f(1,1,1);
+      glBegin(GL_LINES);
       glVertex2f(0, 1);
       glVertex2f(0,-1);
       glEnd();
@@ -639,8 +644,8 @@ void game_render()
       glTranslatef(e_bullet[i].pos_x, e_bullet[i].pos_y, 0);
       glRotatef(e_bullet[i].dir, 0,0,1);
 
-      glBegin(GL_LINES);
       glColor3f(1,1,0);
+      glBegin(GL_LINES);
       glVertex2f(0, 1);
       glVertex2f(0,-1);
       glEnd();
@@ -656,7 +661,7 @@ void game_render()
     if (particle[i].state)
       glVertex2f(particle[i].pos_x, particle[i].pos_y);
   }
-  glEnd();  
+  glEnd();
 
   /* textual info */
   if (fontbase) {
@@ -684,7 +689,7 @@ gint switch_fullscreen(GtkWidget *gl_area)
 
   if (!fullscreenwidget)
     {
-      /* Grab keybaord and pointer so that user does not wander off the game
+      /* Grab keyboard and pointer so that user does not wander off the game
 	 window while in fullscreen mode.
       */
       if (gdk_keyboard_grab(gl_area->window, FALSE, GDK_CURRENT_TIME) == 0)

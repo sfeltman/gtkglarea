@@ -67,6 +67,7 @@ static void
 gtk_gl_area_init (GtkGLArea *gl_area)
 {
   gl_area->glcontext = NULL;
+  gtk_widget_set_double_buffered(GTK_WIDGET(gl_area), FALSE);
 }
 
 
