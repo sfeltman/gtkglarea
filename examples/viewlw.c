@@ -176,7 +176,7 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
   mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget), "mesh_info");
 
   if (event->is_hint) {
-    // fix this!
+    /* fix this! */
 #if !defined(WIN32)
     gdk_window_get_pointer(event->window, &x, &y, &state);
 #endif
