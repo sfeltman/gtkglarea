@@ -1,9 +1,13 @@
+Thu Apr 29 13:34:58 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gdkgl.c (gdk_gl_pixmap_new): buffer size test fixed.
+
 Sun Mar 28 22:06:44 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
-	* gtkgl/gtkglarea.c, gtkgl/gtkglarea.h
+	* gtkgl/gtkglarea.c, gtkgl/gtkglarea.h:
 	Added gtk_gl_area_swap_buffers, fixes spelling of gtk_gl_area_swapbuffers.
 
-	* docs/HOWTO.txt, docs/gtkglarea.txt
+	* docs/HOWTO.txt, docs/gtkglarea.txt:
 	Updated documentation
 
 Wed Feb 24 17:41:35 1999  Janne Löf  <jlof@mail.student.oulu.fi>

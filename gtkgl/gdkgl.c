@@ -219,7 +219,9 @@ GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
   g_return_val_if_fail(gdk_window_get_type(pixmap) == GDK_WINDOW_PIXMAP, NULL);
 
   gdk_window_get_geometry(pixmap, 0,0,0,0, &depth);
-  g_return_val_if_fail(gdk_gl_get_config(visual, GDK_GL_BUFFER_SIZE) == depth, NULL);
+  g_return_val_if_fail((gdk_gl_get_config(visual, GDK_GL_RED_SIZE) +
+			gdk_gl_get_config(visual, GDK_GL_GREEN_SIZE) +
+			gdk_gl_get_config(visual, GDK_GL_BLUE_SIZE)) == depth, NULL);
 
   dpy = GDK_DISPLAY();
 
