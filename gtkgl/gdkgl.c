@@ -44,12 +44,15 @@ static XVisualInfo *get_xvisualinfo(GdkVisual *visual)
 
   dpy = GDK_DISPLAY();
 
-  /* TODO: is this right way to get VisualInfo from Visual ?? */
-  /* AFAIK VisualID and depth should be enough to uniquely identify visual */
+  /* 'GLX uses VisualInfo records because they uniquely identify
+   * a (VisualID,screen,depth) tuple.'
+   */
   vinfo_template.visual   = GDK_VISUAL_XVISUAL(visual);
   vinfo_template.visualid = XVisualIDFromVisual(vinfo_template.visual);
   vinfo_template.depth    = visual->depth;
-  vi = XGetVisualInfo(dpy, VisualIDMask|VisualDepthMask, &vinfo_template, &nitems_return);
+  vinfo_template.screen   = DefaultScreen(dpy);
+  vi = XGetVisualInfo(dpy, VisualIDMask|VisualDepthMask|VisualScreenMask,
+		      &vinfo_template, &nitems_return);
 
   g_assert( vi!=0  && nitems_return==1 ); /* visualinfo needs to be unique */
 

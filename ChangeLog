@@ -1,3 +1,8 @@
+Tue Feb 29 19:25:03 2000  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gdkgl.c (get_xvisualinfo):
+	tuple VisualID,screen,depth should be used to identify visual
+
 Tue Feb 22 20:27:21 2000  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* : gkglarea-1.2.2 released
