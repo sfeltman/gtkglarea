@@ -1,0 +1,37 @@
+
+Here is Windows port of GtkGLArea, or at least a good start of it. It
+has been contributed by  Andrew Marriott <raytrace@lillee.cs.curtin.edu.au>,
+thank you Andrew.
+
+Warning: I haven't compiled any of it!! I tried to compile glib and
+gtk+ under cygwin (it is very nice unix'ish development envinronment,
+definetly a must if you have to use Windows) but I failed miserably.
+
+I might try again once ./configure works on Windows port of gtk+ !!
+
+
+- Originally this code was developed under Microsoft C.
+
+- Port uses X11 and GLX emulation code from glut by Nate Robins.
+
+- I don't like the way Windows and X11 specific portions are in
+  the same file, first task to do would be to separate Windows
+  specific code to it's own source files so that X11 code does
+  not need to be touched at all. (nuke #ifdef'ed X11 code from
+  files in win32 directory). Ideally only gdkgl.c needs to be
+  different.
+
+- Windows uses lazy evaluation, gl context is really created when
+  gdk_gl_make_current is called first time, for this reason attribute
+  list needs to be saved to GdkGLContextPrivate --> gtkglarea widget needs
+  to pass attrlist to gdk_gl_area_share_new, I have already put these
+  changes to main gtkglarea.
+
+- Not all gdk_gl_* functions are ported, just enough to use GtkGLArea
+  widget, gtk_gl_pixmap_* and gdk_gl_use_gdk_font functions are
+  X11 specific and unportable (prove me wrong by sending code!)
+
+
+
+--
+Janne
