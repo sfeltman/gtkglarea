@@ -163,7 +163,7 @@ GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelis
   return (GdkGLContext*)private;
 }
 
-GdkGLContext *gdk_gl_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
+GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
 {
   GdkVisual *visual = gdk_gl_choose_visual(attrlist);
   if (visual)

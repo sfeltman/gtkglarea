@@ -107,11 +107,6 @@ int main(int argc, char **argv)
     return 0;
   }
 
-  /* vendor dependent version info string */
-  info_str = gdk_gl_get_info();
-  g_print(info_str);
-  g_free(info_str);
-
 
   /* Create new top level window. */
   window = gtk_window_new( GTK_WINDOW_TOPLEVEL);
@@ -159,6 +154,11 @@ int main(int argc, char **argv)
   gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(glarea));
   gtk_widget_show(GTK_WIDGET(glarea));
   gtk_widget_show(GTK_WIDGET(window));
+
+  /* vendor dependent version info string */
+  info_str = gdk_gl_get_info();
+  g_print(info_str);
+  g_free(info_str);
 
   gtk_main();
 

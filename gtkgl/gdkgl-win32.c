@@ -1,5 +1,6 @@
 /* 
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
+ * Copyright (C) 2000 Marc Flerackers <mflerackers@androme.be>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -23,9 +24,8 @@
  #define WIN32
 #endif
 
-#include <GL/gl.h>
-
 #include "gdkgl.h"
+#include <GL/gl.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/win32/gdkwin32.h>
 
@@ -112,8 +112,6 @@ static void fill_pfd(PIXELFORMATDESCRIPTOR *pfd, int *attriblist)
   }
 }
 
-
-
 struct _GdkGLContextPrivate {
   gboolean  initialised;
   HGLRC     hglrc;
@@ -126,7 +124,6 @@ struct _GdkGLContextPrivate {
 
 typedef struct _GdkGLContextPrivate GdkGLContextPrivate;
 
-
 gint gdk_gl_query(void)
 {
   return TRUE;
@@ -134,31 +131,71 @@ gint gdk_gl_query(void)
 
 gchar *gdk_gl_get_info()
 {
-  return g_strdup_printf("gdk_gl_get_info() has not been implemented\n");
+  return g_strdup_printf("VENDOR     : %s\n"
+			 "VERSION    : %s\n"
+			 "EXTENSIONS : %s\n",
+			 glGetString ( GL_VENDOR ),
+			 glGetString ( GL_VERSION ),
+			 glGetString ( GL_EXTENSIONS ));
 }
 
 GdkVisual *gdk_gl_choose_visual(int *attrlist)
 {
-  g_warning("not implemented");
-  return NULL;
+  return gdk_visual_get_system ();
 }
 
 int gdk_gl_get_config(GdkVisual *visual, int attrib)
 {
-  g_warning("not implemented");
+  g_warning ( "not implemented" );
   return 0;
 }
 
 GdkGLContext *gdk_gl_context_new(GdkVisual *visual)
 {
-  g_warning("not implemented");
-  return NULL;
+  return gdk_gl_context_share_new ( visual, NULL, FALSE );
 }
 
 GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
 {
-  g_warning("not implemented");
-  return NULL;
+  GdkGLContextPrivate *private;
+
+  g_return_val_if_fail ( visual != NULL, NULL );
+
+  private = g_new ( GdkGLContextPrivate, 1 );
+  private->initialised = FALSE;
+  private->hglrc   = NULL;
+  private->hdc     = NULL;
+  private->hwnd    = NULL;
+  private->share = (GdkGLContextPrivate*)sharelist;
+
+  memset ( &(private->pfd), 0, sizeof(PIXELFORMATDESCRIPTOR) );
+
+  /* if direct is TRUE, we create a context which renders to the screen, otherwise
+     we create one to render to an offscreen bitmap */
+  if ( direct )
+  {
+    private->pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+    private->pfd.nVersion = 1;
+    private->pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
+    private->pfd.iPixelType = PFD_TYPE_RGBA;
+	private->pfd.cColorBits = 24;
+	private->pfd.cDepthBits = 32;
+	private->pfd.iLayerType = PFD_MAIN_PLANE;
+  } 
+  else
+  {
+    private->pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+    private->pfd.nVersion = 1;
+    private->pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_BITMAP | PFD_SUPPORT_GDI;
+    private->pfd.iPixelType = PFD_TYPE_RGBA;
+	private->pfd.cColorBits = 24;
+	private->pfd.cDepthBits = 32;
+	private->pfd.iLayerType = PFD_MAIN_PLANE;
+  }
+  
+  private->ref_count = 1;
+  
+  return (GdkGLContext*)private;
 }
 
 GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
@@ -183,70 +220,74 @@ GdkGLContext *gdk_gl_context_ref(GdkGLContext *context)
 {
   GdkGLContextPrivate *private = (GdkGLContextPrivate*)context;
 
-  g_return_val_if_fail(context != NULL, NULL);
+  g_return_val_if_fail ( context != NULL, NULL );
   private->ref_count += 1;
 
   return context;
 }
 
-
-
 void gdk_gl_context_unref(GdkGLContext *context)
 {
   GdkGLContextPrivate *private = (GdkGLContextPrivate*)context;
   
-  g_return_if_fail(context != NULL);
+  g_return_if_fail ( context != NULL );
   
-  if (private->ref_count > 1)
-    {
-      private->ref_count -= 1;
-    }
+  if ( private->ref_count > 1 )
+  {
+     private->ref_count -= 1;
+  }
   else
-    {
-      if (private->hglrc == wglGetCurrentContext())
-	wglMakeCurrent(NULL, NULL);
+  {
+    if ( private->hglrc == wglGetCurrentContext () )
+      wglMakeCurrent ( NULL, NULL );
 
-      wglDeleteContext(private->hglrc);
-      ReleaseDC(private->hwnd, private->hdc);
+    wglDeleteContext ( private->hglrc );
+	
+	if ( private->hwnd )
+      ReleaseDC ( private->hwnd, private->hdc );
+    else
+      DeleteDC ( private->hdc );
 
-      g_free(private);
-    }
+    g_free ( private );
+  }
 }
-
-
 
 gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 {
   GdkGLContextPrivate *private = (GdkGLContextPrivate*)context;
 
-  g_return_val_if_fail(drawable != NULL, FALSE);
-  g_return_val_if_fail(context  != NULL, FALSE);
+  g_return_val_if_fail ( drawable != NULL, FALSE );
+  g_return_val_if_fail ( context  != NULL, FALSE );
 
-  if(!private->initialised )
-    {
-      /* Here is where lazy evaluation takes place... */
-      int pf;
-      private->hglrc = (HWND)GDK_DRAWABLE_XID(drawable);
-      private->hdc   = GetDC(private->hglrc);
-      pf = ChoosePixelFormat(private->hdc, &private->pfd);
-      if (pf != 0)
+  if ( !private->initialised )
+  {
+    int pf;
+    HWND hwnd = (HWND)GDK_DRAWABLE_XID(drawable);
+
+    private->hdc = GetDC ( hwnd );
+
+    pf = ChoosePixelFormat ( private->hdc, &private->pfd );
+
+    if ( pf != 0 )
 	{
-	  SetPixelFormat(private->hdc, pf, &private->pfd);
-	  private->hglrc = wglCreateContext(private->hdc);
+	  SetPixelFormat ( private->hdc, pf, &private->pfd );
+	  private->hglrc = wglCreateContext ( private->hdc );
 	}
-      if (private->share)
+
+    if (private->share)
 	{
-	  if (private->share->hglrc)
-	    wglShareLists(private->share->hglrc, private->hglrc);
-	  gdk_gl_context_unref((GdkGLContext*)private->share);
+	  if ( private->share->hglrc )
+	    wglShareLists ( private->share->hglrc, private->hglrc );
+	  gdk_gl_context_unref ( (GdkGLContext*)private->share );
 	}
-      private->initialised = TRUE;
-    }
 
-  g_return_val_if_fail(private->hdc    != NULL, FALSE);
-  g_return_val_if_fail(private->hglrc  != NULL, FALSE);
+    private->initialised = TRUE;
+  }
 
-  wglMakeCurrent(private->hdc, private->hglrc);
+  g_return_val_if_fail ( private->hdc    != NULL, FALSE );
+  g_return_val_if_fail ( private->hglrc  != NULL, FALSE );
+
+  wglMakeCurrent ( private->hdc, private->hglrc );
   
   return TRUE;
 }
@@ -257,33 +298,137 @@ void gdk_gl_swap_buffers(GdkDrawable *drawable)
   HDC   hdc;
   HWND  hwnd;
 
-  g_return_if_fail(drawable != NULL);
+  g_return_if_fail ( drawable != NULL );
 
   hwnd = (HWND)GDK_DRAWABLE_XID(drawable);
-  hdc  = GetDC(hwnd);
-  if (hdc  == NULL)
-    {
-      g_warning("gdk_gl_swap_buffers: GetDC failed");
-      return;
-    }
-  SwapBuffers(hdc);
-  ReleaseDC(hwnd,hdc);
+  hdc  = GetDC ( hwnd );
+  if ( hdc  == NULL )
+  {
+     g_warning ( "gdk_gl_swap_buffers: GetDC failed" );
+     return;
+  }
+  SwapBuffers ( hdc );
+  ReleaseDC ( hwnd, hdc );
 }
 
 
 void gdk_gl_wait_gdk(void)
 {
+	GdiFlush ();
 }
 
 void gdk_gl_wait_gl (void)
 {
+	glFinish ();
 }
 
-/* pixmap routines not implemented */
+/* glpixmap stuff */
 
+struct _GdkGLPixmapPrivate {
+  gboolean  initialised;
+  HDC       hdc;
+  HBITMAP   hbitmap;
+  GdkPixmap *pixmap;
+  guint     ref_count;
+};
 
+typedef struct _GdkGLPixmapPrivate GdkGLPixmapPrivate;
+
+GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
+{
+  GdkGLPixmapPrivate *private;
+
+  private = g_new ( GdkGLPixmapPrivate, 1 );
+  private->initialised = FALSE;
+  private->hdc = NULL;
+  private->hbitmap = NULL;
+  private->pixmap = gdk_pixmap_ref ( pixmap );
+  private->ref_count = 1;
+
+  return (GdkGLPixmap*)private;
+}
+
+GdkGLPixmap *gdk_gl_pixmap_ref(GdkGLPixmap *glpixmap)
+{
+  GdkGLPixmapPrivate *private = (GdkGLPixmapPrivate*)glpixmap;
+
+  g_return_val_if_fail ( glpixmap != NULL, NULL );
+  private->ref_count += 1;
+
+  return glpixmap;
+}
+
+void gdk_gl_pixmap_unref(GdkGLPixmap *glpixmap)
+{
+  GdkGLPixmapPrivate *private = (GdkGLPixmapPrivate*)glpixmap;
+
+  g_return_if_fail ( glpixmap != NULL );
+
+  if ( private->ref_count > 1 )
+  {
+    private->ref_count -= 1;
+  }
+  else
+  {
+    glFinish ();
+	SelectObject ( private->hdc, private->hbitmap );
+    gdk_pixmap_unref ( private->pixmap );
+    memset ( glpixmap, 0, sizeof(GdkGLPixmapPrivate) );
+    g_free ( glpixmap );
+  }
+}
+
+gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
+{
+  GdkGLContextPrivate *private = (GdkGLContextPrivate*)context;
+  GdkGLPixmapPrivate *pixmap_private = (GdkGLPixmapPrivate*)glpixmap;
+
+  g_return_val_if_fail ( pixmap_private != NULL, FALSE );
+  g_return_val_if_fail ( context  != NULL, FALSE );
+
+  if ( !private->initialised )
+  {
+    int pf;
+
+    private->hdc = CreateCompatibleDC ( NULL );
+	pixmap_private->hdc = private->hdc;
+    pixmap_private->hbitmap = SelectObject ( private->hdc, (HBITMAP)GDK_DRAWABLE_XID (pixmap_private->pixmap) );
+
+    pf = ChoosePixelFormat ( private->hdc, &private->pfd );
+
+    if ( pf != 0 )
+	{
+	  SetPixelFormat ( private->hdc, pf, &private->pfd );
+	  private->hglrc = wglCreateContext ( private->hdc );
+	}
+
+    if (private->share)
+	{
+	  if ( private->share->hglrc )
+	    wglShareLists ( private->share->hglrc, private->hglrc );
+	  gdk_gl_context_unref ( (GdkGLContext*)private->share );
+	}
+
+    private->initialised = TRUE;
+  }
+
+  g_return_val_if_fail ( private->hdc    != NULL, FALSE );
+  g_return_val_if_fail ( private->hglrc  != NULL, FALSE );
+
+  wglMakeCurrent ( private->hdc, private->hglrc );
+  
+  return TRUE;
+}
+
+/* fonts */
 void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base)
 {
-  g_warning("not implemented");
+  HDC dc = CreateCompatibleDC ( NULL );
+  HFONT old_font = SelectObject ( dc, GDK_FONT_XFONT ( font ) );
+
+  wglUseFontBitmaps ( dc, first, count, list_base );
+
+  SelectObject ( dc, old_font );
+  DeleteDC ( dc );
 }
 

@@ -1,3 +1,8 @@
+Tue Apr 25 23:12:17 2000  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gdkgl-win32.c:
+	Applied gdkgl-win32.c patch from Marc Flerackers
+
 Tue Feb 29 19:25:03 2000  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkgl/gdkgl.c (get_xvisualinfo):

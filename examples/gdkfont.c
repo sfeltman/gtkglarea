@@ -91,6 +91,8 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
     glListBase(fontbase);
     glCallLists(strlen(fontname), GL_UNSIGNED_BYTE, fontname);
 
+    gdk_gl_wait_gl();
+
   }
   return TRUE;
 }
