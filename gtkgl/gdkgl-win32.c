@@ -18,12 +18,6 @@
  */
 
 
-#include <windows.h>
-
-#ifndef WIN32
- #define WIN32
-#endif
-
 #include "gdkgl.h"
 #include <GL/gl.h>
 #include <gdk/gdkprivate.h>

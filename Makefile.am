@@ -1,11 +1,10 @@
 ## top diretory
 
-SUBDIRS= gtkgl examples docs
+SUBDIRS= gtkgl examples docs build
 
 EXTRA_DIST=	\
 	gtkgl.m4 \
-	gtkglarea.spec.in \
-	makefile.cygwin
+	gtkglarea.spec.in
 
 m4datadir= $(datadir)/aclocal
 m4data_DATA= gtkgl.m4

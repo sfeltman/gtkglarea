@@ -20,7 +20,7 @@ GTKGL_LIBRARY_VERSION=5:0:1
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AC_SUBST(GTKGL_LIBRARY_VERSION)
-
+AC_SUBST(VERSION)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -119,4 +119,6 @@ AC_OUTPUT(Makefile
           gtkglarea.spec
           gtkgl/Makefile
           docs/Makefile
-          examples/Makefile)
+          examples/Makefile
+          build/Makefile
+          build/win32/Makefile)

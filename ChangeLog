@@ -1,3 +1,43 @@
+2000-07-21  Tor Lillqvist  <tml@iki.fi>
+
+	Improvements for Win32 build, make it use the current setup
+	used for GLib, GTK+, GIMP etc.
+
+	* include the "build" virtual module. With older CVS clients
+	you might need to reget gtkglarea. Or just do a cvs get build
+	in the top gtkglarea directory.
+
+	* makefile.cygwin: Remove. Instruct in README to build in gtkgl
+	and examples separately.
+
+	* README: Improve instructions for Win32 build.
+
+	* Makefile.am: Add the build subdirectory. Remove the
+	makefile.cygwin file.
+
+	* configure.in: Substiture also VERSION. Build also build/Makefile
+	and build/win32/Makefile.
+
+	* examples/makefile.cygwin: Remove.
+	* examples/makefile.mingw.in: New file. When building a distribution,
+	will produce makefile.mingw, with correct version number in the
+	library name.
+
+	* examples/Makefile.am: Corresponding changes.
+
+	* gtkgl/makefile.cygwin
+	* gtkgl/makefile.mingw.in
+	* gtkgl/Makefile.am: Ditto here.
+
+	* gtkgl/gdkgl-win32.c: Don't include <windows.h> here. No need to
+	define WIN32, I think.
+
+	* gtkgl/gdkgl.h: Include glib.h (for G_OS_WIN32). Remove cruft
+	definitions of STDCALL, CDECL, CALLBACK etc. Just include <windows.h>
+	always on Windows. Will need it for <GL/gl.h> anyway.
+
+	* gtkgl/gtkglarea.c: Conditionalise call to GTK+ 1.3.1 -only function.
+
 Sun Jun 11 15:27:46 2000  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkgl/gtkglarea.c (gtk_gl_area_init): disable double buffering.

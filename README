@@ -65,20 +65,29 @@ INSTALLATION
 WIN32
 -----
 
- There is now a working windows port. autoconfig is not used, but you probably
- don't want to use it anyway. It has only been tested with mingw32.
+ There is now a working windows port. autoconfig is not used, but you
+ probably don't want to use it anyway. Makefiles are supplied only for
+ gcc compilation (for mingw), sorry. But it shouldn't be hard to build
+ this with MSVC, either.
 
- You will of course need win32 gtk+ packages in addition to mingw32.
+ You will of course need win32 gtk+ packages, too:
 
-   glib-dev-19991218.zip
-   gtk+-dev-20000104.zip
-   extralibs-dev-19991218.zip
+   glib-dev-*.zip
+   gtk+-dev-*.zip
+
+ (insert latest timestamp in place of the *)
 
  you can get these from http://www.iki.fi/tml/gimp/win32/ installation
- instructions (README.win32) are long and complicated, but you can
- ingnore about half of them (I did).
+ instructions (README.win32) are not as long as they usedf to be
+ earlier.  It should be simpler now to get a correct gcc setup. You
+ will also want to have cygwin installed, for instance the DLLs are
+ built with a shell script.
 
- OpenlGL headers and (dev) libraries for mingw32 are also needed, grab
+ OpenlGL headers are also needed, either use those from the
+ PlatformSDK (freely downloadable from Microsoft, even if you have to
+ use a complex installer program, and it's hard to decide which of the
+ zillion optional parts you actually want to get these headers), or
+ grab
 
    Mingw32_OpenGL.zip
 
@@ -90,20 +99,32 @@ WIN32
 
  from http://www.cim.pe.u-tokyo.ac.jp/~kawachi/software/cygwin_glut-e.html
 
- Unzip these packages to some directory, then modify GTKDIR and OGLDIR
- in makefile.cygwin to point to correct directories. Now you should be all
- set to compile with
+ Unzip these packages to some directory.
 
-   make -f makefile.cygwin
+ Then modify the OPENGL definition in the build/win32/module.defs file
+ to point to the directory where you have the GL subdirectory with
+ OpenGL headers (gl.h, glaux.h and glu.h). Now you should be all set
+ to compile. Go to the gtkgl directory, and do:
 
- This should produce libgtkgl.a in gtkgl directory and two examples simple.exe
- and viewlw.exe in examples directory. Windows version of viewlw is a bit shaky
- but should show example *.lwo objects if their file names are given from
- command line. Other examples do not compile at this time. (Pixmaps and fonts are
- unsupported in win32).
+   make -f makefile.mingw
 
- Inner workings of win32 gtkglarea is quite different form glx version, therefore
- you should only use GtkGLArea widget (gtk_gl_*) functions, no gdk_gl_* functions.
+ This should produce gtkgl-<VERSION>.dll and libgtkgl-<VERSION>.a, and
+ perhaps gtkgl-<VERSION>.lib, where <VERSION> will be replaced by the
+ version number of GtkGLArea. Move the dll to some directory in your
+ PATH, or keep a copy of it in the same directory as the executable
+ that will use it. The .lib file (import library for MSVC) is produced
+ only if you have the Microsoft linker, link, available.
+
+ Then go to the examples directory, and do a make there, too. This
+ should produce three examples: simple.exe, viewlw.exe and
+ zktor.exe. The Windows version of viewlw is a bit shaky but should
+ show the sample *.lwo objects if their file names are given on the
+ command line. The other examples do not compile at this
+ time. (Pixmaps and fonts are unsupported in win32).
+
+ Inner workings of win32 gtkglarea is quite different form glx
+ version, therefore you should only use GtkGLArea widget (gtk_gl_*)
+ functions, no gdk_gl_* functions.
 
 
 DOCUMENTATION
