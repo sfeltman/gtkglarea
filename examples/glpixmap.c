@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   /* top level window. */
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "glpixmap");
-  gtk_container_border_width(GTK_CONTAINER(window), 10);
+  gtk_container_set_border_width(GTK_CONTAINER(window), 10);
   gtk_signal_connect(GTK_OBJECT(window), "delete_event",
 		     GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
   gtk_widget_set_usize(window, 100,100);

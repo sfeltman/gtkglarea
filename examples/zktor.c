@@ -883,7 +883,7 @@ int main(int argc, char **argv)
 
 
   vbox = GTK_WIDGET(gtk_vbox_new(FALSE, 0));
-  gtk_container_border_width(GTK_CONTAINER(vbox), 10);
+  gtk_container_set_border_width(GTK_CONTAINER(vbox), 10);
 
 
   logo = gtk_label_new("Zktor");

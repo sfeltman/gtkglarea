@@ -1,3 +1,12 @@
+Wed Feb 24 13:49:34 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* Makefile.am, configure.in, gtkglarea.spec.in:
+	Generate RPM spec file automatically.
+
+	* examples/gdkfont.c, examples/glpixmap.c, examples/simple.c:
+	* examples/viewlw.c, examples/zktor.c:
+	Changed gtk_container_border_width() to gtk_container_set_border_width().
+	
 Sat Feb 20 03:47:36 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* gtkglarea.spec: RPM spec file, contributed by Ray Glendenning

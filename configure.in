@@ -116,6 +116,7 @@ dnl Checks for library functions.
 
 
 AC_OUTPUT(Makefile
+          gtkglarea.spec
           gtkgl/Makefile
           docs/Makefile
           examples/Makefile)

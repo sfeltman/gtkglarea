@@ -342,7 +342,7 @@ gint show_lwobject(char *lwobject_name)
   /* create new top level window */
   window = gtk_window_new( GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), lwobject_name);
-  gtk_container_border_width(GTK_CONTAINER(window), 10);
+  gtk_container_set_border_width(GTK_CONTAINER(window), 10);
   create_popup_menu(window); /* add popup menu to window */
   gtk_signal_connect (GTK_OBJECT(window), "destroy",
 		      GTK_SIGNAL_FUNC(window_destroy), NULL);

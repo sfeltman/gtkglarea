@@ -135,7 +135,7 @@ int main(int argc, char **argv)
   /* Create new top level window. */
   window = gtk_window_new( GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "gdkfont");
-  gtk_container_border_width(GTK_CONTAINER(window), 10);
+  gtk_container_set_border_width(GTK_CONTAINER(window), 10);
 
   /* Quit form main if got delete event */
   gtk_signal_connect(GTK_OBJECT(window), "delete_event",
