@@ -23,6 +23,6 @@ mkinstalldirs
 stamp-h
 stamp-h.in
 gtkglarea.spec
-
+gtkgl-2.0.pc
 HISTORY
 *.tar.gz

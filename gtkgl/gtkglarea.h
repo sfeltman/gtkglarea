@@ -29,11 +29,13 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define GTK_TYPE_GL_AREA          (gtk_gl_area_get_type())
-#define GTK_GL_AREA(obj)          (GTK_CHECK_CAST ((obj), GTK_TYPE_GL_AREA, GtkGLArea))
-#define GTK_GL_AREA_CLASS(klass)  (GTK_CHECK_CLASS_CAST (klass, GTK_TYPE_GL_AREA, GtkGLAreaClass))
-#define GTK_IS_GL_AREA(obj)       (GTK_CHECK_TYPE ((obj), GTK_TYPE_GL_AREA))
-#define GTK_IS_GL_AREA_CLASS      (GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_GL_AREA))
+#define GTK_TYPE_GL_AREA            (gtk_gl_area_get_type())
+#define GTK_GL_AREA(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_GL_AREA, GtkGLArea))
+#define GTK_GL_AREA_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GTK_TYPE_GL_AREA, GtkGLAreaClass))
+#define GTK_IS_GL_AREA(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_GL_AREA))
+#define GTK_IS_GL_AREA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_GL_AREA))
+#define GTK_GL_AREA_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_GL_AREA, GtkGLArea))
+
 
 typedef struct _GtkGLArea       GtkGLArea;
 typedef struct _GtkGLAreaClass  GtkGLAreaClass;

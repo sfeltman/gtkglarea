@@ -19,7 +19,6 @@
 #include "gdkgl.h"
 #include "gtkglarea.h"
 #include <GL/gl.h>
-#include <gtk/gtkfeatures.h>
 #include <stdarg.h>
 
 static void gtk_gl_area_class_init    (GtkGLAreaClass *klass);
@@ -32,24 +31,28 @@ static GtkDrawingAreaClass *parent_class = NULL;
 GtkType
 gtk_gl_area_get_type ()
 {
-  static GtkType gl_area_type = 0;
-  
-  if (!gl_area_type)
+  static GType object_type = 0;
+
+  if (!object_type)
     {
-      GtkTypeInfo gl_area_info =
+      static const GTypeInfo object_info =
       {
-	(gchar*)"GtkGLArea",
-	sizeof (GtkGLArea),
-	sizeof (GtkGLAreaClass),
-	(GtkClassInitFunc) gtk_gl_area_class_init,
-	(GtkObjectInitFunc) gtk_gl_area_init,
-	/* reserved_1 */ NULL,
-	/* reserved_2 */ NULL,
-	(GtkClassInitFunc) NULL
+        sizeof (GtkGLAreaClass),
+        (GBaseInitFunc) NULL,
+        (GBaseFinalizeFunc) NULL,
+        (GClassInitFunc) gtk_gl_area_class_init,
+        NULL,           /* class_finalize */
+        NULL,           /* class_data */
+        sizeof (GtkGLArea),
+        0,              /* n_preallocs */
+        (GInstanceInitFunc) gtk_gl_area_init,
       };
-      gl_area_type = gtk_type_unique (gtk_drawing_area_get_type (), &gl_area_info);
-  }
-  return gl_area_type;
+      
+      object_type = g_type_register_static (GTK_TYPE_DRAWING_AREA,
+                                            "GtkGLArea",
+                                            &object_info, 0);
+    }
+  return object_type;
 }
 
 static void
@@ -68,9 +71,7 @@ static void
 gtk_gl_area_init (GtkGLArea *gl_area)
 {
   gl_area->glcontext = NULL;
-#if GTK_CHECK_VERSION (1, 3, 1)
   gtk_widget_set_double_buffered(GTK_WIDGET(gl_area), FALSE);
-#endif
 }
 
 

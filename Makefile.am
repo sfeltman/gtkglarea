@@ -2,12 +2,11 @@
 
 SUBDIRS= gtkgl examples docs build
 
-EXTRA_DIST=	\
-	gtkgl.m4 \
-	gtkglarea.spec.in
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gtkgl-2.0.pc
 
-m4datadir= $(datadir)/aclocal
-m4data_DATA= gtkgl.m4
+EXTRA_DIST = \
+  gtkgl-2.0.pc.in \
+  gtkglarea.spec.in \
+  gtkglarea.spec
 
-dist-hook:
-	cp gtkglarea.spec $(distdir)
