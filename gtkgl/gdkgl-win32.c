@@ -20,8 +20,7 @@
 
 #include "gdkgl.h"
 #include <GL/gl.h>
-#include <gdk/gdkprivate.h>
-#include <gdk/win32/gdkwin32.h>
+#include <gdk/gdkwin32.h>
 
 static void fill_pfd(PIXELFORMATDESCRIPTOR *pfd, int *attriblist)
 {
@@ -257,7 +256,7 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
   if ( !private->initialised )
   {
     int pf;
-    HWND hwnd = (HWND)GDK_DRAWABLE_XID(drawable);
+    HWND hwnd = (HWND) gdk_win32_drawable_get_handle ( drawable );
 
     private->hdc = GetDC ( hwnd );
 
@@ -295,7 +294,7 @@ void gdk_gl_swap_buffers(GdkDrawable *drawable)
 
   g_return_if_fail ( drawable != NULL );
 
-  hwnd = (HWND)GDK_DRAWABLE_XID(drawable);
+  hwnd = (HWND) gdk_win32_drawable_get_handle ( drawable );
   hdc  = GetDC ( hwnd );
   if ( hdc  == NULL )
   {
@@ -387,7 +386,7 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 
     private->hdc = CreateCompatibleDC ( NULL );
 	pixmap_private->hdc = private->hdc;
-    pixmap_private->hbitmap = SelectObject ( private->hdc, (HBITMAP)GDK_DRAWABLE_XID (pixmap_private->pixmap) );
+    pixmap_private->hbitmap = SelectObject ( private->hdc, (HBITMAP) gdk_win32_drawable_get_handle ( pixmap_private->pixmap ) );
 
     pf = ChoosePixelFormat ( private->hdc, &private->pfd );
 
@@ -419,7 +418,7 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base)
 {
   HDC dc = CreateCompatibleDC ( NULL );
-  HFONT old_font = SelectObject ( dc, GDK_FONT_XFONT ( font ) );
+  HFONT old_font = SelectObject ( dc, gdk_font_id ( font ) );
 
   wglUseFontBitmaps ( dc, first, count, list_base );
 

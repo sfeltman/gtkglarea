@@ -1,3 +1,25 @@
+2002-03-15  Tor Lillqvist  <tml@iki.fi>
+
+	Updates for Win32, (autoconfiscated) build. Examples seem to work OK.
+
+	* configure.in: Set and substitute LT_CURRENT_MINUS_AGE like GLib
+	et al. Use AC_LIBTOOL_WIN32_DLL. Check for Win32. Check for MS
+	lib.exe. Use -lglu32 and -lopengl32.
+
+	* gtkgl/gtkgl.def: New file.
+
+	* gtkgl/Makefile.am: Use -no-undefined and -export-symbols.  Use
+	either gdkgl.c or gdkgl-win32.c. Generate MSVC import
+	library. Install gcc and MSVC import libraries.
+
+	* gtkgl/gdkgl-win32.c: Update for GTK+ 2.0.
+
+	* examples/glpixmap.c
+	* examples/gtkglarea_demo.c: Include <windows.h> on Win32.
+
+	* gtkgl/makefile.mingw.in
+	* examples/makefile.mingw.in: Mark as obsolete.
+
 2002-03-14  James Henstridge  <james@daa.com.au>
 
 	* gtkgl/gtkglarea.c (gtk_gl_area_size): remove deprecated function

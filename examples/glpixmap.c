@@ -17,8 +17,13 @@
  */
 
 
+#include <glib.h>		/* For G_OS_WIN32 */
+
 #include <math.h>
 #include <gtk/gtk.h>
+#ifdef G_OS_WIN32
+#include <windows.h>
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 

@@ -36,6 +36,12 @@
  *
  ************/
 
+#include <glib.h>		/* For G_OS_WIN32 */
+
+#ifdef G_OS_WIN32
+#include <windows.h>
+#endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <gtk/gtk.h>

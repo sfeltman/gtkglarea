@@ -1,3 +1,7 @@
+##
+## Obsolete. Use autoconfiscation.
+##
+
 TOP = ../..
 
 include ../build/win32/make.mingw

@@ -17,17 +17,39 @@ GTKGL_LIBRARY_VERSION=1:0:0
 #              |           set to zero if current is incremented
 #              +- increment if interfaces have been added, removed or changed
 # 
+# Value of current - age. Used by libtool in Win32 DLL names. We need
+# to know the DLL name to build MSVC import libraries.
+LT_CURRENT_MINUS_AGE=1
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AC_SUBST(GTKGL_LIBRARY_VERSION)
+AC_SUBST(LT_CURRENT_MINUS_AGE)
 AC_SUBST(VERSION)
 
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
+AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 AM_SANITY_CHECK
 AM_MAINTAINER_MODE
+
+AC_MSG_CHECKING([for Win32])
+case "$host" in
+  *-*-mingw*)
+    atk_native_win32=yes
+    ;;
+  *)
+    atk_native_win32=no
+    ;;
+esac
+AC_MSG_RESULT([$atk_native_win32])
+AM_CONDITIONAL(OS_WIN32, test "$atk_native_win32" = "yes")
+
+if test "$atk_native_win32" = "yes"; then
+  AC_CHECK_PROG(ms_librarian, lib.exe, yes, no)
+fi
+AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 
 dnl Check for GTK libraries
 AM_PATH_GTK_2_0(2.0.0)
@@ -36,6 +58,7 @@ dnl Check for GL/MesaGL libraries
 AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])
 AC_ARG_WITH(lib-GL,     [  --with-lib-GL           use '-lGL'])
 AC_ARG_WITH(lib-MesaGL, [  --with-lib-MesaGL       use '-lMesaGL'])
+AC_ARG_WITH(lib-opengl32,[ --with-lib-opengl32     use '-lopengl32'])
 
 if test "x$with_GL_prefix" = "x" ; then
  GL_LDOPTS=""
@@ -49,7 +72,14 @@ saved_LIBS="$LIBS"
 
 AC_MSG_CHECKING([OpenGL])
 LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL"
-AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, have_GL=no)
+AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, 
+  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lopengl32"
+  [AC_TRY_LINK([ #include <windows.h>
+                 #include <GL/gl.h>], 
+               [ glBegin(GL_TRIANGLES); ], 
+    [have_opengl32=yes
+     have_GL=yes],
+    have_GL=no)])
 AC_MSG_RESULT($have_GL)
 
 AC_MSG_CHECKING([Mesa])
@@ -85,9 +115,19 @@ elif test "x$with_lib_MesaGL" = "xyes"; then
   AC_MSG_ERROR([Missing MesaGL library])
  fi
 
+elif test "x$with_lib_opengl32" = "xyes"; then
+
+ if test "x$have_opengl32" = "xyes"; then
+  GL_LIBS="$GL_LDOPTS -lglu32 -lopengl32"
+ else
+  AC_MSG_ERROR([Missing OpenGL32 library])
+ fi
+
 else
 
- if test "x$have_GL" = "xyes"; then
+ if test "x$have_opengl32" = "xyes"; then
+  GL_LIBS="$GL_LDOPTS -lglu32 -lopengl32"
+ elif test "x$have_GL" = "xyes"; then
   GL_LIBS="$GL_LDOPTS -lGLU -lGL"
  elif test "x$have_MesaGL" = "xyes"; then
   GL_LIBS="$GL_LDOPTS -lMesaGLU -lMesaGL"
