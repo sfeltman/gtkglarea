@@ -25,9 +25,7 @@
 #include <gtk/gtkdrawingarea.h>
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 #define GTK_TYPE_GL_AREA            (gtk_gl_area_get_type())
 #define GTK_GL_AREA(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_GL_AREA, GtkGLArea))
@@ -52,7 +50,7 @@ struct _GtkGLAreaClass
   GtkDrawingAreaClass parent_class;
 };
 
-GtkType    gtk_gl_area_get_type   (void);
+GType      gtk_gl_area_get_type   (void);
 GtkWidget* gtk_gl_area_new        (int       *attrList);
 GtkWidget* gtk_gl_area_share_new  (int       *attrList,
                                    GtkGLArea *share);
@@ -80,9 +78,6 @@ void       gtk_gl_area_swap_buffers(GtkGLArea *glarea);
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+G_END_DECLS
 
 #endif /* __GTK_GL_AREA_H__ */

@@ -28,8 +28,8 @@ static void gtk_gl_area_destroy       (GtkObject      *object); /* change to fin
 static GtkDrawingAreaClass *parent_class = NULL;
 
 
-GtkType
-gtk_gl_area_get_type ()
+GType
+gtk_gl_area_get_type (void)
 {
   static GType object_type = 0;
 
@@ -60,7 +60,7 @@ gtk_gl_area_class_init (GtkGLAreaClass *klass)
 {
   GtkObjectClass *object_class;
 
-  parent_class = gtk_type_class(gtk_drawing_area_get_type());
+  parent_class = g_type_class_peek_parent(klass);
   object_class = (GtkObjectClass*) klass;
   
   object_class->destroy = gtk_gl_area_destroy;
@@ -135,7 +135,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   gtk_widget_push_colormap(gdk_colormap_new(visual,TRUE));
   gtk_widget_push_visual(visual);
   
-  gl_area = gtk_type_new (gtk_gl_area_get_type());
+  gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
   gl_area->glcontext = glcontext;
 
   /* pop back defaults */
@@ -153,7 +153,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   if (glcontext == NULL)
     return NULL;
 
-  gl_area = gtk_type_new (gtk_gl_area_get_type());
+  gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
   gl_area->glcontext = glcontext;
 
 #endif
@@ -171,7 +171,10 @@ gtk_gl_area_destroy(GtkObject *object)
   g_return_if_fail (GTK_IS_GL_AREA(object));
   
   gl_area = GTK_GL_AREA(object);
-  gdk_gl_context_unref(gl_area->glcontext);
+
+  if (gl_area->glcontext)
+    g_object_unref(gl_area->glcontext);
+  gl_area->glcontext = NULL;
 
   if (GTK_OBJECT_CLASS (parent_class)->destroy)
     (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
