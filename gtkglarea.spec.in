@@ -7,7 +7,7 @@ Summary: GtkGLArea OpenGL widget for GTK+
 Name: gtkglarea
 Version: %ver
 Release: %rel
-Copyright: GPL
+Copyright: LGPL
 Packager: Ray Glendenning <ray.glendenning@hackery.demon.co.uk>
 Group: X11/Libraries
 Source:  http://www.student.oulu.fi/~jlof/gtkglarea/download/gtkglarea-%{version}.tar.gz

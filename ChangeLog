@@ -1,3 +1,7 @@
+Wed Feb 24 14:13:41 1999  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkglarea.spec.in: Copyright is LGPL not GPL
+
 Wed Feb 24 13:49:34 1999  Janne Löf  <jlof@mail.student.oulu.fi>
 
 	* Makefile.am, configure.in, gtkglarea.spec.in:
