@@ -180,7 +180,12 @@ void gtk_gl_area_endgl(GtkGLArea *gl_area)
   glFlush();
 }
 
+/* deprecated, use gtk_gl_area_swap_buffers */
 void gtk_gl_area_swapbuffers(GtkGLArea *gl_area)
+{
+  gtk_gl_area_swap_buffers(gl_area);
+}
+void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
 {
   g_return_if_fail(gl_area != NULL);
   g_return_if_fail(GTK_IS_GL_AREA(gl_area));

@@ -1,10 +1,23 @@
 
 
+1. Help, ./configure does not find Mesa, I do have Mesa libaries installed.
 
-1. How do I make any widget opengl widget?
+	- Mesa may need additional libraries to link with, depending on what
+	  options were used while compiling Mesa libraries. Currently configure tries
+	  to link Mesa with whatever libraries GTK needs and if this fails it tries
+	  Mesa+needed by GTK+pthreads libraries. Try passing extra libraries to
+	  ./configure in LIBS envinronment variable.
 
-	Your widget needs OpenGL capable visual and
-	you also need to set colormap for it.
+	- configure scripts are still a bit flaky, patches are gratefully accepted.
+
+
+
+
+2. How do I make any widget opengl widget?
+
+	Your widget needs OpenGL capable visual and you also
+	need to set colormap for it. Widget must also have
+	X window (not all widgets have it).
 
 	/* get visual using gdk_gl_choose_visual */
 	visual = gdk_gl_choose_visual(visual_attributes);
@@ -22,7 +35,8 @@
 
 
 
-2. How do I render to such widget?
+
+3. How do I render to such widget?
 
 	Create gl context and connect it to widgets GdkDrawable.
 
@@ -36,19 +50,24 @@
 
 
 
-3. How do I render to off screen pixmap?
+
+4. How do I render to off screen pixmap?
 
 	See examples/glpixmap.c, remember that pixmaps can not be rendered to with
 	direct context.
 
 
-4. Can I use gdk_gl functions and GtkGLArea widget in the same program?
 
-	Yes, just remember that gtk_gl_area_make_current makes internal context of GtkGLArea
-	widget current context (and leaves it so).
+5. Can I use gdk_gl functions and GtkGLArea widget in the same program?
+
+	Yes, just remember that gtk_gl_area_make_current makes internal context of
+	GtkGLArea widget current context (and leaves it so).
 
 
-5. I can't capture keypress events for GtkGLArea widget, why?
+
+6. How do I capture keypress events for GtkGLArea widget?
+
+	This is not a GtkGLArea specific question, but here is the answer anyway,
 
 	- You forgot to set event mask:
 		 gtk_widget_set_events(glarea, GDK_KEY_PRESS_MASK);
@@ -57,10 +76,16 @@
 		GTK_WIDGET_SET_FLAGS(glarea, GTK_CAN_FOCUS);
 		gtk_widget_grab_focus(GTK_WIDGET(glarea));
 
-	- Both of the above
+	-  keypresses/releases have default handlers, you may need to prevent
+	   them from running:
+		/* do this in your signal keypress handler and return TRUE from handler */
+		gtk_signal_emit_stop_by_name(GTK_OBJECT(glarea),"key_press_event");
+		
 
 
-6. I noticed that gtk_gl_area_begingl() and gtk_gl_area_endgl() are deprecated?
+
+7. I noticed that gtk_gl_area_begingl(), gtk_gl_area_endgl(), and gtk_gl_area_swapbuffers()
+   are deprecated?
 
 	- they are still there, but you should use gtk_gl_area_make_current() instead
 	  then you can avoid calling matching gtk_gl_area_endgl().
@@ -69,20 +94,15 @@
 	  no longer necessary and gtk_gl_area_begingl() just makes widgets context
 	  current.
 
+	- gtk_gl_area_swapbuffers() just fixes minor spelling error.
+
+	- old versions wont go away.
+
 	- to convert your code you can replace them with following functions.
 
-	   gtk_gl_area_begingl() =>  gtk_gl_area_make_current()
-	   gtk_gl_area_endgl()   =>  glFlush() or nothing
+	   gtk_gl_area_begingl()     =>  gtk_gl_area_make_current()
+	   gtk_gl_area_endgl()       =>  glFlush() or nothing
+	   gtk_gl_area_swapbuffers() =>  gtk_gl_area_swap_buffers()
 
 
-
-7. Help, ./configure does not find Mesa, I do have Mesa libaries installed.
-
-	- Mesa may need additional libraries to link with, depending on what
-	  options were used while compiling Mesa libraries. Currently configure tries
-	  to link Mesa with whatever libraries GTK needs and if this fails it tries
-	  Mesa+needed by GTK+pthreads libraries. Try passing extra libraries to
-	  ./configure in LIBS envinronment variable.
-
-	- configure scripts are still a bit flaky, patches are gratefully accepted.
 

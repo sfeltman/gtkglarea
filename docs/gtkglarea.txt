@@ -76,6 +76,7 @@ DESCRIPTION
 ---------------------------------------------------------
 
 C SPECIFICATION
+void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
 void gtk_gl_area_swapbuffers(GtkGLArea *gl_area)
 
 PARAMETERS
@@ -84,7 +85,9 @@ gl_area
 	Specifies a GtkGLArea widget.
 
 DESCRIPTION
-	Wrapper around gdk_gl_swapbuffers. Promotes contents of back buffer
+	*** gtk_gl_area_swapbuffers is deprecated (wrong spelling), use
+	gtk_gl_area_swap_buffers ***
+	Wrapper around gdk_gl_swap_buffers. Promotes contents of back buffer
 	of widget to front buffer. The contents of front buffer become
 	undefined.
 
