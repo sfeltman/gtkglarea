@@ -50,9 +50,9 @@ extern "C" {
 
 /*
  * These definitions are duplicated from GL/glx.h that comes with Mesa.
- * I don't want every program to include GL/glx.h, that might  become
- * problem if GtkGLArea is ever ported to non X environments like
- * (horror!) Windows.
+ * I don't want every program to include GL/glx.h because GtkGLArea
+ * supports lecacy systems like Windows. You can still use GLX_xxxx
+ * attributes with these, but then you lose portability.
  */
 enum _GDK_GL_CONFIGS {
         GDK_GL_NONE             = 0,
@@ -89,6 +89,7 @@ typedef struct _GdkGLContext GdkGLContext;
 
 
 gint          gdk_gl_query(void);
+gchar        *gdk_gl_get_info(void);
 
 GdkVisual    *gdk_gl_choose_visual(int *attrlist);
 int           gdk_gl_get_config(GdkVisual *visual, int attrib);

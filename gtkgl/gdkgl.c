@@ -18,7 +18,18 @@
 
 
 #include "gdkgl.h"
+
+/* support for gtk+1.2 should be removed once gtk+1.4 is released */
+#include <gtk/gtkfeatures.h>
+#if GTK_MAJOR_VERSION == 1 && GTK_MINOR_VERSION == 2
 #include <gdk/gdkx.h>
+#define GDK_DRAWABLE_XID GDK_WINDOW_XWINDOW
+
+#else
+#include <gdk/x11/gdkx.h>
+#endif
+
+
 #include <GL/gl.h>
 #include <GL/glx.h>
 #include <string.h>
@@ -60,6 +71,18 @@ gint gdk_gl_query(void)
 {
   return (glXQueryExtension(GDK_DISPLAY(),NULL,NULL) == True) ? TRUE : FALSE;
 }
+
+
+gchar *gdk_gl_get_info()
+{
+  return g_strdup_printf("VENDOR     : %s\n"
+			 "VERSION    : %s\n"
+			 "EXTENSIONS : %s\n",
+			 glXGetClientString(GDK_DISPLAY(), GLX_VENDOR),
+			 glXGetClientString(GDK_DISPLAY(), GLX_VERSION),
+			 glXGetClientString(GDK_DISPLAY(), GLX_EXTENSIONS));
+}
+
 
 GdkVisual *gdk_gl_choose_visual(int *attrlist)
 {
@@ -233,31 +256,34 @@ GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
   Pixmap xpixmap;
   GdkGLPixmapPrivate *private;
   GLXPixmap glxpixmap;
-  gint depth;
+  Window root_return;
+  unsigned int x_ret, y_ret, w_ret, h_ret, bw_ret, depth_ret;
 
   g_return_val_if_fail(pixmap != NULL, NULL);
   g_return_val_if_fail(visual != NULL, NULL);
   g_return_val_if_fail(gdk_window_get_type(pixmap) == GDK_WINDOW_PIXMAP, NULL);
 
-  gdk_window_get_geometry(pixmap, 0,0,0,0, &depth);
+  dpy = GDK_DISPLAY();
+  xpixmap = (Pixmap)GDK_DRAWABLE_XID(pixmap);
+  
+  g_return_val_if_fail(XGetGeometry(dpy, xpixmap, &root_return,
+				    &x_ret, &y_ret, &w_ret, &h_ret, &bw_ret, &depth_ret), NULL);
+
   g_return_val_if_fail((gdk_gl_get_config(visual, GDK_GL_RED_SIZE) +
 			gdk_gl_get_config(visual, GDK_GL_GREEN_SIZE) +
-			gdk_gl_get_config(visual, GDK_GL_BLUE_SIZE)) == depth, NULL);
-
-  dpy = GDK_DISPLAY();
+			gdk_gl_get_config(visual, GDK_GL_BLUE_SIZE)) == depth_ret, NULL);
 
   vi = get_xvisualinfo(visual);
-  xpixmap = ((GdkPixmapPrivate*)pixmap)->xwindow;
   glxpixmap = glXCreateGLXPixmap(dpy, vi, xpixmap);
   XFree(vi);
 
   g_return_val_if_fail(glxpixmap != None, NULL);
 
   private = g_new(GdkGLPixmapPrivate, 1);
-  private->xdisplay  = dpy;
-  private->glxpixmap = glxpixmap;
+  private->xdisplay   = dpy;
+  private->glxpixmap  = glxpixmap;
   private->front_left = gdk_pixmap_ref(pixmap);
-  private->ref_count = 1;
+  private->ref_count  = 1;
 
   return (GdkGLPixmap*)private;
 }

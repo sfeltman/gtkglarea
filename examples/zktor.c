@@ -23,6 +23,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
@@ -53,6 +54,8 @@ typedef struct {
 } Entity;
 
 /* game state */
+
+GTimer *gtimer = NULL;
 
 double game_time;
 double game_tick;
@@ -110,7 +113,11 @@ void game_init()
 {
   int i;
 
-  game_time = gdk_time_get() / 1000.0;
+  if (!gtimer)
+    gtimer = g_timer_new();
+  g_timer_reset(gtimer);
+
+  game_time = g_timer_elapsed(gtimer, NULL);
   game_tick  = 1.0 / 60;
 
   wave_cnt = 0;
@@ -152,7 +159,7 @@ void game_play()
   double time_now,tick_now;
 
   /* timing */
-  time_now = gdk_time_get() / 1000.0;
+  time_now = g_timer_elapsed(gtimer, NULL);
   tick_now = time_now - game_time;
   if (tick_now < 0.001) tick_now = 0.001;
   if (tick_now > 0.2  ) tick_now = 0.2;
@@ -723,11 +730,14 @@ gint init(GtkWidget *widget)
 {
   /* OpenGL functions can be called only if makecurrent returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
+#if !defined(WIN32)
     GdkFont *font;
+#endif
 
     /* set viewport */
     glViewport(0,0, widget->allocation.width, widget->allocation.height);
 
+#if !defined(WIN32)
     /* generate font display lists */
     font = gdk_font_load("-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*");
     if (font) {
@@ -735,6 +745,7 @@ gint init(GtkWidget *widget)
       gdk_gl_use_gdk_font(font, 0, 128, fontbase);
       gdk_font_unref(font);
     }
+#endif
   }
   return TRUE;
 }

@@ -132,6 +132,11 @@ gint gdk_gl_query(void)
   return TRUE;
 }
 
+gchar *gdk_gl_get_info()
+{
+  return g_strdup_printf("gdk_gl_get_info() has not been implemented\n");
+}
+
 GdkVisual *gdk_gl_choose_visual(int *attrlist)
 {
   g_warning("not implemented");

@@ -12,7 +12,7 @@ CONTRIBUTORS
  Daniel Skarda   <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
  Jussi Löf       <jussi.lof@pirko.fi>                (LightWave objects)
  Andrew Marriott <raytrace@lillee.cs.curtin.edu.au>  (original win32 port)
-
+ Chris Abernethy <chris65536@home.com>               (gtkglarea_demo.c)
 
 LICENSE
 -------
@@ -109,6 +109,8 @@ WIN32
 DOCUMENTATION
 -------------
 
+ Documentation is slightly out of date, sorry.
+
  docs/gtkglarea.txt	documents GtkGLArea widget (needs updating)
  docs/gtkgl.txt		documents gtk_gl_* functions (needs updating)
  docs/HOWTO.txt		good advice
@@ -127,6 +129,7 @@ TODO
  - rewrite documentation in texinfo format
  - weed out bugs from autoconfigure scripts
  - overlays
+ - add more functionality to windows port
 
 ---
 Trademarks are owned by trademark owners.

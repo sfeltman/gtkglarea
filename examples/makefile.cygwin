@@ -12,7 +12,7 @@ LIBS= -L../gtkgl -lgtkgl \
       -L$(OGLDIR)/lib -lopengl32 -lglu32
 
 
-TARGETS = viewlw simple
+TARGETS = viewlw simple zktor
 OBJS    = viewlw.o lw.o trackball.o \
 	  simple.o \
           zktor.o

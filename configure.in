@@ -5,7 +5,7 @@ VERSION=1.2.2
 PACKAGE=gtkglarea
 
 #shared library versioning
-GTKGL_LIBRARY_VERSION=5:0:0
+GTKGL_LIBRARY_VERSION=5:0:1
 #                     | | |
 #              +------+ | +---+
 #              |        |     |
@@ -30,7 +30,7 @@ AM_SANITY_CHECK
 AM_MAINTAINER_MODE
 
 dnl Check for GTK libraries
-AM_PATH_GTK(1.1.5,,AC_MSG_ERROR([Cannot find proper gtk version]))
+AM_PATH_GTK(,,AC_MSG_ERROR([Cannot find proper gtk version]))
 
 dnl Check for GL/MesaGL libraries
 AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])

@@ -81,6 +81,7 @@ gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 int main(int argc, char **argv)
 {
   GtkWidget *window,*glarea;
+  gchar *info_str;
 
   /* Attribute list for gtkglarea widget. Specifies a
      list of Boolean attributes and enum/integer
@@ -105,6 +106,12 @@ int main(int argc, char **argv)
     g_print("OpenGL not supported\n");
     return 0;
   }
+
+  /* vendor dependent version info string */
+  info_str = gdk_gl_get_info();
+  g_print(info_str);
+  g_free(info_str);
+
 
   /* Create new top level window. */
   window = gtk_window_new( GTK_WINDOW_TOPLEVEL);

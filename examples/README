@@ -2,7 +2,14 @@
 simple
 ------
 
-Heavily commented and easy to understand example.
+Commented and easy to understand example.
+
+
+gtkglarea_demo
+--------------
+
+Even better example than simple.
+
 
 
 gdkfont
@@ -53,8 +60,8 @@ f                       switch between fullscreen/windowed mode (only with 3DFX)
 
 Keyboard handling is buggy and needs to be fixed. For some reason key
 releases are not received unless cursor is over glarea widget.
-There is now rudimentary support for fullscreen 3DFX acceleration with 3DFX
-Mesa, it is not compiled in as default. You have to uncomment
+There is now rudimentary support for fullscreen 3DFX acceleration with
+Mesa, but it is not compiled in as default. You have to uncomment
 FULLSCREEN_MESA_3DFX defined near the start of zktor.c to compile it.
 
 

@@ -1,5 +1,6 @@
 ## gtkgl directory
 
+EXTRA_DIST = makefile.cygwin gdkgl-win32.c
 
 INCLUDES= -I$(top_srcdir)
 
