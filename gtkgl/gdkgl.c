@@ -174,7 +174,16 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
   g_return_val_if_fail(drawable != NULL, FALSE);
   g_return_val_if_fail(context  != NULL, FALSE);
 
-  return (glXMakeCurrent(private->xdisplay, GDK_WINDOW_XWINDOW(drawable), private->glxcontext) == True) ? TRUE : FALSE;
+
+  if (private->glxcontext != None && private->glxcontext == glXGetCurrentContext())
+    {
+      glFlush();
+      return TRUE;
+    }
+  else
+    {
+      return (glXMakeCurrent(private->xdisplay, GDK_WINDOW_XWINDOW(drawable), private->glxcontext) == True) ? TRUE : FALSE;
+    }
 }
 
 void gdk_gl_swap_buffers(GdkDrawable *drawable)

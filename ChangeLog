@@ -1,3 +1,9 @@
+1999-09-25  Janne Löf  <jlof@mail.student.oulu.fi>
+
+	* gtkgl/gdkgl.c (gdk_gl_make_current):
+	Do not call glXMakeCurrent if context is already current context.
+	
+
 1999-07-30  Jame Henstridge  <james@daa.com.au>
 
 	* gtkgl.m4: changed the order of libraries on the link lines.  If
