@@ -1,3 +1,11 @@
+2002-03-14  James Henstridge  <james@daa.com.au>
+
+	* gtkgl/gtkglarea.c (gtk_gl_area_size): remove deprecated function
+	(compatibility define in header).
+	(gtk_gl_area_swap_buffers): same here.
+	(gtk_gl_area_begingl): same here.
+	(gtk_gl_area_endgl): same here.
+
 2002-03-13  James Henstridge  <james@daa.com.au>
 
 	* configure.in: explicitly list the makefile.mingw files here, so

@@ -178,10 +178,6 @@ gtk_gl_area_destroy(GtkObject *object)
 }
 
 
-
-
-
-
 gint gtk_gl_area_make_current(GtkGLArea *gl_area)
 {
   g_return_val_if_fail(gl_area != NULL, FALSE);
@@ -191,25 +187,6 @@ gint gtk_gl_area_make_current(GtkGLArea *gl_area)
   return gdk_gl_make_current(GTK_WIDGET(gl_area)->window, gl_area->glcontext);
 }
 
-/* deprecated, use gtk_gl_area_make_current */
-gint gtk_gl_area_begingl(GtkGLArea *gl_area)
-{
-  return gtk_gl_area_make_current(gl_area);
-}
-
-/* deprecated, use glFlush if needed */
-void gtk_gl_area_endgl(GtkGLArea *gl_area)
-{
-  g_return_if_fail(gl_area != NULL);
-  g_return_if_fail(GTK_IS_GL_AREA(gl_area));
-  glFlush();
-}
-
-/* deprecated, use gtk_gl_area_swap_buffers */
-void gtk_gl_area_swapbuffers(GtkGLArea *gl_area)
-{
-  gtk_gl_area_swap_buffers(gl_area);
-}
 void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
 {
   g_return_if_fail(gl_area != NULL);
@@ -217,12 +194,4 @@ void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
   g_return_if_fail(GTK_WIDGET_REALIZED(gl_area));
 
   gdk_gl_swap_buffers(GTK_WIDGET(gl_area)->window);
-}
-
-void gtk_gl_area_size (GtkGLArea *glarea, gint width, gint height)
-{
-  g_return_if_fail (glarea != NULL);
-  g_return_if_fail (GTK_IS_GL_AREA (glarea));
-
-  gtk_drawing_area_size(GTK_DRAWING_AREA(glarea), width, height);
 }
