@@ -1,3 +1,11 @@
+2006-04-12  C.J. Adams-Collier <cjcollier@colliertech.org>
+	* TODO
+	- Created
+	* AUTHORS
+	- added myself, moved Jan and Xavier to "retired"
+	* MAINTAINERS
+	- added myself, moved Jan and Xavier to "former"
+
 2003-05-04  Masahiro Sakai  <sakai@tom.sfc.keio.ac.jp>
 
 	* configure.in: check `$PKG_CONFIG --variable=target gtk+-2.0` and
