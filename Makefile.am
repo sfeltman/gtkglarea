@@ -4,7 +4,7 @@
 ACLOCAL_FLAGS =
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-SUBDIRS= gtkgl examples docs build
+SUBDIRS= gtkgl examples docs # build
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gtkgl-2.0.pc

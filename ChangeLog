@@ -1,3 +1,7 @@
+2006-09-28  C.J. Adams-Collier <cjcollier@colliertech.org>
+	* Makefile.am
+	- commented out the build/ directory (failing win32 build path)
+
 2006-04-12  C.J. Adams-Collier <cjcollier@colliertech.org>
 	* TODO
 	- Created
