@@ -395,7 +395,7 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
   GLXContext glxcontext;
 
   g_return_val_if_fail(GDK_IS_GL_PIXMAP(glpixmap), FALSE);
-  g_return_val_if_fail(GDK_IS_GL_PIXMAP(context), FALSE);
+  g_return_val_if_fail(GDK_IS_GL_CONTEXT(context), FALSE);
 
   dpy        = context->xdisplay;
   glxpixmap  = glpixmap->glxpixmap;
