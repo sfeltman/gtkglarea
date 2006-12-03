@@ -1,3 +1,10 @@
+2006-12-02  C.J. Adams-Collier <cjcollier@colliertech.org>
+	* TODO
+	- re-ordered priorities
+	- made into an ordered list
+	* autogen.sh
+	- copied autogen.sh from gtkglarea-sharp
+	
 2006-09-28  C.J. Adams-Collier <cjcollier@colliertech.org>
 	* Makefile.am
 	- commented out the build/ directory (failing win32 build path)

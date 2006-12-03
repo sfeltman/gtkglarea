@@ -1,72 +1,44 @@
-#!/bin/sh
-# Run this to generate all the initial makefiles, etc.
-# This script is shamelessly stolen from glib module.
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+echo "Running glib-gettextize ..."
+glib-gettextize --force --copy ||
+	{ echo "**Error**: glib-gettextize failed."; exit 1; }
 
-ORIGDIR=`pwd`
-cd $srcdir
-PROJECT=GtkGLArea
-TEST_TYPE=-f
-FILE=gtkgl/gtkglarea.h
+echo "Running intltoolize ..."
+intltoolize --force --copy --automake ||
+	{ echo "**Error**: intltoolize failed."; exit 1; }
 
-DIE=0
-
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
-	echo
-	echo "You must have autoconf installed to compile $PROJECT."
-	echo "Download the appropriate package for your distribution,"
-	echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
-	DIE=1
+echo "Running aclocal $ACLOCAL_FLAGS ..."
+aclocal $ACLOCAL_GLAGS || {
+  echo
+  echo "**Error**: aclocal failed. This may mean that you have not"
+  echo "installed all of the packages you need, or you may need to"
+  echo "set ACLOCAL_FLAGS to include \"-I \$prefix/share/aclocal\""
+  echo "for the prefix where you installed the packages whose"
+  echo "macros were not found"
+  exit 1
 }
 
-(libtool --version) < /dev/null > /dev/null 2>&1 || {
-	echo
-	echo "You must have libtool installed to compile $PROJECT."
-	echo "Get ftp://alpha.gnu.org/gnu/libtool-1.2d.tar.gz"
-	echo "(or a newer version if it is available)"
-	DIE=1
-}
-
-(automake --version) < /dev/null > /dev/null 2>&1 || {
-	echo
-	echo "You must have automake installed to compile $PROJECT."
-	echo "Get ftp://sourceware.cygnus.com/pub/automake/automake-1.4.tar.gz"
-	echo "(or a newer version if it is available)"
-	DIE=1
-}
-
-if test "$DIE" -eq 1; then
-	exit 1
+# checking for automake 1.9+
+am_version=`automake --version | cut -f 4 -d ' ' | head -n 1`
+if [ `expr match "$am_version" '1\.9'` -ne 3 ]; then
+	echo "**Error**: automake 1.9+ required.";
+	exit 1;
 fi
 
-test $TEST_TYPE $FILE || {
-	echo "You must run this script in the top-level $PROJECT directory"
-	exit 1
-}
+echo "Running automake --gnu $am_opt ..."
+automake --add-missing --gnu $am_opt ||
+	{ echo "**Error**: automake failed."; exit 1; }
 
-if test -z "$*"; then
-	echo "I am going to run ./configure with no arguments - if you wish "
-        echo "to pass any to it, please specify them on the $0 command line."
+echo "running autoconf ..."
+WANT_AUTOCONF=2.5 autoconf || {
+  echo "**Error**: autoconf failed."; exit 1; }
+
+conf_flags="--enable-maintainer-mode --enable-compile-warnings"
+
+if test x$NOCONFIGURE = x; then
+  echo Running $srcdir/configure $conf_flags "$@" ...
+  ./configure $conf_flags "$@" \
+  && echo Now type \`make\' to compile $PKG_NAME || exit 1
+else
+  echo Skipping configure process.
 fi
-
-case $CC in
-*xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
-esac
-
-aclocal $ACLOCAL_FLAGS
-
-libtoolize --force
-
-# optionally feature autoheader
-#(autoheader --version)  < /dev/null > /dev/null 2>&1 && autoheader
-
-automake -a $am_opt
-autoconf
-cd $ORIGDIR
-
-$srcdir/configure --enable-maintainer-mode "$@"
-
-echo 
-echo "Now type 'make' to compile $PROJECT."
