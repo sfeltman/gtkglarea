@@ -1,3 +1,8 @@
+2006-12-05  C.J. Adams-Collier <cjcollier@colliertech.org>
+	* added vs2k5 build infrastructure
+	* added WinMain() entry points to simple.c and viewlw.c
+	* status output at the end of configure.ac
+
 2006-12-02T1753  C.J. Adams-Collier <cjcollier@colliertech.org>
 	* moved configure.in to configure.ac
 

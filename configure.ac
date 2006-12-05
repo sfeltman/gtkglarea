@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(gtkgl/gtkglarea.h)
 
-VERSION=1.99.0
+VERSION=2.0.0
 PACKAGE=gtkglarea
 
 #shared library versioning
@@ -36,7 +36,7 @@ AM_MAINTAINER_MODE
 
 AC_MSG_CHECKING([for Win32])
 case "$host" in
-  *-*-mingw*)
+  *mingw* | pw32* | cygwin*)
     native_win32=yes
     ;;
   *)
@@ -169,3 +169,13 @@ AC_OUTPUT(
   build/win32/Makefile
   build/win32/dirent/Makefile
 )
+
+
+echo "---"
+echo "Configuration summary"
+echo ""
+echo "   * Installation prefix: $prefix"
+echo "   * Win32:               $native_win32"
+echo "   * OpenGL Libs:         $GL_LIBS"
+echo ""
+echo "---"
