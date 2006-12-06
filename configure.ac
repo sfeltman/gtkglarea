@@ -52,7 +52,11 @@ fi
 AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 
 dnl Check for GTK libraries
-AM_PATH_GTK_2_0(2.0.0)
+GTK_REQUIRED_VERSION=2.0.0
+PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk+-2.0 >= $GTK_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION)
+AC_SUBST(BASE_DEPENDENCIES_CFLAGS)
+AC_SUBST(BASE_DEPENDENCIES_LIBS)
+
 gdk_target=`$PKG_CONFIG --variable=target gtk+-2.0`
 AM_CONDITIONAL(WINDOWING_WIN32, test x$gdk_target = xwin32)
 
@@ -73,9 +77,9 @@ fi
 saved_LIBS="$LIBS"
 
 AC_MSG_CHECKING([OpenGL])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL"
+LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lGL"
 AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, 
-  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lopengl32"
+  LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lopengl32"
   [AC_TRY_LINK([ #include <windows.h>
                  #include <GL/gl.h>], 
                [ glBegin(GL_TRIANGLES); ], 
@@ -85,13 +89,13 @@ AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes,
 AC_MSG_RESULT($have_GL)
 
 AC_MSG_CHECKING([Mesa])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL"
+LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lMesaGL"
 AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_MesaGL=yes, have_MesaGL=no)
 AC_MSG_RESULT($have_MesaGL)
 
 if test "x$have_MesaGL" = "xno"; then
  AC_MSG_CHECKING([Mesa with pthreads])
- LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lpthread"
+ LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lMesaGL -lpthread"
  AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_MesaGL_pthread=yes, have_MesaGL_pthread=no)
  AC_MSG_RESULT($have_MesaGL_pthread)
 fi
@@ -145,7 +149,7 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 
-CFLAGS="$CFLAGS $GTK_CFLAGS $GL_CFLAGS"
+CFLAGS="$CFLAGS $BASE_DEPENDENCIES_CFLAGS $GL_CFLAGS"
 
 dnl Checks for header files.
 AC_HEADER_STDC

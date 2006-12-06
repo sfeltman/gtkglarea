@@ -1,3 +1,6 @@
+2006-12-06T1431  C.J. Adams-Collier <cjcollier@colliertech.org>
+	* replaced AM_PATH_GTK_2_0 with pkg-config bits
+
 2006-12-06  C.J. Adams-Collier <cjcollier@colliertech.org>
 	* added #ifdef G_OS_WIN32 around WinMain functions in simple.c and
 	viewlw.c
