@@ -3,9 +3,9 @@ echo "Running glib-gettextize ..."
 glib-gettextize --force --copy ||
 	{ echo "**Error**: glib-gettextize failed."; exit 1; }
 
-echo "Running intltoolize ..."
-intltoolize --force --copy --automake ||
-	{ echo "**Error**: intltoolize failed."; exit 1; }
+# echo "Running intltoolize ..."
+# intltoolize --force --copy --automake ||
+# 	{ echo "**Error**: intltoolize failed."; exit 1; }
 
 echo "Running aclocal $ACLOCAL_FLAGS ..."
 aclocal $ACLOCAL_GLAGS || {
