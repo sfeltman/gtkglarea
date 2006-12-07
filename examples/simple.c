@@ -79,11 +79,11 @@ gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 
 #ifdef G_OS_WIN32
 
-/* for windows usage */
 int _stdcall
-WinMain (struct mumble *hInstance,		 struct mumble *hPrevInstance,
-		 char      *lpszCmdLine,
-		 int        nCmdShow)
+WinMain (struct mumble *hInstance,
+	 struct mumble *hPrevInstance,
+	 char      *lpszCmdLine,
+	 int        nCmdShow)
 {
 	return main (__argc, __argv);
 }

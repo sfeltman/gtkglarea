@@ -1,3 +1,9 @@
+2006-12-06T1944  C.J. Adams-Collier <cjcollier@colliertech.org>
+	* configure.ac
+	- changed OpenGL from lib list to a boolean
+	* examples/simple.c, examples/viewlw.c
+	- fixed line endings
+
 2006-12-06T1928  C.J. Adams-Collier <cjcollier@colliertech.org>
 	* autogen.sh
 	- applied a patch from muntyan that removes the assumption that

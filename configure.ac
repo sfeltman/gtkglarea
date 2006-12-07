@@ -54,10 +54,12 @@ AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 dnl Check for GTK libraries
 GTK_REQUIRED_VERSION=2.0.0
 PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk+-2.0 >= $GTK_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION)
+
 AC_SUBST(BASE_DEPENDENCIES_CFLAGS)
 AC_SUBST(BASE_DEPENDENCIES_LIBS)
 
 gdk_target=`$PKG_CONFIG --variable=target gtk+-2.0`
+
 AM_CONDITIONAL(WINDOWING_WIN32, test x$gdk_target = xwin32)
 
 dnl Check for GL/MesaGL libraries
@@ -101,7 +103,6 @@ if test "x$have_MesaGL" = "xno"; then
 fi
 
 LIBS="$saved_LIBS"
-
 
 if test "x$with_lib_GL" = "xyes"; then
 
@@ -148,7 +149,6 @@ fi
 AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
-
 CFLAGS="$CFLAGS $BASE_DEPENDENCIES_CFLAGS $GL_CFLAGS"
 
 dnl Checks for header files.
@@ -180,6 +180,6 @@ echo "Configuration summary"
 echo ""
 echo "   * Installation prefix: $prefix"
 echo "   * Win32:               $native_win32"
-echo "   * OpenGL Libs:         $GL_LIBS"
+echo "   * OpenGL:              $have_GL"
 echo ""
 echo "---"
