@@ -394,13 +394,14 @@ void select_lwobject()
 
 #ifdef G_OS_WIN32
 
-int _stdcall
-WinMain (struct mumble *hInstance,
-	 struct mumble *hPrevInstance,
-	 char      *lpszCmdLine,
-	 int        nCmdShow)
+/* for windows usage */
+int APIENTRY WinMain(HINSTANCE hInstance,
+		     HINSTANCE hPrevInstance,
+		     LPSTR lpszCmdLine,
+		     int nCmdshow
+		     )
 {
-  return main (__argc, __argv);
+	return main (__argc, __argv);
 }
 
 #endif

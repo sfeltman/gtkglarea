@@ -1,3 +1,6 @@
+builddir=`pwd`
+srcdir=`dirname $0`
+cd $srcdir
 
 echo "Running glib-gettextize ..."
 glib-gettextize --force --copy ||
@@ -37,7 +40,8 @@ conf_flags="--enable-maintainer-mode --enable-compile-warnings"
 
 if test x$NOCONFIGURE = x; then
   echo Running $srcdir/configure $conf_flags "$@" ...
-  ./configure $conf_flags "$@" \
+  cd $builddir
+  $srcdir/configure $conf_flags "$@" \
   && echo Now type \`make\' to compile $PKG_NAME || exit 1
 else
   echo Skipping configure process.
