@@ -190,10 +190,8 @@ AC_OUTPUT(
   gtkglarea-2.0.pc
   gtkglarea.spec
   gtkglarea/Makefile
-  gtkglarea/makefile.mingw
   docs/Makefile
   examples/Makefile
-  examples/makefile.mingw
 )
 
 
