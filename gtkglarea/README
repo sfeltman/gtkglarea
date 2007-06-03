@@ -1,0 +1,15 @@
+This directory contains gtkglarea.h and friends.
+
+Makefile.am             - used to generate Makefile
+
+gtkglarea.h             - declaration for client-facing gtkglarea interface
+gtkglarea.c             - top level implementation of gtkglarea
+
+gdkglarea.h             - declarations for drawing-layer functions
+gdkglarea-win32.c       - drawing-layer functions, win32 
+gdkglarea-x11.c         - drawing-layer functions, x11 
+gdkglarea-unsupported.c - drawing-layer functions, quartz, linux-fb, directfb
+
+gtkglarea.def           - something to do with generating win32 .lib files
+
+
