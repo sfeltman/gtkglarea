@@ -4,13 +4,17 @@
 ACLOCAL_FLAGS =
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-SUBDIRS= gtkgl examples docs # build
+SUBDIRS= gtkglarea examples docs
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gtkgl-2.0.pc
+pkgconfig_DATA = gtkglarea-2.0.pc
+
+DISTCLEANFILES = \
+	gtkglarea-2.0.pc \
+	depcomp
 
 EXTRA_DIST = \
-  gtkgl-2.0.pc.in \
+  gtkglarea-2.0.pc.in \
   gtkglarea.spec.in \
   gtkglarea.spec
 

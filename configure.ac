@@ -1,28 +1,30 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(gtkgl/gtkglarea.h)
+AC_INIT(gtkglarea/gtkglarea.h)
 
 VERSION=2.0.0a
 PACKAGE=gtkglarea
 
 #shared library versioning
-GTKGL_LIBRARY_VERSION=1:0:0
-#                     | | |
-#              +------+ | +---+
-#              |        |     |
-#           current:revision:age
-#              |        |     |
-#              |        |     +- increment if interfaces have been added
-#              |        |        set to zero if interfaces have been removed or changed
-#              |        +- increment if source code has changed
-#              |           set to zero if current is incremented
-#              +- increment if interfaces have been added, removed or changed
+GTKGLAREA_LIBRARY_VERSION=2:0:0
+#                         | | |
+#                  +------+ | +---+
+#                  |        |     |
+#               current:revision:age
+#                  |        |     |
+#                  |        |     +- increment if interfaces have been added
+#                  |        |        set to zero if interfaces have
+#                  |        |        been removed or changed
+#                  |        +- increment if source code has changed
+#                  |           set to zero if current is incremented
+#                  +- increment if interfaces have been added, removed
+#                     or changed
 # 
 # Value of current - age. Used by libtool in Win32 DLL names. We need
 # to know the DLL name to build MSVC import libraries.
 LT_CURRENT_MINUS_AGE=1
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
-AC_SUBST(GTKGL_LIBRARY_VERSION)
+AC_SUBST(GTKGLAREA_LIBRARY_VERSION)
 AC_SUBST(LT_CURRENT_MINUS_AGE)
 AC_SUBST(VERSION)
 
@@ -185,10 +187,10 @@ dnl Checks for library functions.
 
 AC_OUTPUT(
   Makefile
-  gtkgl-2.0.pc
+  gtkglarea-2.0.pc
   gtkglarea.spec
-  gtkgl/Makefile
-  gtkgl/makefile.mingw
+  gtkglarea/Makefile
+  gtkglarea/makefile.mingw
   docs/Makefile
   examples/Makefile
   examples/makefile.mingw
