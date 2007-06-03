@@ -192,9 +192,6 @@ AC_OUTPUT(
   docs/Makefile
   examples/Makefile
   examples/makefile.mingw
-  build/Makefile
-  build/win32/Makefile
-  build/win32/dirent/Makefile
 )
 
 
