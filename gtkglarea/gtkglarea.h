@@ -21,7 +21,7 @@
 #define __GTK_GL_AREA_H__
 
 #include <gdk/gdk.h>
-#include <gtkgl/gdkgl.h>
+#include <gtkglarea/gdkglarea.h>
 #include <gtk/gtkdrawingarea.h>
 
 

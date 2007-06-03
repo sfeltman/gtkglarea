@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gdkgl.h"
+#include "gdkglarea.h"
 #include "gtkglarea.h"
 #include <GL/gl.h>
 #include <stdarg.h>

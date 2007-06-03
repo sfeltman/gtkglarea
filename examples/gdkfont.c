@@ -19,7 +19,7 @@
 
 #include <math.h>
 #include <gtk/gtk.h>
-#include <gtkgl/gtkglarea.h>
+#include <gtkglarea/gtkglarea.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>

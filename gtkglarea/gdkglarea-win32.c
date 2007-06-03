@@ -18,7 +18,7 @@
  */
 
 
-#include "gdkgl.h"
+#include "gdkglarea.h"
 #include <GL/gl.h>
 #include <gdk/gdkwin32.h>
 

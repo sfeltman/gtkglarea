@@ -21,7 +21,7 @@
 #define LW_H
 
 #include <glib.h>
-#include <gtkgl/gdkgl.h>
+#include <gtkglarea/gdkglarea.h>
 #include <GL/gl.h>
 
 #define LW_MAX_POINTS   200

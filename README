@@ -58,7 +58,7 @@ INSTALLATION
  Run './configure' and 'make' to build. You may now test programs in examples
  directory. Run 'make install' to install.
 
- Include files go to PREFIX/include/gtkgl/
+ Include files go to PREFIX/include/gtkglarea/
  Library files go to PREFIX/lib/
 
 

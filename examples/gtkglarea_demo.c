@@ -45,7 +45,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <gtk/gtk.h>
-#include <gtkgl/gtkglarea.h>
+#include <gtkglarea/gtkglarea.h>
 
 GtkWidget* create_glarea         (void);
 gint       glarea_button_release (GtkWidget*, GdkEventButton*);

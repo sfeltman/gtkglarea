@@ -28,7 +28,7 @@
 #include <GL/glu.h>
 
 #include <gdk/gdk.h>
-#include <gtkgl/gdkgl.h>
+#include <gtkglarea/gdkglarea.h>
 
 
 int visual_attributes[] = { GDK_GL_RGBA,

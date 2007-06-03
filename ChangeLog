@@ -1,3 +1,7 @@
+2007-05-03T1609  C.J. Adams-Collier <cjac@colliertech.org>
+	Overview: gtkgl becomes gtkglarea - this fixes an issue with the
+	debian package version as well as clearing the muddy waters
+
 2007-05-03  C.J. Adams-Collier <cjac@colliertech.org>
 	* ltmain.sh
 	- including newer version with more win32 definitions

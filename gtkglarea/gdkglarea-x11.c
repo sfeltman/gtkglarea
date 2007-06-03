@@ -17,7 +17,7 @@
  */
 
 
-#include "gdkgl.h"
+#include "gdkglarea.h"
 
 #include <gdk/gdkx.h>
 
