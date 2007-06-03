@@ -53,20 +53,36 @@ AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 
 dnl Check for GTK libraries
 GTK_REQUIRED_VERSION=2.0.0
-PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk+-2.0 >= $GTK_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION)
+PKG_CHECK_MODULES(BASE_DEPENDENCIES, dnl
+                  gtk+-2.0 >= $GTK_REQUIRED_VERSION dnl
+		  gmodule-2.0 >= $GTK_REQUIRED_VERSION dnl
+		  )
 
 AC_SUBST(BASE_DEPENDENCIES_CFLAGS)
 AC_SUBST(BASE_DEPENDENCIES_LIBS)
 
-gdk_target=`$PKG_CONFIG --variable=target gtk+-2.0`
-
-AM_CONDITIONAL(WINDOWING_WIN32, test x$gdk_target = xwin32)
-
 dnl Check for GL/MesaGL libraries
-AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])
-AC_ARG_WITH(lib-GL,     [  --with-lib-GL           use '-lGL'])
-AC_ARG_WITH(lib-MesaGL, [  --with-lib-MesaGL       use '-lMesaGL'])
-AC_ARG_WITH(lib-opengl32,[ --with-lib-opengl32     use '-lopengl32'])
+AC_ARG_WITH(GL-prefix,   [ --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])
+AC_ARG_WITH(lib-GL,      [ --with-lib-GL           use '-lGL'])
+AC_ARG_WITH(lib-MesaGL,  [ --with-lib-MesaGL       use '-lMesaGL'])
+
+AC_MSG_CHECKING([GDK target])
+
+gdktarget=`$PKG_CONFIG --variable=target gtk+-2.0`
+
+AC_SUBST(gdktarget)
+case $gdktarget in
+  x11|linux-fb|win32|quartz|directfb) ;;
+  *) AC_MSG_ERROR([Invalid target for GDK: use x11, linux-fb, quartz, directfb or win32.]);;
+esac
+
+AM_CONDITIONAL(USE_WIN32,    test x$gdktarget = "xwin32")
+AM_CONDITIONAL(USE_QUARTZ,   test x$gdktarget = "xquartz")
+AM_CONDITIONAL(USE_X11,      test x$gdktarget = "xx11")
+AM_CONDITIONAL(USE_LINUX_FB, test x$gdktarget = "xlinux-fb")
+AM_CONDITIONAL(USE_DIRECTFB, test x$gdktarget = "xdirectfb")
+
+AC_MSG_RESULT($gdktarget)
 
 if test "x$with_GL_prefix" = "x" ; then
  GL_LDOPTS=""
@@ -80,25 +96,32 @@ saved_LIBS="$LIBS"
 
 AC_MSG_CHECKING([OpenGL])
 LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lGL"
-AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, 
+AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes,
   LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lopengl32"
   [AC_TRY_LINK([ #include <windows.h>
-                 #include <GL/gl.h>], 
-               [ glBegin(GL_TRIANGLES); ], 
+                 #include <GL/gl.h>
+		 ],
+               [ glBegin(GL_TRIANGLES); ],
     [have_opengl32=yes
      have_GL=yes],
-    have_GL=no)])
+     have_GL=no)])
 AC_MSG_RESULT($have_GL)
 
 AC_MSG_CHECKING([Mesa])
 LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lMesaGL"
-AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_MesaGL=yes, have_MesaGL=no)
+AC_TRY_LINK( ,[ char glBegin(); glBegin(); ],
+	     have_MesaGL=yes,
+	     have_MesaGL=no
+	     )
 AC_MSG_RESULT($have_MesaGL)
 
 if test "x$have_MesaGL" = "xno"; then
  AC_MSG_CHECKING([Mesa with pthreads])
  LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS -lMesaGL -lpthread"
- AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_MesaGL_pthread=yes, have_MesaGL_pthread=no)
+ AC_TRY_LINK( ,[ char glBegin(); glBegin(); ],
+	      have_MesaGL_pthread=yes,
+	      have_MesaGL_pthread=no
+	      )
  AC_MSG_RESULT($have_MesaGL_pthread)
 fi
 
@@ -179,7 +202,7 @@ echo "---"
 echo "Configuration summary"
 echo ""
 echo "   * Installation prefix: $prefix"
-echo "   * Win32:               $native_win32"
+echo "   * target:              $gdktarget"
 echo "   * OpenGL:              $have_GL"
 echo ""
 echo "---"

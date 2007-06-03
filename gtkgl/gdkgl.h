@@ -115,11 +115,10 @@ GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap);
 gint         gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context);
 
 
-/* fonts */
+#ifndef GTKGL_DISABLE_DEPRECATED
+/* non-pango fonts */
 void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base);
 
-
-#ifndef GTKGL_DISABLE_DEPRECATED
 #  define gdk_gl_context_ref(context)   g_object_ref(context)
 #  define gdk_gl_context_unref(context) g_object_unref(context)
 #  define gdk_gl_pixmap_ref(pixmap)     g_object_ref(pixmap)

@@ -1,3 +1,28 @@
+2007-05-03  C.J. Adams-Collier <cjac@colliertech.org>
+	* ltmain.sh
+	- including newer version with more win32 definitions
+	* configure.ac
+	- using USE_$TARGET in a way similar to gtk+ core
+	- status line now prints target rather than whether win32 is being
+	  used
+	* TODO
+	- now an unordered listfg 
+	* gtkgl/gdkgl-unsupported.c
+	- created.  haven't tested.  It's a bunch of stubs where methods
+	  should be filled in.
+	* gtkgl/Makefile.am
+	- x11 is no longer the default target.  there is none.  we get it
+	  from the gtk detected by pkg-config.  thus, gtkgl.c has been
+	  moved to gtkgl-x11.c and is now on a level with gtkgl-win32.c;
+	  quartz, directfb and linux-fb are being treated the same
+	* gtkgl/gdkgl.c, gtkgl/gdkgl-x11.c
+	- gdkgl.c was re-named to gdkgl-x11.c
+	* gtkgl/gdkgl.h
+	- deprecated non-pango fonts
+	* autogen.sh
+	- fixed "GLAGS" typo (FLAGS)
+	- no longer depending on automake 1.9
+
 2006-12-07  C.J. Adams-Collier <cjcollier@colliertech.org>
 	* README.mingw
 	- created this file and put some tips in it

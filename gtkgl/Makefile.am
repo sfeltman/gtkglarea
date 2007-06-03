@@ -25,12 +25,6 @@ install-ms-lib:
 uninstall-ms-lib:
 endif
 
-if WINDOWING_WIN32
-gdkgl = gdkgl-win32.c
-else
-gdkgl = gdkgl.c
-endif
-
 EXTRA_DIST = makefile.mingw makefile.mingw.in gdkgl-win32.c gtkgl.def
 
 AM_CFLAGS = $(BASE_DEPENDENCIES_CFLAGS) $(GL_CFLAGS)
@@ -40,8 +34,42 @@ gtkglincludedir = $(includedir)/gtkgl-2.0/gtkgl
 
 lib_LTLIBRARIES= libgtkgl-2.0.la
 
-gtkglinclude_HEADERS= gdkgl.h gtkglarea.h
-libgtkgl_2_0_la_SOURCES = $(gdkgl) gtkglarea.c
+gtkgl_x11_c_sources      = \
+	gdkgl-x11.c
+gtkgl_win32_c_sources    = \
+	gdkgl-win32.c
+gtkgl_linux_fb_c_sources = \
+	gdkgl-unsupported.c
+gtkgl_quartz_c_sources   = \
+	gdkgl-unsupported.c
+gtkgl_directfb_c_sources = \
+	gdkgl-unsupported.c
+
+gtkglinclude_HEADERS = gdkgl.h gtkglarea.h
+gtkgl_c_sources = gtkglarea.c
+
+if USE_WIN32
+  gtkgl_c_sources += $(gtkgl_win32_c_sources)
+endif
+
+if USE_X11
+  gtkgl_c_sources += $(gtkgl_x11_c_sources)
+endif
+
+if USE_DIRECTFB
+  gtkgl_c_sources += $(gtkgl_directfb_c_sources)
+endif
+
+if USE_LINUX_FB
+  gtkgl_c_sources += $(gtkgl_linux_fb_c_sources)
+endif
+
+if USE_QUARTZ
+  gtkgl_c_sources += $(gtkgl_quartz_c_sources)
+endif
+
+libgtkgl_2_0_la_SOURCES = $(gtkgl_c_sources)
+
 libgtkgl_2_0_la_LDFLAGS = -version-info $(GTKGL_LIBRARY_VERSION) $(export_symbols) -no-undefined
 libgtkgl_2_0_la_LIBADD = $(BASE_DEPENDENCIES_LIBS) $(GL_LIBS)
 

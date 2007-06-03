@@ -11,7 +11,7 @@ glib-gettextize --force --copy ||
 # 	{ echo "**Error**: intltoolize failed."; exit 1; }
 
 echo "Running aclocal $ACLOCAL_FLAGS ..."
-aclocal $ACLOCAL_GLAGS || {
+aclocal $ACLOCAL_FLAGS || {
   echo
   echo "**Error**: aclocal failed. This may mean that you have not"
   echo "installed all of the packages you need, or you may need to"
@@ -21,12 +21,15 @@ aclocal $ACLOCAL_GLAGS || {
   exit 1
 }
 
-# checking for automake 1.9+
-am_version=`automake --version | cut -f 4 -d ' ' | head -n 1`
-if [ `expr match "$am_version" '1\.9'` -ne 3 ]; then
-	echo "**Error**: automake 1.9+ required.";
-	exit 1;
-fi
+# checking for automake 
+(automake --version) < /dev/null > /dev/null 2>&1 || {
+  echo
+  echo "**Error**: You must have \`automake' installed to compile gtkglarea."
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
+  echo "(or a newer version if it is available)"
+  DIE=1
+  NO_AUTOMAKE=yes
+}
 
 echo "Running automake --gnu $am_opt ..."
 automake --add-missing --gnu $am_opt ||

@@ -1,4 +1,7 @@
-1) Ensure windows compatability exists
-2) Bump version to 2.0
-3) code audit
-4) begin using glitz.  This will provide better cross-platform support
+* Ensure windows compatability exists
+* Bump version to 2.0
+* code audit
+* begin using glitz.  This will provide better cross-platform support
+* re-write configure.ac
+** Operating system detection
+** Windowing system selection 
