@@ -1,0 +1,11 @@
+Since we don't have an automated regression suite, ensure that the
+following succeed on all supported platforms before releasing:
+
+* make distcheck
+* examples/gdkfont
+* examples/glpixmap
+* examples/gtkglarea_demo
+* examples/simple
+* examples/viewlw examples/alien.lwo
+* examples/viewlw examples/penguin.lwo
+* examples/zktor
