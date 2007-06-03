@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(gtkgl/gtkglarea.h)
 
-VERSION=2.0.0
+VERSION=2.0.0a
 PACKAGE=gtkglarea
 
 #shared library versioning
