@@ -18,28 +18,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-#include "gdkgl.h"
-#include <GL/gl.h>
-#include <gdk/gdkwin32.h>
-
-GType gdk_gl_pixmap_get_type(void)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
-{
-  g_warning ( "not implemented" );
-  return 0;
-}
+#include "gdkgl-fb.h"
 
 gint gdk_gl_query(void)
 {

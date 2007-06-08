@@ -1,5 +1,6 @@
 /* 
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
+ * Copyright (C) 2007 C.J. Adams-Collier <cjac@colliertech.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,14 +21,6 @@
 #define __GDK_GL_H__
 
 #include <glib.h>
-
-#ifdef G_OS_WIN32
- /* The GL/gl.h on Windows requires you to include <windows.h>
-  * anyway, so we might as well include it here.
-  */
- #include <windows.h>
-#endif
-
 #include <gdk/gdk.h>
 
 G_BEGIN_DECLS
@@ -78,52 +71,27 @@ enum _GDK_GL_CONFIGS {
 
 typedef struct _GdkGLContext GdkGLContext;
 
-
 gint          gdk_gl_query(void);
 gchar        *gdk_gl_get_info(void);
 
-GdkVisual    *gdk_gl_choose_visual(int *attrlist);
-int           gdk_gl_get_config(GdkVisual *visual, int attrib);
+GdkVisual    *gdk_gl_choose_visual              (int *attrlist);
+int           gdk_gl_get_config                 (GdkVisual *visual,
+                                                 int attrib);
+GType         gdk_gl_context_get_type           (void);
+GdkGLContext *gdk_gl_context_new                (GdkVisual *visual);
+GdkGLContext *gdk_gl_context_share_new          (GdkVisual *visual,
+                                                 GdkGLContext *sharelist,
+                                                 gint direct);
+GdkGLContext *gdk_gl_context_attrlist_share_new (int *attrlist,
+                                                 GdkGLContext *sharelist,
+                                                 gint direct);
 
-GType         gdk_gl_context_get_type(void);
-GdkGLContext *gdk_gl_context_new(GdkVisual *visual);
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct);
-GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct);
-
-gint          gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context);
+gint          gdk_gl_make_current(GdkDrawable *drawable,
+                                  GdkGLContext *context);
 void          gdk_gl_swap_buffers(GdkDrawable *drawable);
-
 
 void          gdk_gl_wait_gdk(void);
 void          gdk_gl_wait_gl(void);
-
-
-/* glpixmap stuff */
-
-#define GDK_TYPE_GL_PIXMAP            (gdk_gl_pixmap_get_type())
-#define GDK_GL_PIXMAP(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GDK_TYPE_GL_PIXMAP, GdkGLPixmap))
-#define GDK_GL_PIXMAP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDK_TYPE_GL_PIXMAP, GdkGLPixmapClass))
-#define GDK_IS_GL_PIXMAP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDK_TYPE_GL_PIXMAP))
-#define GDK_IS_GL_PIXMAP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDK_TYPE_GL_PIXMAP))
-#define GDK_GL_PIXMAP_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GDK_TYPE_GL_PIXMAP, GdkGLPixmap))
-
-typedef struct _GdkGLPixmap GdkGLPixmap;
-
-GType        gdk_gl_pixmap_get_type(void);
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap);
-
-gint         gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context);
-
-
-#ifndef GTKGL_DISABLE_DEPRECATED
-/* non-pango fonts */
-void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base);
-
-#  define gdk_gl_context_ref(context)   g_object_ref(context)
-#  define gdk_gl_context_unref(context) g_object_unref(context)
-#  define gdk_gl_pixmap_ref(pixmap)     g_object_ref(pixmap)
-#  define gdk_gl_pixmap_unref(pixmap)   g_object_unref(pixmap)
-#endif
 
 G_END_DECLS
 

@@ -18,22 +18,20 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gdkglpixmap-quartz.h"
+#ifndef __GDK_GL_CONTEXT_WIN32_H__
+#define __GDK_GL_CONTEXT_WIN32_H__
 
-GType gdk_gl_pixmap_get_type(void)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
+#include "gdk/gdkglcontext.h"
+#include "gdkgl-win32.h"
 
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
+struct _GdkGLContext {
+  GObject   parent;
+  gboolean  initialised;
+  HGLRC     hglrc;
+  HDC       hdc;
+  HWND      hwnd;
+  GdkGLContext *share;
+  PIXELFORMATDESCRIPTOR pfd;
+};
 
-gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
-{
-  g_warning ( "not implemented" );
-  return 0;
-}
+#endif /* __GDK_GL_CONTEXT_WIN32_H__ */

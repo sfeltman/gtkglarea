@@ -18,22 +18,10 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gdkglpixmap-quartz.h"
+#ifndef __GDK_GL_PIXMAP_QUARTZ_H__
+#define __GDK_GL_PIXMAP_QUARTZ_H__
 
-GType gdk_gl_pixmap_get_type(void)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
+#include "gdk/gdkglpixmap.h"
+#include <GL/gl.h>
 
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
-{
-  g_warning ( "not implemented" );
-  return 0;
-}
+#endif /* __GDK_GL_PIXMAP_QUARTZ_H__ */

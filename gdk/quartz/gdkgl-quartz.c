@@ -18,28 +18,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-#include "gdkgl.h"
-#include <GL/gl.h>
-#include <gdk/gdkwin32.h>
-
-GType gdk_gl_pixmap_get_type(void)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
-{
-  g_warning ( "not implemented" );
-  return 0;
-}
+#include "gdkgl-quartz.h"
 
 gint gdk_gl_query(void)
 {
@@ -65,30 +44,6 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
   return 0;
 }
 
-GType gdk_gl_context_get_type(void)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-GdkGLContext *gdk_gl_context_new(GdkVisual *visual)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
-GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
-
 gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 {
   g_warning ( "not implemented" );
@@ -110,3 +65,4 @@ void gdk_gl_wait_gl(void)
   g_warning ( "not implemented" );
 }
 
+#define __GDK_GL_QUARTZ_C__

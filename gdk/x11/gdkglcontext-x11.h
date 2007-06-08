@@ -1,6 +1,5 @@
 /* 
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
- * Copyright (C) 2000 Marc Flerackers <mflerackers@androme.be>
  * Copyright (C) 2007 C.J. Adams-Collier <cjac@colliertech.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -18,22 +17,15 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gdkglpixmap-quartz.h"
+#ifndef __GDK_GL_CONTEXT_X11_H__
+#define __GDK_GL_CONTEXT_X11_H__
 
-GType gdk_gl_pixmap_get_type(void)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
+#include "gdk/gdkglcontext.h"
 
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
-{
-  g_warning ( "not implemented" );
-  return NULL;
-}
+struct _GdkGLContext {
+  GObject     parent;
+  Display    *xdisplay;
+  GLXContext  glxcontext;
+};
 
-gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
-{
-  g_warning ( "not implemented" );
-  return 0;
-}
+#define /* __GDK_GL_CONTEXT_X11_H__ */
