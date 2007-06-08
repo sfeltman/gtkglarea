@@ -23,10 +23,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-
 #include "trackball.h"
 #include "lw.h"
-
 
 #define VIEW_ASPECT 1.3
 

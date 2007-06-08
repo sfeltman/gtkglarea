@@ -4,7 +4,7 @@
 ACLOCAL_FLAGS =
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-SUBDIRS= gtkglarea examples docs
+SUBDIRS = gdk gtkglarea examples docs
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gtkglarea-2.0.pc
