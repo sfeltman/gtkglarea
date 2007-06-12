@@ -26,6 +26,15 @@ typedef struct _GdkGLContextClass GdkGLContextClass;
 
 static GObjectClass *glcontext_parent_class;
 
-static void gdk_gl_context_class_init (GdkGLContextClass *class);
+static void   gdk_gl_context_class_init         (GdkGLContextClass *class);
+
+GType         gdk_gl_context_get_type           (void);
+GdkGLContext *gdk_gl_context_new                (GdkVisual *visual);
+GdkGLContext *gdk_gl_context_share_new          (GdkVisual *visual,
+                                                 GdkGLContext *sharelist,
+                                                 gint direct);
+GdkGLContext *gdk_gl_context_attrlist_share_new (int *attrlist,
+                                                 GdkGLContext *sharelist,
+                                                 gint direct)
 
 #endif /* __GDK_GL_CONTEXT_H__ */
