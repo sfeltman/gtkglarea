@@ -23,7 +23,7 @@ aclocal $ACLOCAL_GLAGS || {
 
 # checking for automake 1.9+
 am_version=`automake --version | cut -f 4 -d ' ' | head -n 1`
-if [ `expr match "$am_version" '1\.9'` -ne 3 ]; then
+if [ "${am_version##1.}" -lt 9 ]; then
 	echo "**Error**: automake 1.9+ required.";
 	exit 1;
 fi
