@@ -245,7 +245,7 @@ gint glarea_button_press (GtkWidget* widget, GdkEventButton* event) {
   if (event->button == 2) {
 
     /* Mouse button 2 was engaged */
-    g_print ("Button 1 press   (%d, %d)\n", x, y);
+    g_print ("Button 2 press   (%d, %d)\n", x, y);
 
     return TRUE;
 
