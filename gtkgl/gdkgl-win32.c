@@ -479,7 +479,7 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base)
 {
   HDC dc = CreateCompatibleDC ( NULL );
-  HFONT old_font = SelectObject ( dc, gdk_font_id ( font ) );
+  HFONT old_font = SelectObject ( dc, (void *)gdk_font_id ( font ) );
 
   wglUseFontBitmaps ( dc, first, count, list_base );
 

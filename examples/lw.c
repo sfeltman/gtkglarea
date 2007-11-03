@@ -53,8 +53,9 @@ static gint32 read_long(FILE *f)
 
 static GLfloat read_float(FILE *f)
 {
-  gint32 x = read_long(f);
-  return *(GLfloat*)&x;
+  union { GLfloat g; gint32 x; } u;
+  u.x = read_long(f);
+  return u.g;
 }
 
 static gint read_string(FILE *f, char *s)
