@@ -18,6 +18,7 @@
 
 
 #include <math.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>

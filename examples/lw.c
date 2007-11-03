@@ -19,6 +19,7 @@
 
 #include "lw.h"
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 #define MK_ID(a,b,c,d) ((((guint32)(a))<<24)| \
