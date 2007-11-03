@@ -36,7 +36,7 @@ AM_MAINTAINER_MODE
 
 AC_MSG_CHECKING([for Win32])
 case "$host" in
-  *mingw* | pw32* | cygwin*)
+  *mingw* | pw32* | *cygwin*)
     native_win32=yes
     ;;
   *)
@@ -169,9 +169,6 @@ AC_OUTPUT(
   docs/Makefile
   examples/Makefile
   examples/makefile.mingw
-  build/Makefile
-  build/win32/Makefile
-  build/win32/dirent/Makefile
 )
 
 
