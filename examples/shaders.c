@@ -1,0 +1,452 @@
+/******************************************************************************
+ * Copyright (C) 1999 Chris Abernethy <chris65536@home.com>                   *
+ *           (c) 2007 Éric Beets (Uniways-Innovatys) <ericbeets@free.fr>      *
+ *                                                                            *
+ * This program is free software; you can redistribute it and/or              *
+ * modify it under the terms of the GNU General Public License                *
+ * as published by the Free Software Foundation; either version 2             *
+ * of the License, or (at your option) any later version.                     *
+ *                                                                            *
+ * This program is distributed in the hope that it will be useful,            *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
+ * GNU General Public License for more details.                               *
+ *                                                                            *
+ * You should have received a copy of the GNU General Public License          *
+ * along with this program; if not, write to the Free Software                *
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,     *
+ * USA.                                                                       *
+ *                                                                            *
+ ******************************************************************************
+ *
+ * This program creates a window with a GtkGLArea widget using a Vertex
+ * Shader and a Fragment shader. It should display a coloured texture. A
+ * grayscale result means the shaders are not supported.
+ *
+ ************/
+
+#ifndef GL_GLEXT_PROTOTYPES
+#    define GL_GLEXT_PROTOTYPES 1
+#endif
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <gtk/gtk.h>
+#include <gtkgl/gtkglarea.h>
+
+#include <stdlib.h>
+
+
+void       create_shader         (void);
+void       create_texture_2D     (void);
+GtkWidget* create_glarea         (void);
+gint       glarea_draw           (GtkWidget*, GdkEventExpose*);
+gint       glarea_draw_scene     (void);
+gint       glarea_reshape        (GtkWidget*, GdkEventConfigure*);
+gint       glarea_init           (GtkWidget*);
+gint       glarea_destroy        (GtkWidget*);
+int        main                  (int, char**);
+
+#define texture_width   64
+#define texture_height  64
+static GLubyte texture[texture_height][texture_width][3];
+
+/**************************************************/
+/*                                                */
+/* Function: create_texture_2D (void)             */
+/*                                                */
+/* This function creates a procedural 2d texture. */
+/*                                                */
+/**************************************************/
+
+void create_texture_2D (void) {
+
+  int x, y;
+  
+  g_print("Creating 2D texture\n");
+
+  for(y = 0; y < texture_height; y++) {
+    for(x = 0; x < texture_width; x++) {
+      texture[y][x][0] = (x * y) % 255;
+      texture[y][x][1] = (x * y) % 255;
+      texture[y][x][2] = (x * y) % 255;
+    }
+  }
+}
+
+/*******************************************************/
+/*                                                     */
+/* Function: shader_status(int)                        */
+/*                                                     */
+/* This function checks the shader status and show     */
+/* the compilation log                                 */
+/*                                                     */
+/*******************************************************/
+
+void shader_status(int shader_id)
+{
+   /* Compilation Test */
+
+   int status;
+   glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
+   
+   /* Display log compilation */
+   
+   if( !status )
+   {
+     int infologLength, charsWritten;
+     GLchar *infoLog;
+     glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &infologLength);
+     infoLog = malloc(sizeof(GLchar) * infologLength);
+     glGetShaderInfoLog(shader_id, infologLength, &charsWritten, infoLog);
+     g_print(infoLog);
+     free(infoLog);
+   }
+}
+
+/*******************************************************/
+/*                                                     */
+/* Function: create_shader(void)                       */
+/*                                                     */
+/* This function creates a Vertex and Fragment Shader, */
+/* compile the Program Shader and use it.              */
+/*                                                     */
+/*******************************************************/
+
+void create_shader (void) {
+
+  int ver, fgm, prog;
+
+  g_print("Creating shaders\n");
+
+  /* Vertex Shader                                */
+  /*   compute the color from the vertex position */
+
+  const char *str_ver =
+    "varying vec4 color;"
+    "void main()"
+    "{"
+    "  gl_TexCoord[0] = gl_MultiTexCoord0;"
+    "  float r = (float)(gl_Vertex.x + 100) / 100.0;"
+    "  float g = (float)(gl_Vertex.y + 100) / 100.0;"
+    "  color = vec4(1 - r, 1 - g, 0, 1);"
+    "  gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex ;"
+    "}";
+
+  /* Fragment Shader                              */
+  /*   coordinates texture repeat on X and Y      */
+  /*   invert coordinates texture (on repetition) */
+
+  const char *str_fgm =
+    "varying vec4 color;"
+    "uniform sampler2D tex;"
+    "void main()"
+    "{"
+    "  int fact_x = 1;"
+    "  int fact_y = 1;"
+    "  if(gl_TexCoord[0].x > 0.5)"
+    "    fact_x = -1;"
+    "  if(gl_TexCoord[0].y > 0.5)"
+    "    fact_y = -1;"
+    "  gl_TexCoord[0].x = fact_x * gl_TexCoord[0].x * 2.0 ;"
+    "  gl_TexCoord[0].y = fact_y * gl_TexCoord[0].y * 2.0 ;"
+    "  gl_FragColor = texture2D(tex,gl_TexCoord[0]) + color;"
+    "}";
+
+  /* Create Shaders (vertex and fragment) */
+
+  ver = glCreateShader( GL_VERTEX_SHADER );
+  fgm = glCreateShader( GL_FRAGMENT_SHADER );
+
+  /* Source Shader */
+
+  glShaderSource(ver, 1, &str_ver, NULL);
+  glShaderSource(fgm, 1, &str_fgm, NULL);
+  
+  /* Shader source compilation */
+  
+  glCompileShader(ver);
+  glCompileShader(fgm);
+  
+  /* Create Program */
+  
+  prog = glCreateProgram();
+  
+  /* Add the shader to the program */
+  
+  glAttachShader(prog, ver);
+  glAttachShader(prog, fgm);
+  
+  /* Link the shader */
+  
+  glLinkProgram(prog);
+  
+  /* Check the program */
+  
+  glValidateProgram(prog);
+
+  /* Check shaders */
+
+  shader_status(ver);
+  shader_status(fgm);
+
+  /* Activate shaders */
+  glUseProgram(prog);
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/* Function: create_glarea (void)                                            */
+/*                                                                           */
+/* This function performs the necessary operations to construct a GtkGlarea  */
+/* widget. These operations include creating the widget, setting the size    */
+/* of the widget, and registering callbacks for the widget.                  */
+/*                                                                           */
+/* This is a good place to add function calls for any GtkGlarea              */
+/* initialization that you need to do.                                       */
+/*                                                                           */
+/*****************************************************************************/
+
+GtkWidget* create_glarea (void) {
+
+  GtkWidget* glarea;
+  
+  int attrlist[] = {
+    GDK_GL_RGBA,
+    GDK_GL_DOUBLEBUFFER,
+    GDK_GL_DEPTH_SIZE, 1,
+    GDK_GL_NONE
+  };
+
+  if(gdk_gl_query() == FALSE) {
+    g_print("OpenGL not supported!\n");
+    return NULL;
+  }
+
+  if ((glarea = gtk_gl_area_new(attrlist)) == NULL) {
+    g_print("Error creating GtkGLArea!\n");
+    return NULL;
+  }
+
+  gtk_widget_set_events(GTK_WIDGET(glarea), GDK_EXPOSURE_MASK);
+
+  gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",
+                      GTK_SIGNAL_FUNC(glarea_draw), NULL);
+  
+  gtk_signal_connect (GTK_OBJECT(glarea), "configure_event",
+                      GTK_SIGNAL_FUNC(glarea_reshape), NULL);
+  
+  gtk_signal_connect (GTK_OBJECT(glarea), "realize",
+                      GTK_SIGNAL_FUNC(glarea_init), NULL);
+  
+  gtk_signal_connect (GTK_OBJECT(glarea), "destroy",
+                      GTK_SIGNAL_FUNC (glarea_destroy), NULL);
+
+  gtk_widget_set_usize(GTK_WIDGET(glarea), 256, 256);
+
+  return (glarea);
+
+}
+
+/*******************************************************/
+/*                                                     */
+/* Function: glarea_draw_scene(void)                   */
+/*                                                     */
+/* This function draws a simple textured quad          */
+/*                                                     */
+/*******************************************************/
+
+gint glarea_draw_scene (void) {
+
+  /* Draw a simple Quad */
+  glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex3f(-100,-100,0);
+    glTexCoord2f(0.0, 1.0); glVertex3f(-100, 100,0);
+    glTexCoord2f(1.0, 1.0); glVertex3f( 100, 100,0);
+    glTexCoord2f(1.0, 0.0); glVertex3f( 100,-100,0);
+  glEnd();
+
+  return(TRUE);
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/* Function: glarea_draw (GtkWidget*, GdkEventExpose*)                       */
+/*                                                                           */
+/* This is the function that should render your scene to the GtkGLArea. It   */
+/* can be used as a callback to the 'Expose' event.                          */
+/*                                                                           */
+/*****************************************************************************/
+
+gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
+
+  if (event->count > 0) {
+    return(TRUE);
+  }
+
+  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
+
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glarea_draw_scene();
+    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));
+    
+  }
+
+  return (TRUE);
+
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/* Function: glarea_reshape (GtkWidget*, GdkEventConfigure*)                 */
+/*                                                                           */
+/* This function performs the operations needed to maintain the viewing area */
+/* of the GtkGLArea. This should be called whenever the size of the area     */
+/* is changed.                                                               */
+/*                                                                           */
+/*****************************************************************************/
+
+gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
+
+  int w = widget->allocation.width;
+  int h = widget->allocation.height;
+
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
+
+    glViewport (0, 0, w, h);
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+    gluOrtho2D (-(w>>1), (w>>1), -(h>>1), h>>1);
+    glMatrixMode (GL_MODELVIEW);  
+
+  }
+  
+  return (TRUE);
+
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/* Function: glarea_init (GtkWidget*)                                        */
+/*                                                                           */
+/* This function is a callback for the realization of the GtkGLArea widtget. */
+/* You should do any OpenGL initialization here.                             */
+/*                                                                           */
+/*****************************************************************************/
+
+gint glarea_init (GtkWidget* widget) {
+
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
+
+    /* Procedural texture creation */
+
+    create_texture_2D ();
+
+    /* Create and Activate shaders */
+
+    create_shader();
+  
+    /* Activate and parameterization texture context */
+
+    glEnable(GL_TEXTURE_2D);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  }
+
+  return TRUE;
+
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/* Function: glarea_destroy (GtkWidget*)                                     */
+/*                                                                           */
+/* This function is a callback for the main GtkGLArea. It deletes should     */
+/* delete any data structures stored in the GtkGLArea.                       */
+/*                                                                           */
+/*****************************************************************************/
+
+gint glarea_destroy (GtkWidget* widget) {
+
+  g_print ("GTK GL Area destroy event\n");
+
+  /* Insert any required cleanup */
+  /* code here.                  */
+
+  return TRUE;
+
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/* Function: main (int, char**)                                              */
+/*                                                                           */
+/* The main function sets up our GUI and calls the functions needed to       */
+/* create our GtkGLArea.                                                     */
+/*                                                                           */
+/*****************************************************************************/
+
+int main (int argc, char** argv) {
+
+  GtkWidget* window;
+  GtkWidget* button_quit;
+  GtkWidget* box_main;
+  GtkWidget* glarea;
+
+  gtk_init (&argc, &argv);
+
+  /* Main widget container */
+
+  box_main = gtk_vbox_new (FALSE, 10);
+
+  /* GTK GL Area */
+
+  glarea = create_glarea ();
+
+  /* Quit button */
+
+  button_quit = gtk_button_new_with_label ("Quit");
+
+  gtk_signal_connect (GTK_OBJECT(button_quit), "clicked",
+                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+
+  /* Main window */
+
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+  gtk_window_set_title (GTK_WINDOW(window), "GtkGLArea Shader Demo");
+
+  /* destroy this window when exiting from gtk_main() */
+
+  gtk_quit_add_destroy (1, GTK_OBJECT(window));
+
+  gtk_signal_connect (GTK_OBJECT(window), "delete_event",
+                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+
+  gtk_container_set_border_width (GTK_CONTAINER(window), 10);
+
+  /* Pack everything into the main box, add the main box to */
+  /* the top-level window, and 'show' all of the widgets.   */
+  /* The window is 'shown' last so that when the user sees  */
+  /* it, it's contents are already there. Otherwise they    */
+  /* might see each widget come up.                         */
+
+  gtk_box_pack_start (GTK_BOX(box_main), glarea,      FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX(box_main), button_quit, FALSE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER(window), box_main);
+
+  gtk_widget_show (glarea);
+  gtk_widget_show (button_quit);
+  gtk_widget_show (box_main);
+  gtk_widget_show (window);
+
+  gtk_main ();
+
+  return (0);
+
+}
