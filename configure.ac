@@ -146,6 +146,15 @@ else
 
 fi
 
+saved_LIBS="$LIBS"
+AC_MSG_CHECKING([OpenGL shaders])
+LIBS="$saved_LIBS $BASE_DEPENDENCIES_LIBS $GL_LDOPTS $GL_LIBS"
+AC_TRY_LINK( ,[ char glCreateProgram(); glCreateProgram(); ],
+            have_shaders=yes, have_shaders=no)
+AC_MSG_RESULT($have_shaders)
+LIBS="$saved_LIBS"
+AM_CONDITIONAL(HAVE_SHADERS, test "$have_shaders" = "yes")
+
 AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
