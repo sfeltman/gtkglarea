@@ -392,6 +392,7 @@ int main (int argc, char** argv) {
 
   GtkWidget* window;
   GtkWidget* button_quit;
+  GtkWidget* message;
   GtkWidget* box_main;
   GtkWidget* glarea;
 
@@ -404,6 +405,12 @@ int main (int argc, char** argv) {
   /* GTK GL Area */
 
   glarea = create_glarea ();
+
+  /* Information message */
+
+  message = gtk_label_new ("If the above drawing consists only of\n"
+                           "shades of grey, your hardware or your\n"
+                           "drivers do not support fragment shaders.");
 
   /* Quit button */
 
@@ -436,11 +443,13 @@ int main (int argc, char** argv) {
   /* it, it's contents are already there. Otherwise they    */
   /* might see each widget come up.                         */
 
-  gtk_box_pack_start (GTK_BOX(box_main), glarea,      FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX(box_main), glarea,      TRUE,  TRUE, 0);
+  gtk_box_pack_start (GTK_BOX(box_main), message,     FALSE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX(box_main), button_quit, FALSE, TRUE, 0);
   gtk_container_add (GTK_CONTAINER(window), box_main);
 
   gtk_widget_show (glarea);
+  gtk_widget_show (message);
   gtk_widget_show (button_quit);
   gtk_widget_show (box_main);
   gtk_widget_show (window);
