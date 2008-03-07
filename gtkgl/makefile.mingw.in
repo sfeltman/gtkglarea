@@ -13,7 +13,7 @@ DEPCFLAGS = $(GLIB_CFLAGS) $(GTK_CFLAGS) $(OPENGL_CFLAGS)
 
 TARGET = libgtkgl-$(GTKGLAREA_VER).dll
 
-OBJS   = gdkgl-win32.o gtkglarea.o
+OBJS   = gdkgl.o gtkglarea.o
 
 all : $(TARGET)
 

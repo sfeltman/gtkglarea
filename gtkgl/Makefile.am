@@ -25,13 +25,7 @@ install-ms-lib:
 uninstall-ms-lib:
 endif
 
-if WINDOWING_WIN32
-gdkgl = gdkgl-win32.c
-else
-gdkgl = gdkgl.c
-endif
-
-EXTRA_DIST = makefile.mingw makefile.mingw.in gdkgl-win32.c gtkgl.def
+EXTRA_DIST = makefile.mingw makefile.mingw.in gtkgl.def
 
 AM_CFLAGS = $(BASE_DEPENDENCIES_CFLAGS) $(GL_CFLAGS)
 INCLUDES= -I$(top_srcdir)
@@ -41,7 +35,7 @@ gtkglincludedir = $(includedir)/gtkgl-2.0/gtkgl
 lib_LTLIBRARIES= libgtkgl-2.0.la
 
 gtkglinclude_HEADERS= gdkgl.h gtkglarea.h
-libgtkgl_2_0_la_SOURCES = $(gdkgl) gtkglarea.c
+libgtkgl_2_0_la_SOURCES = gdkgl.c gtkglarea.c
 libgtkgl_2_0_la_LDFLAGS = -version-info $(GTKGL_LIBRARY_VERSION) $(export_symbols) -no-undefined
 libgtkgl_2_0_la_LIBADD = $(BASE_DEPENDENCIES_LIBS) $(GL_LIBS)
 

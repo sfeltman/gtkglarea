@@ -1,5 +1,6 @@
 /* 
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
+ *           (c) 2008 Sam Hocevar <sam@zoy.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,15 +19,103 @@
 
 #include "config.h"
 
-#include "gdkgl.h"
-
-#include <gdk/gdkx.h>
-
 #include <GL/gl.h>
-#include <GL/glx.h>
 #include <string.h>
 
+#ifdef USE_WIN32
+#   include <gdk/gdkwin32.h>
+#else
+#   include <gdk/gdkx.h>
+#   include <GL/glx.h>
+#endif
 
+#include "gdkgl.h"
+
+#ifdef USE_WIN32
+static void fill_pfd(PIXELFORMATDESCRIPTOR *pfd, int *attriblist)
+{
+  /*
+   * Ripped from glut's win32_x11.c
+   */
+
+  int *p = attriblist;
+
+  memset(pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+  pfd->nSize = (sizeof(PIXELFORMATDESCRIPTOR));
+  pfd->nVersion = 1;
+
+  /* Defaults. */
+  pfd->dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW;
+  pfd->iPixelType = PFD_TYPE_COLORINDEX;
+  pfd->cColorBits = 32;
+  pfd->cDepthBits = 0;
+  pfd->cAccumBits = 0;
+
+  while (*p) {
+    switch (*p) {
+    case GDK_GL_USE_GL:
+      pfd->dwFlags |= PFD_SUPPORT_OPENGL;
+      break;
+    case GDK_GL_BUFFER_SIZE:
+      pfd->cColorBits = *(++p);
+      break;
+    case GDK_GL_LEVEL:
+      /* the bReserved flag of the pfd contains the
+         overlay/underlay info. */
+      pfd->bReserved = *(++p);
+      break;
+    case GDK_GL_RGBA:
+      pfd->iPixelType = PFD_TYPE_RGBA;
+      break;
+    case GDK_GL_DOUBLEBUFFER:
+      pfd->dwFlags |= PFD_DOUBLEBUFFER;
+      break;
+    case GDK_GL_STEREO:
+      pfd->dwFlags |= PFD_STEREO;
+      break;
+    case GDK_GL_AUX_BUFFERS:
+      pfd->cAuxBuffers = *(++p);
+      break;
+    case GDK_GL_RED_SIZE:
+      pfd->cRedBits = 8; /* Try to get the maximum. */
+      ++p;
+      break;
+    case GDK_GL_GREEN_SIZE:
+      pfd->cGreenBits = 8;
+      ++p;
+      break;
+    case GDK_GL_BLUE_SIZE:
+      pfd->cBlueBits = 8;
+      ++p;
+      break;
+    case GDK_GL_ALPHA_SIZE:
+      pfd->cAlphaBits = 8;
+      ++p;
+      break;
+    case GDK_GL_DEPTH_SIZE:
+      pfd->cDepthBits = 32;
+      ++p;
+      break;
+    case GDK_GL_STENCIL_SIZE:
+      pfd->cStencilBits = *(++p);
+      break;
+    case GDK_GL_ACCUM_RED_SIZE:
+    case GDK_GL_ACCUM_GREEN_SIZE:
+    case GDK_GL_ACCUM_BLUE_SIZE:
+    case GDK_GL_ACCUM_ALPHA_SIZE:
+      /* I believe that WGL only used the cAccumRedBits,
+         cAccumBlueBits, cAccumGreenBits, and cAccumAlphaBits fields
+         when returning info about the accumulation buffer precision.
+         Only cAccumBits is used for requesting an accumulation
+         buffer. */
+      pfd->cAccumBits += *(++p);
+                break;
+    }
+    ++p;
+  }
+}
+
+#else
 static XVisualInfo *get_xvisualinfo(GdkVisual *visual)
 {
   Display *dpy;
@@ -51,28 +140,44 @@ static XVisualInfo *get_xvisualinfo(GdkVisual *visual)
   /* remember to XFree returned XVisualInfo !!! */
   return vi;
 }
-
+#endif
 
 
 gint gdk_gl_query(void)
 {
+#ifdef USE_WIN32
+  return TRUE;
+#else
   return (glXQueryExtension(GDK_DISPLAY(),NULL,NULL) == True) ? TRUE : FALSE;
+#endif
 }
 
 
 gchar *gdk_gl_get_info()
 {
+#ifdef USE_WIN32
+  return g_strdup_printf("VENDOR     : %s\n"
+                         "VERSION    : %s\n"
+                         "EXTENSIONS : %s\n",
+                         glGetString ( GL_VENDOR ),
+                         glGetString ( GL_VERSION ),
+                         glGetString ( GL_EXTENSIONS ));
+#else
   return g_strdup_printf("VENDOR     : %s\n"
 			 "VERSION    : %s\n"
 			 "EXTENSIONS : %s\n",
 			 glXGetClientString(GDK_DISPLAY(), GLX_VENDOR),
 			 glXGetClientString(GDK_DISPLAY(), GLX_VERSION),
 			 glXGetClientString(GDK_DISPLAY(), GLX_EXTENSIONS));
+#endif
 }
 
 
 GdkVisual *gdk_gl_choose_visual(int *attrlist)
 {
+#ifdef USE_WIN32
+  return gdk_visual_get_system ();
+#else
   Display *dpy;
   XVisualInfo *vi;
   GdkVisual  *visual;
@@ -86,11 +191,16 @@ GdkVisual *gdk_gl_choose_visual(int *attrlist)
   visual = gdkx_visual_get(vi->visualid);
   XFree(vi);
   return visual;
+#endif
 }
 
 
 int gdk_gl_get_config(GdkVisual *visual, int attrib)
 {
+#ifdef USE_WIN32
+  g_warning ( "not implemented" );
+  return 0;
+#else
   Display *dpy;
   XVisualInfo *vi;
   int value;
@@ -108,12 +218,22 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
     }
   XFree(vi);
   return -1;
+#endif
 }
 
 struct _GdkGLContext {
   GObject     parent;
+#ifdef USE_WIN32
+  gboolean  initialised;
+  HGLRC     hglrc;
+  HDC       hdc;
+  HWND      hwnd;
+  GdkGLContext *share;
+  PIXELFORMATDESCRIPTOR pfd;
+#else
   Display    *xdisplay;
   GLXContext  glxcontext;
+#endif
 };
 struct _GdkGLContextClass {
   GObjectClass parent_class;
@@ -158,6 +278,17 @@ gdk_gl_context_finalize(GObject *object)
 
   context = GDK_GL_CONTEXT(object);
 
+#ifdef USE_WIN32
+  if (context->hglrc == wglGetCurrentContext () )
+    wglMakeCurrent ( NULL, NULL );
+
+  wglDeleteContext ( context->hglrc );
+
+  if ( context->hwnd )
+    ReleaseDC ( context->hwnd, context->hdc );
+  else
+    DeleteDC ( context->hdc );
+#else
   if (context->glxcontext) {
     if (context->glxcontext == glXGetCurrentContext())
       glXMakeCurrent(context->xdisplay, None, NULL);
@@ -165,6 +296,7 @@ gdk_gl_context_finalize(GObject *object)
     glXDestroyContext(context->xdisplay, context->glxcontext);
   }
   context->glxcontext = NULL;
+#endif
 
   (* glcontext_parent_class->finalize)(object);
 }
@@ -190,6 +322,47 @@ gdk_gl_context_new(GdkVisual *visual)
 GdkGLContext *
 gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
 {
+#ifdef USE_WIN32
+  GdkGLContext *context;
+
+  g_return_val_if_fail ( visual != NULL, NULL );
+
+  context = g_object_new(GDK_TYPE_GL_CONTEXT, NULL);
+  if (!context) return NULL;
+
+  context->initialised = FALSE;
+  context->hglrc   = NULL;
+  context->hdc     = NULL;
+  context->hwnd    = NULL;
+  context->share   = sharelist ? g_object_ref(sharelist) : NULL;
+
+  memset ( &(context->pfd), 0, sizeof(PIXELFORMATDESCRIPTOR) );
+
+  /* if direct is TRUE, we create a context which renders to the screen, otherwise
+     we create one to render to an offscreen bitmap */
+  if ( direct )
+  {
+    context->pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+    context->pfd.nVersion = 1;
+    context->pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
+    context->pfd.iPixelType = PFD_TYPE_RGBA;
+    context->pfd.cColorBits = 24;
+    context->pfd.cDepthBits = 32;
+    context->pfd.iLayerType = PFD_MAIN_PLANE;
+  }
+  else
+  {
+    context->pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+    context->pfd.nVersion = 1;
+    context->pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_BITMAP | PFD_SUPPORT_GDI;
+    context->pfd.iPixelType = PFD_TYPE_RGBA;
+    context->pfd.cColorBits = 24;
+    context->pfd.cDepthBits = 32;
+    context->pfd.iLayerType = PFD_MAIN_PLANE;
+  }
+ 
+  return context;
+#else
   Display *dpy;
   XVisualInfo *vi;
   GLXContext glxcontext;
@@ -219,20 +392,74 @@ gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct
   context->glxcontext = glxcontext;
   
   return context;
+#endif
 }
 
 GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
 {
+#ifdef USE_WIN32
+  GdkGLContext *context;
+
+  g_return_val_if_fail(attrlist != NULL, NULL);
+
+  context = g_object_new(GDK_TYPE_GL_CONTEXT, NULL);
+  if (!context) return NULL;
+
+  context->initialised = FALSE;
+  context->hglrc    = NULL;
+  context->hdc      = NULL;
+  context->hwnd     = NULL;
+  context->share    = sharelist ? g_object_ref(sharelist) : NULL;
+  fill_pfd(&context->pfd, attrlist);
+
+  return context;
+#else
   GdkVisual *visual = gdk_gl_choose_visual(attrlist);
   if (visual)
     return gdk_gl_context_share_new(visual, sharelist, direct);
   return NULL;
+#endif
 }
 
 
 gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 {
+#ifdef USE_WIN32
+  g_return_val_if_fail (GDK_IS_DRAWABLE(drawable), FALSE );
+  g_return_val_if_fail (GDK_IS_GL_CONTEXT(context), FALSE );
 
+  if ( !context->initialised )
+  {
+    int pf;
+    HWND hwnd = (HWND) gdk_win32_drawable_get_handle ( drawable );
+
+    context->hdc = GetDC ( hwnd );
+
+    pf = ChoosePixelFormat ( context->hdc, &context->pfd );
+
+    if ( pf != 0 )
+        {
+          SetPixelFormat ( context->hdc, pf, &context->pfd );
+          context->hglrc = wglCreateContext ( context->hdc );
+        }
+
+    if (context->share)
+        {
+          if ( context->share->hglrc )
+            wglShareLists ( context->share->hglrc, context->hglrc );
+          g_object_unref ( context->share );
+        }
+
+    context->initialised = TRUE;
+  }
+
+  g_return_val_if_fail ( context->hdc    != NULL, FALSE );
+  g_return_val_if_fail ( context->hglrc  != NULL, FALSE );
+
+  wglMakeCurrent ( context->hdc, context->hglrc );
+
+  return TRUE;
+#else
   g_return_val_if_fail(drawable != NULL, FALSE);
   g_return_val_if_fail(context  != NULL, FALSE);
 
@@ -250,33 +477,67 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
       return (glXMakeCurrent(context->xdisplay, GDK_WINDOW_XWINDOW(drawable), context->glxcontext) == True) ? TRUE : FALSE;
     }
 #endif
+#endif
 }
 
 void gdk_gl_swap_buffers(GdkDrawable *drawable)
 {
+#ifdef USE_WIN32
+  HDC   hdc;
+  HWND  hwnd;
+
+  g_return_if_fail ( GDK_IS_DRAWABLE(drawable) );
+
+  hwnd = (HWND) gdk_win32_drawable_get_handle ( drawable );
+  hdc  = GetDC ( hwnd );
+  if ( hdc  == NULL )
+  {
+     g_warning ( "gdk_gl_swap_buffers: GetDC failed" );
+     return;
+  }
+  SwapBuffers ( hdc );
+  ReleaseDC ( hwnd, hdc );
+#else
   g_return_if_fail(drawable != NULL);
 
   glXSwapBuffers(GDK_WINDOW_XDISPLAY(drawable), GDK_WINDOW_XWINDOW(drawable));
+#endif
 }
 
 void gdk_gl_wait_gdk(void)
 {
+#ifdef USE_WIN32
+  GdiFlush ();
+#else
   glXWaitX();
+#endif
 }
 
 void gdk_gl_wait_gl (void)
 {
+#ifdef USE_WIN32
+  glFinish ();
+#else
   glXWaitGL();
+#endif
 }
 
 
 /* glpixmap stuff */
 
 struct _GdkGLPixmap {
+#ifdef USE_WIN32
+  GObject   object;
+  gboolean  initialised;
+  HDC       hdc;
+  HBITMAP   hbitmap;
+  GdkPixmap *pixmap;
+#else
   GObject   parent;
   Display   *xdisplay;
   GLXPixmap glxpixmap;
   GdkPixmap *front_left;
+#endif
 };
 
 struct _GdkGLPixmapClass {
@@ -322,6 +583,11 @@ gdk_gl_pixmap_finalize(GObject *object)
 
   pixmap = GDK_GL_PIXMAP(object);
 
+#ifdef USE_WIN32
+  glFinish ();
+  SelectObject ( pixmap->hdc, pixmap->hbitmap );
+  gdk_pixmap_unref ( pixmap->pixmap );
+#else
   if (pixmap->glxpixmap != None) {
     glXDestroyGLXPixmap(pixmap->xdisplay, pixmap->glxpixmap);
     glXWaitGL();
@@ -332,6 +598,7 @@ gdk_gl_pixmap_finalize(GObject *object)
     glXWaitX();
   }
   pixmap->front_left = NULL;
+#endif
 
   (* glcontext_parent_class->finalize)(object);
 }
@@ -350,6 +617,22 @@ gdk_gl_pixmap_class_init(GdkGLPixmapClass *class)
 GdkGLPixmap *
 gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
 {
+#ifdef USE_WIN32
+  GdkGLPixmap *glpixmap;
+
+  g_return_val_if_fail(GDK_IS_VISUAL(visual), NULL);
+  g_return_val_if_fail(GDK_IS_PIXMAP(pixmap), NULL);
+
+  glpixmap = g_object_new(GDK_TYPE_GL_PIXMAP, NULL);
+  if (!glpixmap) return NULL;
+
+  glpixmap->initialised = FALSE;
+  glpixmap->hdc = NULL;
+  glpixmap->hbitmap = NULL;
+  glpixmap->pixmap = gdk_pixmap_ref ( pixmap );
+
+  return glpixmap;
+#else
   Display *dpy;
   XVisualInfo *vi;
   Pixmap xpixmap;
@@ -385,11 +668,49 @@ gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
   glpixmap->front_left = gdk_pixmap_ref(pixmap);
 
   return glpixmap;
+#endif
 }
 
 
 gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 {
+#ifdef USE_WIN32
+  g_return_val_if_fail (GDK_IS_GL_PIXMAP(glpixmap), FALSE );
+  g_return_val_if_fail (GDK_IS_GL_CONTEXT(context), FALSE );
+
+  if ( !context->initialised )
+  {
+    int pf;
+
+    context->hdc = CreateCompatibleDC ( NULL );
+    glpixmap->hdc = context->hdc;
+    glpixmap->hbitmap = SelectObject ( context->hdc, (HBITMAP) gdk_win32_drawable_get_handle ( glpixmap->pixmap ) );
+
+    pf = ChoosePixelFormat ( context->hdc, &context->pfd );
+
+    if ( pf != 0 )
+        {
+          SetPixelFormat ( context->hdc, pf, &context->pfd );
+          context->hglrc = wglCreateContext ( context->hdc );
+        }
+
+    if (context->share)
+        {
+          if ( context->share->hglrc )
+            wglShareLists ( context->share->hglrc, context->hglrc );
+          gdk_gl_context_unref ( (GdkGLContext*)context->share );
+        }
+
+    context->initialised = TRUE;
+  }
+
+  g_return_val_if_fail ( context->hdc    != NULL, FALSE );
+  g_return_val_if_fail ( context->hglrc  != NULL, FALSE );
+
+  wglMakeCurrent ( context->hdc, context->hglrc );
+
+  return TRUE;
+#else
   Display  *dpy;
   GLXPixmap glxpixmap;
   GLXContext glxcontext;
@@ -402,12 +723,23 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
   glxcontext = context->glxcontext;
 
   return (glXMakeCurrent(dpy, glxpixmap, glxcontext) == True) ? TRUE : FALSE;
+#endif
 }
 
 /* fonts */
 void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base)
 {
+#ifdef USE_WIN32
+  HDC dc = CreateCompatibleDC ( NULL );
+  HFONT old_font = SelectObject ( dc, (void *)gdk_font_id ( font ) );
+
+  wglUseFontBitmaps ( dc, first, count, list_base );
+
+  SelectObject ( dc, old_font );
+  DeleteDC ( dc );
+#else
   g_return_if_fail(font != NULL);
   glXUseXFont(gdk_font_id(font), first, count, list_base);
+#endif
 }
 
