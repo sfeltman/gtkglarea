@@ -9,7 +9,7 @@ endif
 noinst_PROGRAMS = simple zktor viewlw glpixmap gdkfont $(shader_programs) gtkglarea_demo
 
 INCLUDES = -I$(top_srcdir)
-LDADD = $(top_builddir)/gtkgl/libgtkgl-2.0.la $(BASE_DEPENDENCIES_LIBS) $(GL_LIBS)
+LDADD = $(top_builddir)/gtkgl/libgtkgl-2.0.la $(GTK_LIBS) $(GL_LIBS)
 
 simple_SOURCES   = simple.c
 zktor_SOURCES    = zktor.c
