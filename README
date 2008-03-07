@@ -4,13 +4,13 @@ GtkGLArea
 
 AUTHOR
 ------
- Janne Löf <jlof@mail.student.oulu.fi>
+ Janne LÃ¶f <jlof@mail.student.oulu.fi>
 
 CONTRIBUTORS
 ------------
  Karl Nelson     <kenelson@ece.ucdavis.edu>          (original autoconf, gtkglarea--)
  Daniel Skarda   <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
- Jussi Löf       <jussi.lof@pirko.fi>                (LightWave objects)
+ Jussi LÃ¶f       <jussi.lof@pirko.fi>                (LightWave objects)
  Andrew Marriott <raytrace@lillee.cs.curtin.edu.au>  (original win32 port)
  Chris Abernethy <chris65536@home.com>               (gtkglarea_demo.c)
 

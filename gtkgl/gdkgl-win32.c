@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
+ * Copyright (C) 1998 Janne LÃ¶f <jlof@mail.student.oulu.fi>
  * Copyright (C) 2000 Marc Flerackers <mflerackers@androme.be>
  *
  * This library is free software; you can redistribute it and/or
