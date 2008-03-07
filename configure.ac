@@ -1,8 +1,8 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(gtkgl/gtkglarea.h)
-
-VERSION=2.0.0
-PACKAGE=gtkglarea
+AC_INIT(gtkglarea, 2.0.0)
+AC_CONFIG_AUX_DIR(.auto)
+AC_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE([no-define])
 
 #shared library versioning
 GTKGL_LIBRARY_VERSION=1:0:0
@@ -21,7 +21,6 @@ GTKGL_LIBRARY_VERSION=1:0:0
 # to know the DLL name to build MSVC import libraries.
 LT_CURRENT_MINUS_AGE=1
 
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AC_SUBST(GTKGL_LIBRARY_VERSION)
 AC_SUBST(LT_CURRENT_MINUS_AGE)
 AC_SUBST(VERSION)
@@ -34,6 +33,9 @@ AM_PROG_LIBTOOL
 AM_SANITY_CHECK
 AM_MAINTAINER_MODE
 
+dnl
+dnl  Check for the operating system
+dnl
 AC_MSG_CHECKING([for Win32])
 case "$host" in
   *mingw* | pw32* | *cygwin*)
@@ -51,18 +53,27 @@ if test "$native_win32" = "yes"; then
 fi
 AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 
-dnl Check for GTK libraries
+dnl
+dnl  Check for GTK libraries
+dnl
 GTK_REQUIRED_VERSION=2.0.0
 PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk+-2.0 >= $GTK_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION)
 
 AC_SUBST(BASE_DEPENDENCIES_CFLAGS)
 AC_SUBST(BASE_DEPENDENCIES_LIBS)
 
+dnl
+dnl  Check for the windowing system (X11 or Win32)
+dnl
 gdk_target=`$PKG_CONFIG --variable=target gtk+-2.0`
-
 AM_CONDITIONAL(WINDOWING_WIN32, test x$gdk_target = xwin32)
+if test "$gdk_target" = "win32"; then
+  AC_DEFINE(USE_WIN32, 1, Define to 1 if the windowing system is Windows.)
+fi
 
-dnl Check for GL/MesaGL libraries
+dnl
+dnl  Check for GL/MesaGL libraries
+dnl
 AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])
 AC_ARG_WITH(lib-GL,     [  --with-lib-GL           use '-lGL'])
 AC_ARG_WITH(lib-MesaGL, [  --with-lib-MesaGL       use '-lMesaGL'])

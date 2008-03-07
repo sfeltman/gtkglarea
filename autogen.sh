@@ -2,13 +2,18 @@ builddir=`pwd`
 srcdir=`dirname $0`
 cd $srcdir
 
+mkdir -p .auto
+
 echo "Running glib-gettextize ..."
-glib-gettextize --force --copy ||
-	{ echo "**Error**: glib-gettextize failed."; exit 1; }
+glib-gettextize --force --copy || {
+  echo "**Error**: glib-gettextize failed."; exit 1; }
 
 # echo "Running intltoolize ..."
 # intltoolize --force --copy --automake ||
 # 	{ echo "**Error**: intltoolize failed."; exit 1; }
+
+libtoolize --force --copy || {
+  echo "**ERROR**: libtoolize failed."; exit 1; }
 
 echo "Running aclocal $ACLOCAL_FLAGS ..."
 aclocal $ACLOCAL_GLAGS || {
@@ -21,20 +26,22 @@ aclocal $ACLOCAL_GLAGS || {
   exit 1
 }
 
-# checking for automake 1.9+
-am_version=`automake --version | head -n 1 | cut -f2- -d1 | cut -f2 -d.`
-if [ "${am_version}" -lt 9 ]; then
-	echo "**Error**: automake 1.9+ required.";
-	exit 1;
-fi
-
-echo "Running automake --gnu $am_opt ..."
-automake --add-missing --gnu $am_opt ||
-	{ echo "**Error**: automake failed."; exit 1; }
-
-echo "running autoconf ..."
+echo "Running autoconf ..."
 WANT_AUTOCONF=2.5 autoconf || {
   echo "**Error**: autoconf failed."; exit 1; }
+
+echo "Running autoheader..."
+WANT_AUTOCONF=2.5 autoheader || {
+  echo "**Error**: autoheader failed."; exit 1; }
+
+# checking for automake 1.9+
+am_version=`automake --version | head -n 1 | cut -f2- -d1 | cut -f2 -d.`
+[ "${am_version}" -ge 9 ] || {
+  echo "**Error**: automake 1.9+ required."; exit 1; }
+
+echo "Running automake --gnu $am_opt ..."
+automake --add-missing --gnu $am_opt || {
+  echo "**Error**: automake failed."; exit 1; }
 
 conf_flags="--enable-maintainer-mode --enable-compile-warnings"
 
