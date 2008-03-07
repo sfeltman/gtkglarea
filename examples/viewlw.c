@@ -393,19 +393,6 @@ void select_lwobject()
   gtk_widget_show(filew);
 }
 
-#ifdef G_OS_WIN32
-
-/* for windows usage */
-int APIENTRY WinMain(HINSTANCE hInstance,
-		     HINSTANCE hPrevInstance,
-		     LPSTR lpszCmdLine,
-		     int nCmdshow
-		     )
-{
-	return main (__argc, __argv);
-}
-
-#endif
 
 int main (int argc, char **argv)
 {
