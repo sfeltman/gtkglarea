@@ -58,7 +58,7 @@ typedef struct {
 
 
 void select_lwobject(void);
-gint show_lwobject(char *lwobject_name);
+gint show_lwobject(char const *lwobject_name);
 
 
 
@@ -281,7 +281,7 @@ gint window_destroy(GtkWidget *widget)
 
 
 
-gint show_lwobject(char *lwobject_name)
+gint show_lwobject(char const *lwobject_name)
 {
   GtkWidget *window, *glarea;
   mesh_info *info;
