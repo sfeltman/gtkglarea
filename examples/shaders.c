@@ -35,6 +35,7 @@
 #include <gtkgl/gtkglarea.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 
 void       create_shader         (void);
@@ -72,6 +73,20 @@ void create_texture_2D (void) {
       texture[y][x][2] = (x * y) % 255;
     }
   }
+}
+
+/********************************************************/
+/*                                                      */
+/* Function : check_extension(void)                     */
+/*                                                      */
+/* This function checks for a given GL extension        */
+/*                                                      */
+/********************************************************/
+
+int check_extension(char const *name)
+{
+  const char *glExtensions = (const char *)glGetString(GL_EXTENSIONS);
+  return (strstr(glExtensions, name) != NULL);
 }
 
 /*******************************************************/
@@ -342,9 +357,14 @@ gint glarea_init (GtkWidget* widget) {
 
     create_texture_2D ();
 
-    /* Create and Activate shaders */
+    /* Check, Create and Activate shaders */
 
-    create_shader();
+    if(!check_extension("GL_ARB_fragment_shader"))
+      fprintf(stderr, "Warning: GL_ARB_fragment_shader extension not present\n");
+    else if(!check_extension("GL_ARB_vertex_shader"))
+      fprintf(stderr, "Warning: GL_ARB_vertex_shader extension not present\n");
+    else
+      create_shader();
   
     /* Activate and parameterization texture context */
 
