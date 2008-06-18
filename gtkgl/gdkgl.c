@@ -528,7 +528,8 @@ gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
   Pixmap xpixmap;
   GLXPixmap glxpixmap;
   Window root_return;
-  unsigned int x_ret, y_ret, w_ret, h_ret, bw_ret, depth_ret;
+  unsigned int w_ret, h_ret, bw_ret, depth_ret;
+  int x_ret, y_ret;
 #endif
 
   g_return_val_if_fail(GDK_IS_VISUAL(visual), NULL);
@@ -546,9 +547,10 @@ gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
 #else
   dpy = GDK_DISPLAY();
   xpixmap = (Pixmap)GDK_DRAWABLE_XID(pixmap);
-  
+
   g_return_val_if_fail(XGetGeometry(dpy, xpixmap, &root_return,
-				    &x_ret, &y_ret, &w_ret, &h_ret, &bw_ret, &depth_ret), NULL);
+				    &x_ret, &y_ret, &w_ret, &h_ret,
+                                    &bw_ret, &depth_ret), NULL);
 
   g_return_val_if_fail((gdk_gl_get_config(visual, GDK_GL_RED_SIZE) +
 			gdk_gl_get_config(visual, GDK_GL_GREEN_SIZE) +
