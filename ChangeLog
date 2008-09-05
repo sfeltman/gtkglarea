@@ -1,3 +1,6 @@
+2008-09-05  Sam Hocevar  <sam@zoy.org>
+	* examples/zktor.c: cosmetic gcc warning fix.
+
 2007-06-18  Sam Hocevar  <sam@zoy.org>
 	* gtkgl/gdkgl.c: fix a signed/unsigned compilation warning.
 

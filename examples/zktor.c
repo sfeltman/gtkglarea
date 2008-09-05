@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
  *
  * This library is free software; you can redistribute it and/or
@@ -37,11 +37,13 @@
 #endif
 
 
-/* #define FULLSCREEN_MESA_3DFX    /* uncomment this to get 3DFX acceleration */
+#if 0
+#define FULLSCREEN_MESA_3DFX /* uncomment this to get 3DFX acceleration */
+#endif
 
 #ifdef FULLSCREEN_MESA_3DFX
 #include <GL/xmesa.h>
-#endif 
+#endif
 
 
 
@@ -89,7 +91,7 @@ float rnd()
 }
 int collision(const Entity *a, const Entity *b)
 {
-  if (a->state && b->state) { 
+  if (a->state && b->state) {
     float dx = a->pos_x  - b->pos_x;
     float dy = a->pos_y  - b->pos_y;
     float r  = a->radius + b->radius;
@@ -166,7 +168,7 @@ void game_play()
   if (tick_now > 0.2  ) tick_now = 0.2;
   game_tick = (tick_now + 4*game_tick)/5; /* average */
   game_time = time_now;
-  
+
 
   /* is it time for next wave? */
   if (player.state && wave_time <= game_time) {
@@ -402,7 +404,7 @@ void game_play()
       vortex[i].timer = game_time + rnd()*15 + 5;
       do vortex[i].vel_x = rnd()*30 - 15; while (fabs(vortex[i].vel_x) < 10);
       do vortex[i].vel_y = rnd()*30 - 15; while (fabs(vortex[i].vel_y) < 10);
-      vortex[i].dir = 0;      
+      vortex[i].dir = 0;
     }
   }
 
@@ -597,7 +599,7 @@ void game_render()
   /* vortex */
   for (i=0; i<sizeof(vortex)/sizeof(Entity); i++) {
     if (vortex[i].state) {
-      
+
       glPushMatrix();
       glTranslatef(vortex[i].pos_x, vortex[i].pos_y, 0);
       glRotatef(vortex[i].dir, 0,0,1);
@@ -668,7 +670,7 @@ void game_render()
   if (fontbase) {
     char s[200];
     g_snprintf(s, sizeof(s), "wave %d score %d highscore %d", wave_cnt, score, highscore);
-    
+
     glColor3f(.8,.8,.8);
     glRasterPos2f(-90, 90);
     glListBase(fontbase);
@@ -717,13 +719,13 @@ gint switch_fullscreen(GtkWidget *gl_area)
     {
       if (gtk_gl_area_make_current(GTK_GL_AREA(gl_area)))
 	XMesaSetFXmode(XMESA_FX_WINDOW);
-      
+
       gdk_keyboard_ungrab(GDK_CURRENT_TIME);
       gdk_pointer_ungrab(GDK_CURRENT_TIME);
       fullscreenwidget = NULL;
       return TRUE;
     }
-  
+
   return FALSE;
 }
 
@@ -769,7 +771,7 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
 
   /* Swap backbuffer to front */
   gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
-  
+
   return TRUE;
 }
 
@@ -912,7 +914,7 @@ int main(int argc, char **argv)
 
   logo = gtk_label_new("Zktor");
 
- 
+
   /* Create new OpenGL widget. */
   glarea = GTK_WIDGET(gtk_gl_area_new(attrlist));
   /* Events for widget must be set before X Window is created */
@@ -925,7 +927,7 @@ int main(int argc, char **argv)
   /* set default size */
   gtk_gl_area_size(GTK_GL_AREA(glarea), 640,400);
 
-  
+
   /* Connect signal handlers */
   /* Redraw image when exposed. */
   gtk_signal_connect(GTK_OBJECT(glarea), "expose_event",
