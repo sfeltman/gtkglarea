@@ -1,3 +1,7 @@
+2008-09-22  Sam Hocevar  <sam@zoy.org>
+	* examples/shaders.c: fix shader syntax by replacing (float)xxx with
+	float(xxx).
+
 2008-09-05  Sam Hocevar  <sam@zoy.org>
 	* examples/zktor.c: cosmetic gcc warning fix.
 

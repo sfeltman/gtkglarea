@@ -142,8 +142,8 @@ void create_shader (void) {
     "void main()"
     "{"
     "  gl_TexCoord[0] = gl_MultiTexCoord0;"
-    "  float r = (float)(gl_Vertex.x + 100) / 100.0;"
-    "  float g = (float)(gl_Vertex.y + 100) / 100.0;"
+    "  float r = float(gl_Vertex.x + 100) / 100.0;"
+    "  float g = float(gl_Vertex.y + 100) / 100.0;"
     "  color = vec4(1 - r, 1 - g, 0, 1);"
     "  gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex ;"
     "}";
