@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
  *           (c) 2008 Sam Hocevar <sam@zoy.org>
  *
@@ -157,11 +157,11 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
   Display *dpy;
   XVisualInfo *vi;
   int value;
-  
+
   g_return_val_if_fail(visual != NULL, -1);
 
   dpy = GDK_DISPLAY();
- 
+
   vi = get_xvisualinfo(visual);
 
   if (glXGetConfig(dpy, vi, attrib, &value) == 0)
@@ -198,7 +198,7 @@ gdk_gl_context_get_type (void)
         0,              /* n_preallocs */
         (GInstanceInitFunc) NULL,
       };
-      
+
       object_type = g_type_register_static (G_TYPE_OBJECT,
                                             "GdkGLContext",
                                             &object_info, 0);
@@ -304,17 +304,17 @@ gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct
     glxcontext = glXCreateContext(dpy, vi, sharelist->glxcontext, direct ? True : False);
   else
     glxcontext = glXCreateContext(dpy, vi, 0, direct ? True : False);
-  
+
   XFree(vi);
   if (glxcontext == NULL) {
     g_object_unref(context);
     return NULL;
   }
-  
+
   context->xdisplay = dpy;
   context->glxcontext = glxcontext;
 #endif
-  
+
   return context;
 }
 
@@ -472,7 +472,7 @@ gdk_gl_pixmap_get_type (void)
         0,              /* n_preallocs */
         (GInstanceInitFunc) NULL,
       };
-      
+
       object_type = g_type_register_static (G_TYPE_OBJECT,
                                             "GdkGLPixmap",
                                             &object_info, 0);

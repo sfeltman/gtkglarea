@@ -49,7 +49,7 @@ gtk_gl_area_get_type (void)
         0,              /* n_preallocs */
         (GInstanceInitFunc) gtk_gl_area_init,
       };
-      
+
       object_type = g_type_register_static (GTK_TYPE_DRAWING_AREA,
                                             "GtkGLArea",
                                             &object_info, 0);
@@ -64,7 +64,7 @@ gtk_gl_area_class_init (GtkGLAreaClass *klass)
 
   parent_class = g_type_class_peek_parent(klass);
   object_class = (GtkObjectClass*) klass;
-  
+
   object_class->destroy = gtk_gl_area_destroy;
 }
 
@@ -99,7 +99,7 @@ gtk_gl_area_new_vargs(GtkGLArea *share, ...)
   while ( (attrlist[i] = va_arg(ap, int)) != GDK_GL_NONE) /* copy args to list */
     i++;
   va_end(ap);
-  
+
   glarea = gtk_gl_area_share_new(attrlist, share);
 
   g_free(attrlist);
@@ -136,7 +136,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   /* use colormap and visual suitable for OpenGL rendering */
   gtk_widget_push_colormap(gdk_colormap_new(visual,TRUE));
   gtk_widget_push_visual(visual);
-  
+
   gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
   gl_area->glcontext = glcontext;
 
@@ -171,7 +171,7 @@ gtk_gl_area_destroy(GtkObject *object)
 
   g_return_if_fail (object != NULL);
   g_return_if_fail (GTK_IS_GL_AREA(object));
-  
+
   gl_area = GTK_GL_AREA(object);
 
   if (gl_area->glcontext)

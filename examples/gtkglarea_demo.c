@@ -73,7 +73,7 @@ int        main                  (int, char**);
 GtkWidget* create_glarea (void) {
 
   GtkWidget* glarea;
-  
+
   /* Choose the attributes that we would like for our visual. */
   /* These attributes are passed to glXChooseVisual by the    */
   /* gdk (see gdk_gl_choose_visual in gdkgl.c from the        */
@@ -145,31 +145,31 @@ GtkWidget* create_glarea (void) {
 
   gtk_signal_connect (GTK_OBJECT(glarea), "button_press_event",
                       GTK_SIGNAL_FUNC(glarea_button_press), NULL);
-  
+
   /* motion_notify_event - The mouse is moving in the window. */
 
   gtk_signal_connect (GTK_OBJECT(glarea), "motion_notify_event",
                       GTK_SIGNAL_FUNC(glarea_motion_notify), NULL);
-  
+
   /* expose_event - The window was exposed and the contents   */
   /*                need to be redrawn.                       */
 
   gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",
                       GTK_SIGNAL_FUNC(glarea_draw), NULL);
-  
+
   /* configure_event - The window has been resized. You will  */
   /*                   probably want to call your reshape     */
   /*                   function here.                         */
 
   gtk_signal_connect (GTK_OBJECT(glarea), "configure_event",
                       GTK_SIGNAL_FUNC(glarea_reshape), NULL);
-  
+
   /* realize - The window has been created, this is where you */
   /*           can hook up your initialization routines.      */
 
   gtk_signal_connect (GTK_OBJECT(glarea), "realize",
                       GTK_SIGNAL_FUNC(glarea_init), NULL);
-  
+
   /* destroy - The window has received a destroy event, this  */
   /*           is where you should do any cleanup that needs  */
   /*           to happen, such as de-allocating data objects  */
@@ -278,7 +278,7 @@ gint glarea_motion_notify (GtkWidget* widget, GdkEventMotion* event) {
     y = event->y;
     state = event->state;
   }
-  
+
   if (state & GDK_BUTTON1_MASK) {
 
     /* Mouse button 1 is engaged */
@@ -325,7 +325,7 @@ gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
     /* before drawing.                                  */
 
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     /*                                */
     /* Insert your drawing code here. */
     /*                                */
@@ -336,7 +336,7 @@ gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
     /* single vs. double buffered windows.                  */
 
     gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));
-    
+
   }
 
   return (TRUE);
@@ -374,10 +374,10 @@ gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
     gluOrtho2D (-(w>>1), (w>>1), -(h>>1), h>>1);
-    glMatrixMode (GL_MODELVIEW);  
+    glMatrixMode (GL_MODELVIEW);
 
   }
-  
+
   return (TRUE);
 
 }

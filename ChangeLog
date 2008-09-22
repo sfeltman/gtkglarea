@@ -1,4 +1,7 @@
 2008-09-22  Sam Hocevar  <sam@zoy.org>
+	* Cosmetic fix: remove trailing spaces from source files.
+
+2008-09-22  Sam Hocevar  <sam@zoy.org>
 	* examples/shaders.c: fix shader syntax by replacing (float)xxx with
 	float(xxx).
 

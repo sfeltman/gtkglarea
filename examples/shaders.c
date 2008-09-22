@@ -63,7 +63,7 @@ static GLubyte texture[texture_height][texture_width][3];
 void create_texture_2D (void) {
 
   int x, y;
-  
+
   g_print("Creating 2D texture\n");
 
   for(y = 0; y < texture_height; y++) {
@@ -104,9 +104,9 @@ void shader_status(int shader_id)
 
    int status;
    glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
-   
+
    /* Display log compilation */
-   
+
    if( !status )
    {
      int infologLength, charsWritten;
@@ -177,27 +177,27 @@ void create_shader (void) {
 
   glShaderSource(ver, 1, &str_ver, NULL);
   glShaderSource(fgm, 1, &str_fgm, NULL);
-  
+
   /* Shader source compilation */
-  
+
   glCompileShader(ver);
   glCompileShader(fgm);
-  
+
   /* Create Program */
-  
+
   prog = glCreateProgram();
-  
+
   /* Add the shader to the program */
-  
+
   glAttachShader(prog, ver);
   glAttachShader(prog, fgm);
-  
+
   /* Link the shader */
-  
+
   glLinkProgram(prog);
-  
+
   /* Check the program */
-  
+
   glValidateProgram(prog);
 
   /* Check shaders */
@@ -225,7 +225,7 @@ void create_shader (void) {
 GtkWidget* create_glarea (void) {
 
   GtkWidget* glarea;
-  
+
   int attrlist[] = {
     GDK_GL_RGBA,
     GDK_GL_DOUBLEBUFFER,
@@ -247,13 +247,13 @@ GtkWidget* create_glarea (void) {
 
   gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",
                       GTK_SIGNAL_FUNC(glarea_draw), NULL);
-  
+
   gtk_signal_connect (GTK_OBJECT(glarea), "configure_event",
                       GTK_SIGNAL_FUNC(glarea_reshape), NULL);
-  
+
   gtk_signal_connect (GTK_OBJECT(glarea), "realize",
                       GTK_SIGNAL_FUNC(glarea_init), NULL);
-  
+
   gtk_signal_connect (GTK_OBJECT(glarea), "destroy",
                       GTK_SIGNAL_FUNC (glarea_destroy), NULL);
 
@@ -304,7 +304,7 @@ gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glarea_draw_scene();
     gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));
-    
+
   }
 
   return (TRUE);
@@ -332,10 +332,10 @@ gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
     gluOrtho2D (-(w>>1), (w>>1), -(h>>1), h>>1);
-    glMatrixMode (GL_MODELVIEW);  
+    glMatrixMode (GL_MODELVIEW);
 
   }
-  
+
   return (TRUE);
 
 }
@@ -365,7 +365,7 @@ gint glarea_init (GtkWidget* widget) {
       fprintf(stderr, "Warning: GL_ARB_vertex_shader extension not present\n");
     else
       create_shader();
-  
+
     /* Activate and parameterization texture context */
 
     glEnable(GL_TEXTURE_2D);

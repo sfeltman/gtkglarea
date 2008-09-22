@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
  *
  * This library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ enum _GDK_GL_CONFIGS {
 	GDK_GL_BUFFER_SIZE	= 2,
 	GDK_GL_LEVEL		= 3,
 	GDK_GL_RGBA		= 4,
-	GDK_GL_DOUBLEBUFFER	= 5, 
+	GDK_GL_DOUBLEBUFFER	= 5,
 	GDK_GL_STEREO		= 6,
 	GDK_GL_AUX_BUFFERS	= 7,
 	GDK_GL_RED_SIZE		= 8,

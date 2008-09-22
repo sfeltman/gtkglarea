@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
  *
  * This library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@ void initgl(void)
   /* remove back faces */
   glDisable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
-  
+
   /* speedups */
   glEnable(GL_DITHER);
   glShadeModel(GL_SMOOTH);
@@ -82,15 +82,15 @@ void initgl(void)
 
   /* light */
   glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_color);  
+  glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_color);
   glLightfv(GL_LIGHT1, GL_POSITION, light1_pos);
   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light1_color);
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
   glEnable(GL_LIGHTING);
-    
+
   glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
-  glEnable(GL_COLOR_MATERIAL);  
+  glEnable(GL_COLOR_MATERIAL);
 }
 
 gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
@@ -186,7 +186,7 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
     y = event->y;
     state = event->state;
   }
-  
+
   area.x = 0;
   area.y = 0;
   area.width  = widget->allocation.width;

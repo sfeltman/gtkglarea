@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
  *
  * This library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
 
       /* Swap backbuffer to front */
       gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
-        
+
     }
 
   return TRUE;
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
   /* set minimum size */
   gtk_widget_set_usize(GTK_WIDGET(glarea), 100,100);
-		    
+
   /* put glarea into window and show it all */
   gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(glarea));
   gtk_widget_show(GTK_WIDGET(glarea));

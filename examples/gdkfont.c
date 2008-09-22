@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
  *
  * This library is free software; you can redistribute it and/or
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
 		     GTK_SIGNAL_FUNC(init), NULL);
 
   gtk_widget_set_usize(GTK_WIDGET(glarea), 450,100);
-		    
+
   /* put glarea into window and show it all */
   gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(glarea));
   gtk_widget_show(GTK_WIDGET(glarea));
