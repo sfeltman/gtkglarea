@@ -52,6 +52,40 @@ int        main                  (int, char**);
 #define texture_height  64
 static GLubyte texture[texture_height][texture_width][3];
 
+/* Vertex Shader                                */
+/*   compute the color from the vertex position */
+
+static char const *vertex_shader_str =
+  "varying vec4 color;"
+  "void main()"
+  "{"
+  "  gl_TexCoord[0] = gl_MultiTexCoord0;"
+  "  float r = float(gl_Vertex.x + 100) / 100.0;"
+  "  float g = float(gl_Vertex.y + 100) / 100.0;"
+  "  color = vec4(1 - r, 1 - g, 0, 1);"
+  "  gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;"
+  "}";
+
+/* Fragment Shader                              */
+/*   coordinates texture repeat on X and Y      */
+/*   invert coordinates texture (on repetition) */
+
+static char const *fragment_shader_str =
+  "varying vec4 color;"
+  "uniform sampler2D tex;"
+  "void main()"
+  "{"
+  "  int fact_x = 1;"
+  "  int fact_y = 1;"
+  "  if(gl_TexCoord[0].x > 0.5)"
+  "    fact_x = -1;"
+  "  if(gl_TexCoord[0].y > 0.5)"
+  "    fact_y = -1;"
+  //"  gl_TexCoord[0].x = fact_x * gl_TexCoord[0].x * 2.0;"
+  //"  gl_TexCoord[0].y = fact_y * gl_TexCoord[0].y * 2.0;"
+  "  gl_FragColor = texture2D(tex, gl_TexCoord[0]) + color;"
+  "}";
+
 /**************************************************/
 /*                                                */
 /* Function: create_texture_2D (void)             */
@@ -107,7 +141,7 @@ void shader_status(int shader_id)
 
    /* Display log compilation */
 
-   if( !status )
+   if (!status)
    {
      int infologLength, charsWritten;
      GLchar *infoLog;
@@ -130,58 +164,24 @@ void shader_status(int shader_id)
 
 void create_shader (void) {
 
-  int ver, fgm, prog;
+  int vertex_shader, fragment_shader, prog;
 
   g_print("Creating shaders\n");
 
-  /* Vertex Shader                                */
-  /*   compute the color from the vertex position */
-
-  const char *str_ver =
-    "varying vec4 color;"
-    "void main()"
-    "{"
-    "  gl_TexCoord[0] = gl_MultiTexCoord0;"
-    "  float r = float(gl_Vertex.x + 100) / 100.0;"
-    "  float g = float(gl_Vertex.y + 100) / 100.0;"
-    "  color = vec4(1 - r, 1 - g, 0, 1);"
-    "  gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex ;"
-    "}";
-
-  /* Fragment Shader                              */
-  /*   coordinates texture repeat on X and Y      */
-  /*   invert coordinates texture (on repetition) */
-
-  const char *str_fgm =
-    "varying vec4 color;"
-    "uniform sampler2D tex;"
-    "void main()"
-    "{"
-    "  int fact_x = 1;"
-    "  int fact_y = 1;"
-    "  if(gl_TexCoord[0].x > 0.5)"
-    "    fact_x = -1;"
-    "  if(gl_TexCoord[0].y > 0.5)"
-    "    fact_y = -1;"
-    "  gl_TexCoord[0].x = fact_x * gl_TexCoord[0].x * 2.0 ;"
-    "  gl_TexCoord[0].y = fact_y * gl_TexCoord[0].y * 2.0 ;"
-    "  gl_FragColor = texture2D(tex,gl_TexCoord[0]) + color;"
-    "}";
-
   /* Create Shaders (vertex and fragment) */
 
-  ver = glCreateShader( GL_VERTEX_SHADER );
-  fgm = glCreateShader( GL_FRAGMENT_SHADER );
+  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
   /* Source Shader */
 
-  glShaderSource(ver, 1, &str_ver, NULL);
-  glShaderSource(fgm, 1, &str_fgm, NULL);
+  glShaderSource(vertex_shader, 1, &vertex_shader_str, NULL);
+  glShaderSource(fragment_shader, 1, &fragment_shader_str, NULL);
 
   /* Shader source compilation */
 
-  glCompileShader(ver);
-  glCompileShader(fgm);
+  glCompileShader(vertex_shader);
+  glCompileShader(fragment_shader);
 
   /* Create Program */
 
@@ -189,8 +189,8 @@ void create_shader (void) {
 
   /* Add the shader to the program */
 
-  glAttachShader(prog, ver);
-  glAttachShader(prog, fgm);
+  glAttachShader(prog, vertex_shader);
+  glAttachShader(prog, fragment_shader);
 
   /* Link the shader */
 
@@ -202,8 +202,8 @@ void create_shader (void) {
 
   /* Check shaders */
 
-  shader_status(ver);
-  shader_status(fgm);
+  shader_status(vertex_shader);
+  shader_status(fragment_shader);
 
   /* Activate shaders */
   glUseProgram(prog);
