@@ -1,4 +1,8 @@
 2008-09-22  Sam Hocevar  <sam@zoy.org>
+	* shaders.c: gl_TexCoord is read-only in a fragment shader; use a
+	temporary variable instead.
+
+2008-09-22  Sam Hocevar  <sam@zoy.org>
 	* examples/shaders.c: improve code readability.
 
 2008-09-22  Sam Hocevar  <sam@zoy.org>

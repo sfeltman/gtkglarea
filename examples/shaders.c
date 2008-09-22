@@ -75,15 +75,16 @@ static char const *fragment_shader_str =
   "uniform sampler2D tex;"
   "void main()"
   "{"
+  "  vec2 coord;"
   "  int fact_x = 1;"
   "  int fact_y = 1;"
   "  if(gl_TexCoord[0].x > 0.5)"
   "    fact_x = -1;"
   "  if(gl_TexCoord[0].y > 0.5)"
   "    fact_y = -1;"
-  //"  gl_TexCoord[0].x = fact_x * gl_TexCoord[0].x * 2.0;"
-  //"  gl_TexCoord[0].y = fact_y * gl_TexCoord[0].y * 2.0;"
-  "  gl_FragColor = texture2D(tex, gl_TexCoord[0]) + color;"
+  "  coord.x = fact_x * gl_TexCoord[0].x * 2.0;"
+  "  coord.y = fact_y * gl_TexCoord[0].y * 2.0;"
+  "  gl_FragColor = texture2D(tex, coord) + color;"
   "}";
 
 /**************************************************/
