@@ -63,14 +63,6 @@ AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
 dnl
-dnl  Check for the windowing system (X11 or Win32)
-dnl
-gdk_target=`$PKG_CONFIG --variable=target gtk+-2.0`
-if test "$gdk_target" = "win32"; then
-  AC_DEFINE(USE_WIN32, 1, Define to 1 if the windowing system is Windows.)
-fi
-
-dnl
 dnl  Check for GL/MesaGL libraries
 dnl
 AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])

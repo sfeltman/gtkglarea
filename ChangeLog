@@ -1,4 +1,8 @@
 2008-10-20  Sam Hocevar  <sam@zoy.org>
+	* configure.ac: get rid of USE_WIN32, glib.h knows our windowing
+	platform better than us.
+
+2008-10-20  Sam Hocevar  <sam@zoy.org>
 	* autogen.sh: regenerate config.h.in by running autoheader with the
 	--force flag.
 
