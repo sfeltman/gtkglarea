@@ -18,10 +18,10 @@
 
 #include "config.h"
 
+#include <stdarg.h>
+
 #include "gdkgl.h"
 #include "gtkglarea.h"
-#include <GL/gl.h>
-#include <stdarg.h>
 
 static void gtk_gl_area_class_init    (GtkGLAreaClass *klass);
 static void gtk_gl_area_init          (GtkGLArea      *glarea);
@@ -118,13 +118,13 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 {
   GdkGLContext *glcontext;
   GtkGLArea *gl_area;
-#if !defined(WIN32)
+#if defined GDK_WINDOWING_X11
   GdkVisual *visual;
 #endif
 
   g_return_val_if_fail(share == NULL || GTK_IS_GL_AREA(share), NULL);
 
-#if !defined(WIN32)
+#if defined GDK_WINDOWING_X11
   visual = gdk_gl_choose_visual(attrlist);
   if (visual == NULL)
     return NULL;
@@ -136,7 +136,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   if (glcontext == NULL)
     return NULL;
 
-#if !defined(WIN32)
+#if defined GDK_WINDOWING_X11
   /* use colormap and visual suitable for OpenGL rendering */
   gtk_widget_push_colormap(gdk_colormap_new(visual,TRUE));
   gtk_widget_push_visual(visual);
@@ -145,7 +145,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
   gl_area->glcontext = glcontext;
 
-#if !defined(WIN32)
+#if defined GDK_WINDOWING_X11
   /* pop back defaults */
   gtk_widget_pop_visual();
   gtk_widget_pop_colormap();
