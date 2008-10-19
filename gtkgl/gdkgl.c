@@ -300,10 +300,8 @@ gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct
 
   vi = get_xvisualinfo(visual);
 
-  if (sharelist)
-    glxcontext = glXCreateContext(dpy, vi, sharelist->glxcontext, direct ? True : False);
-  else
-    glxcontext = glXCreateContext(dpy, vi, 0, direct ? True : False);
+  glxcontext = glXCreateContext(dpy, vi, sharelist ? sharelist->glxcontext : 0,
+                                direct ? True : False);
 
   XFree(vi);
   if (glxcontext == NULL) {

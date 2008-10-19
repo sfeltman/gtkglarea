@@ -1,3 +1,6 @@
+2008-10-20  Sam Hocevar  <sam@zoy.org>
+	* gdkgl.c gtkglarea.c: minor code factorisation.
+
 2008-09-22  Sam Hocevar  <sam@zoy.org>
 	* shaders.c: gl_TexCoord is read-only in a fragment shader; use a
 	temporary variable instead.
