@@ -1,5 +1,5 @@
 2008-10-20  Sam Hocevar  <sam@zoy.org>
-	Bug 555779 – Add stubs for other windowing platforms
+	Bug 384072 – Add stubs for other windowing platforms
 
 	* gdkgl.c gtkglarea.c: use GDK_WINDOWING_WIN32 etc. instead of
 	USE_WIN32 macros.
