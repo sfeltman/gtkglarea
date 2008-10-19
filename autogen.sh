@@ -31,7 +31,7 @@ WANT_AUTOCONF=2.5 autoconf || {
   echo "**Error**: autoconf failed."; exit 1; }
 
 echo "Running autoheader..."
-WANT_AUTOCONF=2.5 autoheader || {
+WANT_AUTOCONF=2.5 autoheader --force || {
   echo "**Error**: autoheader failed."; exit 1; }
 
 # checking for automake 1.9+

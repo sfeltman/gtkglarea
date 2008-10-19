@@ -1,4 +1,8 @@
 2008-10-20  Sam Hocevar  <sam@zoy.org>
+	* autogen.sh: regenerate config.h.in by running autoheader with the
+	--force flag.
+
+2008-10-20  Sam Hocevar  <sam@zoy.org>
 	Bug 384072 – Add stubs for other windowing platforms
 
 	* gdkgl.c gtkglarea.c: use GDK_WINDOWING_WIN32 etc. instead of
