@@ -1,3 +1,6 @@
+2009-02-18  Sam Hocevar  <sam@zoy.org>
+	* gtkgl/gdkgl.c: emit a warning if the GL context could not be shared.
+
 2008-10-20  Sam Hocevar  <sam@zoy.org>
 	* configure.ac: get rid of USE_WIN32, glib.h knows our windowing
 	platform better than us.

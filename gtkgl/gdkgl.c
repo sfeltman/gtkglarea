@@ -389,17 +389,20 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
     pf = ChoosePixelFormat (context->hdc, &context->pfd);
 
     if (pf != 0)
-        {
-          SetPixelFormat (context->hdc, pf, &context->pfd);
-          context->hglrc = wglCreateContext (context->hdc);
-        }
+      {
+        SetPixelFormat (context->hdc, pf, &context->pfd);
+        context->hglrc = wglCreateContext (context->hdc);
+      }
 
     if (context->share)
-        {
-          if (context->share->hglrc)
-            wglShareLists (context->share->hglrc, context->hglrc);
-          g_object_unref (context->share);
-        }
+      {
+        if (context->share->hglrc)
+          {
+            if (wglShareLists (context->share->hglrc, context->hglrc) != TRUE)
+                g_warning ("failed sharing context");
+          }
+        g_object_unref (context->share);
+      }
 
     context->initialised = TRUE;
   }
@@ -628,17 +631,20 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
     pf = ChoosePixelFormat (context->hdc, &context->pfd);
 
     if (pf != 0)
-        {
-          SetPixelFormat (context->hdc, pf, &context->pfd);
-          context->hglrc = wglCreateContext (context->hdc);
-        }
+      {
+        SetPixelFormat (context->hdc, pf, &context->pfd);
+        context->hglrc = wglCreateContext (context->hdc);
+      }
 
     if (context->share)
-        {
-          if (context->share->hglrc)
-            wglShareLists (context->share->hglrc, context->hglrc);
-          gdk_gl_context_unref ((GdkGLContext*)context->share);
-        }
+      {
+        if (context->share->hglrc)
+          {
+            if (wglShareLists (context->share->hglrc, context->hglrc) != TRUE)
+                g_warning ("failed sharing context");
+          }
+        gdk_gl_context_unref ((GdkGLContext*)context->share);
+      }
 
     context->initialised = TRUE;
   }
