@@ -615,7 +615,7 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 #elif defined GDK_WINDOWING_X11
 #else
   g_warning ("gdk_gl_pixmap_make_current not implemented on " PLATFORM);
-  return NULL;
+  return 0;
 #endif
 
   g_return_val_if_fail (GDK_IS_GL_PIXMAP(glpixmap), FALSE);
