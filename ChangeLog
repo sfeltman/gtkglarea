@@ -1,3 +1,6 @@
+2009-02-19  Sam Hocevar  <sam@zoy.org>
+	* gtkgl/gdkgl.c: fix the Win32 build by defining PLATFORM everywhere.
+
 2009-02-18  Sam Hocevar  <sam@zoy.org>
 	* gtkgl/gdkgl.c: emit a warning if the GL context could not be shared.
 
