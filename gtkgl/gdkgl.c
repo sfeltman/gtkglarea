@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1998 Janne Löf <jlof@mail.student.oulu.fi>
- *           (c) 2008 Sam Hocevar <sam@zoy.org>
+ *           (c) 2008, 2009 Sam Hocevar <sam@hocevar.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

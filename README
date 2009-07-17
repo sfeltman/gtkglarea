@@ -1,12 +1,13 @@
 GtkGLArea
----------
+=========
 
-
-AUTHOR
-------
+Authors
+-------
  Janne Löf <jlof@mail.student.oulu.fi>
+ C.J. Adams-Collier <cjcollier@colliertech.org>
+ Sam Hocevar <sam@hocevar.net>
 
-CONTRIBUTORS
+Contributors
 ------------
  Karl Nelson     <kenelson@ece.ucdavis.edu>          (original autoconf, gtkglarea--)
  Daniel Skarda   <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
@@ -14,25 +15,7 @@ CONTRIBUTORS
  Andrew Marriott <raytrace@lillee.cs.curtin.edu.au>  (original win32 port)
  Chris Abernethy <chris65536@home.com>               (gtkglarea_demo.c)
 
-LICENSE
--------
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-
-    You should have received a copy of the GNU Library General Public
-    License along with this library; if not, write to the Free
-    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-
-INTRODUCTION
+Introduction
 ------------
 
  GtkGLArea is an OpenGL widget for GTK+ GUI toolkit.
@@ -42,13 +25,13 @@ INTRODUCTION
  from GtkDrawinigArea widget and adds only few extra functions.
 
  Lower level gdkgl functions make it easy to render on any widget that has
- OpenGL capable visual, rendering to off-screen pixmaps is also supported. 
+ OpenGL capable visual, rendering to off-screen pixmaps is also supported.
 
  Related project which may iterest those who use GTK-- is GtkGLArea--. It is a
- C++ wrapper for gtkglarea written by Karl Nelson <kenelson@ece.ucdavis.edu>. 
+ C++ wrapper for gtkglarea written by Karl Nelson <kenelson@ece.ucdavis.edu>.
 
 
-INSTALLATION
+Installation
 ------------
 
  You need GTK+ and either OpenGL or Mesa, if you have both you can choose which
@@ -62,7 +45,7 @@ INSTALLATION
  Library files go to PREFIX/lib/
 
 
-WIN32
+Win32
 -----
 
  There is now a working windows port. There are old hand-written
@@ -97,7 +80,7 @@ WIN32
  functions, no gdk_gl_* functions.
 
 
-DOCUMENTATION
+Documentation
 -------------
 
  Documentation is slightly out of date, sorry.
@@ -107,14 +90,14 @@ DOCUMENTATION
  docs/HOWTO.txt		good advice
 
 
-LINKS
+Links
 -----
 
  GtkGLArea home page http://www.student.oulu.fi/~jlof/gtkglarea/
  Gtk-- wrapper http://www.ece.ucdavis.edu/~kenelson/gtk-glarea/
 
 
-TODO
+Todo
 ----
 
  - rewrite documentation in texinfo format
