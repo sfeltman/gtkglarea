@@ -1,4 +1,10 @@
 2009-07-18  Sam Hocevar  <sam@hocevar.net>
+	* configure.ac: bump version to 2.0.1 and change tarball name to
+        gtkgl.
+	* gtkglarea.spec: remove that file; it is 10 years old and
+	unmaintained.
+
+2009-07-18  Sam Hocevar  <sam@hocevar.net>
 	* AUTHORS README TODO docs/HOWTO.txt: update documentation.
 
 2009-02-19  Sam Hocevar  <sam@hocevar.net>
