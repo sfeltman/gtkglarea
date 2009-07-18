@@ -1,22 +1,5 @@
-GtkGLArea
-=========
-
-Authors
--------
- Janne Löf <jlof@mail.student.oulu.fi>
- C.J. Adams-Collier <cjcollier@colliertech.org>
- Sam Hocevar <sam@hocevar.net>
-
-Contributors
-------------
- Karl Nelson     <kenelson@ece.ucdavis.edu>          (original autoconf, gtkglarea--)
- Daniel Skarda   <0rfelyus@atrey.karlin.mff.cuni.cz> (original automake & libtool)
- Jussi Löf       <jussi.lof@pirko.fi>                (LightWave objects)
- Andrew Marriott <raytrace@lillee.cs.curtin.edu.au>  (original win32 port)
- Chris Abernethy <chris65536@home.com>               (gtkglarea_demo.c)
-
-Introduction
-------------
+GtkGLArea 2.0.1
+===============
 
  GtkGLArea is an OpenGL widget for GTK+ GUI toolkit.
 
@@ -79,6 +62,20 @@ Win32
  version, therefore you should only use GtkGLArea widget (gtk_gl_*)
  functions, no gdk_gl_* functions.
 
+
+ You may also build gtkgl on MinGW. The trick(s) I ended up having to do
+ were many:
+ * run ./autogen.sh from cygwin - for some reason mingw's auto* don't work
+ * copy the gtk dist to /target - for some reason, the .pc files refer to this
+ * be sure to install the w32api mingw package
+ * explicitly set LDFLAGS, PKG_CONFIG_PATH, and explicitly declare
+   where opengl32 is located when running ./configure, thus:
+
+ LDFLAGS=-L/c/GTK/2.8/lib \
+ PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/c/GTK/2.8/lib/pkgconfig/ \
+ ./configure --prefix=/mingw \
+             --with-GL-prefix=/mingw \
+             --with-lib-opengl32
 
 Documentation
 -------------

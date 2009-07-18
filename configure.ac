@@ -1,11 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(gtkgl, 2.1)
+AC_INIT(gtkgl, 2.0.1)
 AC_CONFIG_AUX_DIR(.auto)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([no-define])
 
 #shared library versioning
-GTKGL_LIBRARY_VERSION=1:0:0
+GTKGL_LIBRARY_VERSION=1:1:0
 #                     | | |
 #              +------+ | +---+
 #              |        |     |
