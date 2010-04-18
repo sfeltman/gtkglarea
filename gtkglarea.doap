@@ -14,11 +14,11 @@
       <foaf:name>C.J. Adams-Collier</foaf:name>
       <gnome:userid>ccollier</gnome:userid>
     </foaf:Person>
-
+  </maintainer>
+  <maintainer>
     <foaf:Person>
       <foaf:name>Sam Hocevar</foaf:name>
       <gnome:userid>samh</gnome:userid>
     </foaf:Person>
-
   </maintainer>
 </Project>
