@@ -56,36 +56,35 @@ static GLubyte texture[texture_height][texture_width][3];
 /*   compute the color from the vertex position */
 
 static char const *vertex_shader_str =
-  "varying vec4 color;"
-  "void main()"
-  "{"
-  "  gl_TexCoord[0] = gl_MultiTexCoord0;"
-  "  float r = float(gl_Vertex.x + 100) / 100.0;"
-  "  float g = float(gl_Vertex.y + 100) / 100.0;"
-  "  color = vec4(1 - r, 1 - g, 0, 1);"
-  "  gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;"
-  "}";
+  "varying vec4 color;\n"
+  "void main()\n"
+  "{\n"
+  "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+  "  float r = float(gl_Vertex.x + 100.0) / 100.0;\n"
+  "  float g = float(gl_Vertex.y + 100.0) / 100.0;\n"
+  "  color = vec4(1.0 - r, 1.0 - g, 0.0, 1.0);\n"
+  "  gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;\n"
+  "}\n";
 
 /* Fragment Shader                              */
 /*   coordinates texture repeat on X and Y      */
 /*   invert coordinates texture (on repetition) */
 
 static char const *fragment_shader_str =
-  "varying vec4 color;"
-  "uniform sampler2D tex;"
-  "void main()"
-  "{"
-  "  vec2 coord;"
-  "  int fact_x = 1;"
-  "  int fact_y = 1;"
-  "  if(gl_TexCoord[0].x > 0.5)"
-  "    fact_x = -1;"
-  "  if(gl_TexCoord[0].y > 0.5)"
-  "    fact_y = -1;"
-  "  coord.x = fact_x * gl_TexCoord[0].x * 2.0;"
-  "  coord.y = fact_y * gl_TexCoord[0].y * 2.0;"
-  "  gl_FragColor = texture2D(tex, coord) + color;"
-  "}";
+  "varying vec4 color;\n"
+  "uniform sampler2D tex;\n"
+  "void main()\n"
+  "{\n"
+  "  vec2 coord, fact;\n"
+  "  fact = vec2(1.0, 1.0);\n"
+  "  if(gl_TexCoord[0].x > 0.5)\n"
+  "    fact.x = -1.0;\n"
+  "  if(gl_TexCoord[0].y > 0.5)\n"
+  "    fact.y = -1.0;\n"
+  "  coord.x = fact.x * gl_TexCoord[0].x * 2.0;\n"
+  "  coord.y = fact.y * gl_TexCoord[0].y * 2.0;\n"
+  "  gl_FragColor = texture2D(tex, coord) + color;\n"
+  "}\n";
 
 /**************************************************/
 /*                                                */

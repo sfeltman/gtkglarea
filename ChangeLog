@@ -1,3 +1,6 @@
+2011-02-15  Sam Hocevar  <sam@hocevar.net>
+	* examples/shaders.c: tweak shader syntax for better compatibility.
+
 2011-02-01  Sam Hocevar  <sam@hocevar.net>
 	* autogen.sh: fix ages old typo.
 
