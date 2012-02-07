@@ -1,3 +1,6 @@
+2012-02-06  C.J. Adams-Collier <cjac@uw.edu>
+	* configure.ac: bumped version to 2.0.2, added -lm to default CFLAGS
+	* AUTHORS: added Ryan and Iwan to contributors, changed my email addr
 2011-02-15  Sam Hocevar  <sam@hocevar.net>
 	* examples/shaders.c: tweak shader syntax for better compatibility.
 

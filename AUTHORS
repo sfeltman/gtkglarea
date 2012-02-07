@@ -1,7 +1,7 @@
 Current authors and maintainers
 -------------------------------
  Sam Hocevar <sam@hocevar.net>
- C.J. Adams-Collier <cjcollier@colliertech.org>
+ C.J. Adams-Collier <cjac@colliertech.org>
 
 Previous authors and maintainers
 --------------------------------
@@ -15,4 +15,6 @@ Contributors
  Jussi Löf <jussi.lof@pirko.fi> (LightWave objects)
  Andrew Marriott <raytrace@lillee.cs.curtin.edu.au> (original win32 port)
  Chris Abernethy <chris65536@home.com> (gtkglarea_demo.c)
+ Ryan Corder <ryanc@greengrey.org> (Arch support)
+ Iwan Gabovitch <qubodup@gmail.com> (Arch support)
 

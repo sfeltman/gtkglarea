@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(gtkgl, 2.0.1)
+AC_INIT(gtkgl, 2.0.2)
 AC_CONFIG_AUX_DIR(.auto)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([no-define])
@@ -161,7 +161,7 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 CFLAGS="$CFLAGS $GTK_CFLAGS $GL_CFLAGS"
-CFLAGS="$CFLAGS -Wall"
+CFLAGS="$CFLAGS -Wall -lm"
 
 dnl Checks for header files.
 AC_HEADER_STDC
