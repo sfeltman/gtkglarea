@@ -23,13 +23,13 @@
 
 #include "gdkgl.h"
 
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 #if defined GDK_WINDOWING_WIN32
 #   include <gdk/gdkwin32.h>
 #   define PLATFORM "GDK_WINDOWING_WIN32"
 #elif defined GDK_WINDOWING_X11
 #   include <gdk/gdkx.h>
-#   include <GL/glx.h>
+#   include <epoxy/glx.h>
 #   define PLATFORM "GDK_WINDOWING_X11"
 #elif defined GDK_WINDOWING_FB
 #   define PLATFORM "GDK_WINDOWING_FB"

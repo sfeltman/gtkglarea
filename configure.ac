@@ -75,98 +75,16 @@ GTK_REQUIRED_VERSION=2.22
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= $GTK_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION)
 
 dnl
-dnl  Check for GL/MesaGL libraries
+dnl  Check for EPOXY library
 dnl
-AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=DIR    Prefix where GL/MesaGL is installed])
-AC_ARG_WITH(lib-GL,     [  --with-lib-GL           use '-lGL'])
-AC_ARG_WITH(lib-MesaGL, [  --with-lib-MesaGL       use '-lMesaGL'])
-AC_ARG_WITH(lib-opengl32,[ --with-lib-opengl32     use '-lopengl32'])
-
-if test "x$with_GL_prefix" = "x" ; then
- GL_LDOPTS=""
- GL_CFLAGS=""
-else
- GL_LDOPTS="-L$with_GL_prefix/lib"
- GL_CFLAGS="-I$with_GL_prefix/include"
-fi
-
-saved_LIBS="$LIBS"
-
-AC_MSG_CHECKING([OpenGL])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL"
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
-                                [[ char glBegin(); glBegin(); ]])],
-               [have_GL=yes],
-               [LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lopengl32"
-                AC_LINK_IFELSE([AC_LANG_PROGRAM([[ #include <windows.h>
-                                                   #include <GL/gl.h>]],
-                                                [[ glBegin(GL_TRIANGLES); ]])],
-                               [have_opengl32=yes have_GL=yes],[have_GL=no])])
-AC_MSG_RESULT($have_GL)
-
-AC_MSG_CHECKING([Mesa])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL"
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
-                                [[ char glBegin(); glBegin(); ]])],
-               [have_MesaGL=yes],[have_MesaGL=no])
-AC_MSG_RESULT($have_MesaGL)
-
-if test "x$have_MesaGL" = "xno"; then
- AC_MSG_CHECKING([Mesa with pthreads])
- LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lpthread"
- AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
-                                 [[ char glBegin(); glBegin(); ]])],
-                [have_MesaGL_pthread=yes],[have_MesaGL_pthread=no])
- AC_MSG_RESULT($have_MesaGL_pthread)
-fi
-
-LIBS="$saved_LIBS"
-
-if test "x$with_lib_GL" = "xyes"; then
-
- if test "x$have_GL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lGL"
- else
-  AC_MSG_ERROR([Missing GL library])
- fi
-
-elif test "x$with_lib_MesaGL" = "xyes"; then
-
- if test "x$have_MesaGL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGL"
- elif test "x$have_MesaGL_pthread" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGL -lpthread"
- else
-  AC_MSG_ERROR([Missing MesaGL library])
- fi
-
-elif test "x$with_lib_opengl32" = "xyes"; then
-
- if test "x$have_opengl32" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lopengl32"
- else
-  AC_MSG_ERROR([Missing OpenGL32 library])
- fi
-
-else
-
- if test "x$have_opengl32" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lopengl32"
- elif test "x$have_GL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lGL"
- elif test "x$have_MesaGL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGL"
- elif test "x$have_MesaGL_pthread" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGL -lpthread"
- else
-  AC_MSG_ERROR([You need GL or MesaGL libraries])
- fi
-
-fi
+EPOXY_REQUIRED_VERSION=1.0
+PKG_CHECK_MODULES([GL],[
+	epoxy >= $EPOXY_REQUIRED_VERSION
+])
 
 saved_LIBS="$LIBS"
 AC_MSG_CHECKING([OpenGL shaders])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS $GL_LIBS"
+LIBS="$saved_LIBS $GL_LIBS"
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
                                 [[ char glCreateProgram(); glCreateProgram(); ]])],
                [have_shaders=yes],[have_shaders=no])
@@ -174,8 +92,6 @@ AC_MSG_RESULT($have_shaders)
 LIBS="$saved_LIBS"
 AM_CONDITIONAL(HAVE_SHADERS, test "$have_shaders" = "yes")
 
-AC_SUBST(GL_CFLAGS)
-AC_SUBST(GL_LIBS)
 
 AC_CONFIG_FILES([
   Makefile
@@ -194,6 +110,5 @@ echo "Configuration summary"
 echo ""
 echo "   * Installation prefix: $prefix"
 echo "   * Win32:               $native_win32"
-echo "   * OpenGL:              $have_GL"
 echo ""
 echo "---"
