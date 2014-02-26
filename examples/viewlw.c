@@ -21,7 +21,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 
 
 #include "trackball.h"

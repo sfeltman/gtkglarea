@@ -42,7 +42,7 @@
 #include <windows.h>
 #endif
 
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>
 

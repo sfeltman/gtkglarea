@@ -29,7 +29,7 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtkgl/gtkglarea.h>
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 
 #ifndef M_PI
 #define M_PI 3.14

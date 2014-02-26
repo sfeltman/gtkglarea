@@ -24,7 +24,7 @@
 #ifdef G_OS_WIN32
 #include <windows.h>
 #endif
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 
 #include <gdk/gdk.h>
 #include <gtkgl/gdkgl.h>

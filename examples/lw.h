@@ -22,7 +22,7 @@
 
 #include <glib.h>
 #include <gtkgl/gdkgl.h>
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 
 #define LW_MAX_POINTS   200
 #define LW_MAX_NAME_LEN 500

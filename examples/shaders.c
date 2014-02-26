@@ -29,7 +29,7 @@
 #    define GL_GLEXT_PROTOTYPES 1
 #endif
 
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>
 
