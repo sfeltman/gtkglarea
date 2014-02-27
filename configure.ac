@@ -177,8 +177,6 @@ AM_CONDITIONAL(HAVE_SHADERS, test "$have_shaders" = "yes")
 AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
-CFLAGS="$CFLAGS $GTK_CFLAGS $GL_CFLAGS"
-
 AC_CONFIG_FILES([
   Makefile
   gtkgl-2.0.pc
