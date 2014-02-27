@@ -3,6 +3,7 @@ AC_INIT(gtkgl, 2.0.2)
 AC_CONFIG_AUX_DIR(.auto)
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([no-define])
+AM_MAINTAINER_MODE([enable])
 
 #shared library versioning
 GTKGL_LIBRARY_VERSION=1:1:0
@@ -31,7 +32,6 @@ AC_PROG_CPP
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 AM_SANITY_CHECK
-AM_MAINTAINER_MODE
 
 dnl
 dnl  Check for the operating system
