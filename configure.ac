@@ -33,7 +33,6 @@ AC_PROG_CPP
 dnl Initialize libtool
 LT_PREREQ([2.2.6])
 LT_INIT([win32-dll])
-AM_SANITY_CHECK
 
 dnl
 dnl  Check for the operating system
@@ -84,25 +83,29 @@ saved_LIBS="$LIBS"
 
 AC_MSG_CHECKING([OpenGL])
 LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL"
-AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_GL=yes, 
-  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lopengl32"
-  [AC_TRY_LINK([ #include <windows.h>
-                 #include <GL/gl.h>], 
-               [ glBegin(GL_TRIANGLES); ], 
-    [have_opengl32=yes
-     have_GL=yes],
-    have_GL=no)])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
+                                [[ char glBegin(); glBegin(); ]])],
+               [have_GL=yes],
+               [LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lopengl32"
+                AC_LINK_IFELSE([AC_LANG_PROGRAM([[ #include <windows.h>
+                                                   #include <GL/gl.h>]],
+                                                [[ glBegin(GL_TRIANGLES); ]])],
+                               [have_opengl32=yes have_GL=yes],[have_GL=no])])
 AC_MSG_RESULT($have_GL)
 
 AC_MSG_CHECKING([Mesa])
 LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL"
-AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_MesaGL=yes, have_MesaGL=no)
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
+                                [[ char glBegin(); glBegin(); ]])],
+               [have_MesaGL=yes],[have_MesaGL=no])
 AC_MSG_RESULT($have_MesaGL)
 
 if test "x$have_MesaGL" = "xno"; then
  AC_MSG_CHECKING([Mesa with pthreads])
  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lpthread"
- AC_TRY_LINK( ,[ char glBegin(); glBegin(); ], have_MesaGL_pthread=yes, have_MesaGL_pthread=no)
+ AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
+                                 [[ char glBegin(); glBegin(); ]])],
+                [have_MesaGL_pthread=yes],[have_MesaGL_pthread=no])
  AC_MSG_RESULT($have_MesaGL_pthread)
 fi
 
@@ -153,8 +156,9 @@ fi
 saved_LIBS="$LIBS"
 AC_MSG_CHECKING([OpenGL shaders])
 LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS $GL_LIBS"
-AC_TRY_LINK( ,[ char glCreateProgram(); glCreateProgram(); ],
-            have_shaders=yes, have_shaders=no)
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
+                                [[ char glCreateProgram(); glCreateProgram(); ]])],
+               [have_shaders=yes],[have_shaders=no])
 AC_MSG_RESULT($have_shaders)
 LIBS="$saved_LIBS"
 AM_CONDITIONAL(HAVE_SHADERS, test "$have_shaders" = "yes")
@@ -165,16 +169,7 @@ AC_SUBST(GL_LIBS)
 CFLAGS="$CFLAGS $GTK_CFLAGS $GL_CFLAGS"
 CFLAGS="$CFLAGS -Wall -lm"
 
-dnl Checks for header files.
-AC_HEADER_STDC
-
-
-dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
-
-dnl Checks for library functions.
-
-AC_OUTPUT(
+AC_CONFIG_FILES([
   Makefile
   gtkgl-2.0.pc
   gtkgl/Makefile
@@ -182,7 +177,8 @@ AC_OUTPUT(
   docs/Makefile
   examples/Makefile
   examples/makefile.mingw
-)
+])
+AC_OUTPUT
 
 
 echo "---"
