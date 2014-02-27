@@ -45,6 +45,9 @@ dnl Initialize libtool
 LT_PREREQ([2.2.6])
 LT_INIT([win32-dll])
 
+dnl Find an appropriate libm
+LT_LIB_M
+
 dnl
 dnl  Check for the operating system
 dnl
@@ -175,7 +178,6 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 CFLAGS="$CFLAGS $GTK_CFLAGS $GL_CFLAGS"
-CFLAGS="$CFLAGS -lm"
 
 AC_CONFIG_FILES([
   Makefile
