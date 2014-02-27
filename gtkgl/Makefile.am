@@ -27,8 +27,8 @@ endif
 
 EXTRA_DIST = makefile.mingw makefile.mingw.in gtkgl.def
 
+AM_CPPFLAGS = -I$(top_srcdir)
 AM_CFLAGS = $(GTK_CFLAGS) $(GL_CFLAGS)
-INCLUDES= -I$(top_srcdir)
 
 gtkglincludedir = $(includedir)/gtkgl-2.0/gtkgl
 
