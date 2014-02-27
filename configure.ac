@@ -1,7 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(gtkgl, 2.0.2)
+
 AC_CONFIG_AUX_DIR(.auto)
 AC_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([m4])
+
 AM_INIT_AUTOMAKE([no-define])
 AM_MAINTAINER_MODE([enable])
 
