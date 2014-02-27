@@ -29,8 +29,10 @@ AC_SUBST(VERSION)
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
-AC_LIBTOOL_WIN32_DLL
-AM_PROG_LIBTOOL
+
+dnl Initialize libtool
+LT_PREREQ([2.2.6])
+LT_INIT([win32-dll])
 AM_SANITY_CHECK
 
 dnl
