@@ -738,24 +738,11 @@ gint init(GtkWidget *widget)
 {
   /* OpenGL functions can be called only if makecurrent returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
-#if !defined(WIN32)
-    GdkFont *font;
-#endif
 
     /* set viewport */
     GtkAllocation allocation;
     gtk_widget_get_allocation (widget, &allocation);
     glViewport(0, 0, allocation.width, allocation.height);
-
-#if !defined(WIN32)
-    /* generate font display lists */
-    font = gdk_font_load("-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*");
-    if (font) {
-      fontbase = glGenLists( 128 );
-      gdk_gl_use_gdk_font(font, 0, 128, fontbase);
-      gdk_font_unref(font);
-    }
-#endif
   }
   return TRUE;
 }

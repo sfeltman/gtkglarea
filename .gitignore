@@ -21,7 +21,6 @@ libtool
 stamp-*
 *-stamp
 po
-examples/gdkfont
 examples/glpixmap
 examples/gtkglarea_demo
 examples/makefile.mingw

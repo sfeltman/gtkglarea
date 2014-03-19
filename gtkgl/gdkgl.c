@@ -646,28 +646,6 @@ gint gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context)
 #endif
 }
 
-/*
- *  Font support
- */
-
-void gdk_gl_use_gdk_font(GdkFont *font, int first, int count, int list_base)
-{
-#if defined GDK_WINDOWING_WIN32
-  HDC dc = CreateCompatibleDC (NULL);
-  HFONT old_font = SelectObject (dc, (void *)gdk_font_id (font));
-
-  wglUseFontBitmaps (dc, first, count, list_base);
-
-  SelectObject (dc, old_font);
-  DeleteDC (dc);
-#elif defined GDK_WINDOWING_X11
-  g_return_if_fail(font != NULL);
-  glXUseXFont(gdk_font_id(font), first, count, list_base);
-#else
-  g_warning ("gdk_gl_use_gdk_font not implemented on " PLATFORM);
-#endif
-}
-
 
 /*
  *  Helper functions

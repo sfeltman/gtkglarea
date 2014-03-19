@@ -12,15 +12,6 @@ Even better example than simple.
 
 
 
-gdkfont
--------
-
-Usage: gdkfont [fontname]
-
-Shows how to turn GdkFont to display lists using gdk_gl_use_gdk_font
-function.
-
-
 glpixmap
 --------
 
