@@ -90,8 +90,8 @@ GdkGLContext *gdk_gl_context_new(GdkVisual *visual);
 GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct);
 GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct);
 
-gint          gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context);
-void          gdk_gl_swap_buffers(GdkDrawable *drawable);
+gint          gdk_gl_make_current(GdkWindow *gdkwindow, GdkGLContext *context);
+void          gdk_gl_swap_buffers(GdkWindow *gdkwindow);
 
 
 void          gdk_gl_wait_gdk(void);

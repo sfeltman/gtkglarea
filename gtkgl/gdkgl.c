@@ -353,9 +353,9 @@ GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sha
 }
 
 
-gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
+gint gdk_gl_make_current(GdkWindow *gdkwindow, GdkGLContext *context)
 {
-  g_return_val_if_fail (GDK_IS_DRAWABLE(drawable), FALSE);
+  g_return_val_if_fail (GDK_IS_WINDOW(gdkwindow), FALSE);
   g_return_val_if_fail (GDK_IS_GL_CONTEXT(context), FALSE);
 
 #if defined GDK_WINDOWING_WIN32
@@ -394,7 +394,7 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 
   return TRUE;
 #elif defined GDK_WINDOWING_X11
-  return (glXMakeCurrent(context->xdisplay, GDK_WINDOW_XWINDOW(drawable),
+  return (glXMakeCurrent(context->xdisplay, gdk_x11_window_get_xid (gdkwindow),
 			 context->glxcontext) == True) ? TRUE : FALSE;
 
 #if 0
@@ -413,14 +413,14 @@ gint gdk_gl_make_current(GdkDrawable *drawable, GdkGLContext *context)
 #endif
 }
 
-void gdk_gl_swap_buffers(GdkDrawable *drawable)
+void gdk_gl_swap_buffers(GdkWindow *gdkwindow)
 {
 #if defined GDK_WINDOWING_WIN32
   HDC   hdc;
   HWND  hwnd;
 #endif
 
-  g_return_if_fail (GDK_IS_DRAWABLE(drawable));
+  g_return_if_fail (GDK_IS_WINDOW(gdkwindow));
 
 #if defined GDK_WINDOWING_WIN32
   hwnd = (HWND) gdk_win32_drawable_get_handle (drawable);
@@ -433,9 +433,9 @@ void gdk_gl_swap_buffers(GdkDrawable *drawable)
   SwapBuffers (hdc);
   ReleaseDC (hwnd, hdc);
 #elif defined GDK_WINDOWING_X11
-  GdkDisplay *gdkdisplay = gdk_window_get_display (GDK_WINDOW (drawable));
+  GdkDisplay *gdkdisplay = gdk_window_get_display (GDK_WINDOW (gdkwindow));
   glXSwapBuffers(gdk_x11_display_get_xdisplay (gdkdisplay),
-                 GDK_WINDOW_XID (GDK_WINDOW (drawable)));
+                 gdk_x11_window_get_xid (gdkwindow));
 #else
   g_warning ("gdk_gl_swap_buffers not implemented on " PLATFORM);
 #endif
