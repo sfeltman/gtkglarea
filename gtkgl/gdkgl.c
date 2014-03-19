@@ -455,7 +455,9 @@ void gdk_gl_swap_buffers(GdkDrawable *drawable)
   SwapBuffers (hdc);
   ReleaseDC (hwnd, hdc);
 #elif defined GDK_WINDOWING_X11
-  glXSwapBuffers(GDK_WINDOW_XDISPLAY(drawable), GDK_WINDOW_XWINDOW(drawable));
+  GdkDisplay *gdkdisplay = gdk_window_get_display (GDK_WINDOW (drawable));
+  glXSwapBuffers(gdk_x11_display_get_xdisplay (gdkdisplay),
+                 GDK_WINDOW_XID (GDK_WINDOW (drawable)));
 #else
   g_warning ("gdk_gl_swap_buffers not implemented on " PLATFORM);
 #endif

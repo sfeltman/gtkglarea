@@ -180,7 +180,7 @@ gint gtk_gl_area_make_current(GtkGLArea *gl_area)
   g_return_val_if_fail(GTK_IS_GL_AREA (gl_area), FALSE);
   g_return_val_if_fail(GTK_WIDGET_REALIZED(gl_area), FALSE);
 
-  return gdk_gl_make_current(GTK_WIDGET(gl_area)->window, gl_area->glcontext);
+  return gdk_gl_make_current(gtk_widget_get_window (GTK_WIDGET(gl_area)), gl_area->glcontext);
 }
 
 void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
@@ -189,5 +189,5 @@ void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
   g_return_if_fail(GTK_IS_GL_AREA(gl_area));
   g_return_if_fail(GTK_WIDGET_REALIZED(gl_area));
 
-  gdk_gl_swap_buffers(GTK_WIDGET(gl_area)->window);
+  gdk_gl_swap_buffers(gtk_widget_get_window (GTK_WIDGET(gl_area)));
 }
