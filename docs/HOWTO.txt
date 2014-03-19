@@ -68,15 +68,3 @@
     - Prevent possible default handlers from running:
         /* do this in the keypress handler and return TRUE from handler */
         g_signal_stop_emission_by_name (G_OBJECT(glarea), "key-press-event");
-
-
-
-7. Where are gtk_gl_area_begingl() and gtk_gl_area_endgl()?
-
-    These functions are deprecated. You should use gtk_gl_area_make_current()
-    instead of gtk_gl_area_begingl().
-
-    gtk_gl_area_endgl() is no longer required, but you may wish to call
-    glFlush() instead.
-
-    gtk_gl_area_swapbuffers() was renamed to gtk_gl_area_swap_buffers().

@@ -60,23 +60,8 @@ GtkWidget* gtk_gl_area_new_vargs  (GtkGLArea *share,
 
 gint       gtk_gl_area_make_current(GtkGLArea *glarea);
 
-void       gtk_gl_area_endgl      (GtkGLArea *glarea); /* deprecated */
-
 void       gtk_gl_area_swap_buffers(GtkGLArea *glarea);
 
-
-#ifndef GTKGL_DISABLE_DEPRECATED
-
-#  define gtk_gl_area_begingl(glarea) \
-      gtk_gl_area_make_current(glarea)
-#  define gtk_gl_area_endgl(glarea) \
-      glFlush()
-#  define gtk_gl_area_swapbuffers(glarea) \
-      gtk_gl_area_swap_buffers(glarea)
-#  define gtk_gl_area_size(glarea, width, height) \
-      gtk_widget_set_size_request(GTK_WIDGET(glarea), (width), (height))
-
-#endif
 
 G_END_DECLS
 

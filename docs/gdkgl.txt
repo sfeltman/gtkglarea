@@ -135,51 +135,6 @@ SEE ALSO
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_context_ref - increase reference count
-
-C SPECIFICATION
-	GdkGLContext *gdk_gl_context_ref( GdkGLContext *context )
-
-PARAMETERS
-
-context
-	Pointer to a GdkGLContext.
-
-DESCRIPTION
-	Increases reference count of context by one, returns context.
-
-SEE ALSO
-	gdk_gl_context_new
-	gdk_gl_context_share_new
-	gdk_gl_context_unref
-
----------------------------------------------------------------
-
-NAME
-	gdk_gl_context_unref - decrease reference count
-
-C SPECIFICATION
-	void gdk_gl_context_unref( GdkGLContext *context )
-
-
-PARAMETERS
-
-context	Pointer to a GdlGLContext.
-
-DESCRIPTION
-	gdk_gl_context_unref decreases reference count by 1 and
-	deletes context if it count drops to 0.
-
-
-SEE ALSO
-	glXDestroyContext
-	gdk_gl_context_new
-	gdk_gl_context_share_new
-	gdk_gl_context_ref
-
----------------------------------------------------------------
-
-NAME
 	gdk_gl_make_current - attach context to drawable
 
 C SPECIFICATION

@@ -98,13 +98,6 @@ void          gdk_gl_wait_gdk(void);
 void          gdk_gl_wait_gl(void);
 
 
-#ifndef GTKGL_DISABLE_DEPRECATED
-#  define gdk_gl_context_ref(context)   g_object_ref(context)
-#  define gdk_gl_context_unref(context) g_object_unref(context)
-#  define gdk_gl_pixmap_ref(pixmap)     g_object_ref(pixmap)
-#  define gdk_gl_pixmap_unref(pixmap)   g_object_unref(pixmap)
-#endif
-
 G_END_DECLS
 
 #endif /* __GDK_GL_H__ */

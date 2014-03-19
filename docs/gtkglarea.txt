@@ -51,30 +51,6 @@ DESCRIPTION
 
 ---------------------------------------------------------
 
-
-C SPECIFICATION
-
-gint gtk_gl_area_begingl(GtkGLArea *gl_area)
-void gtk_gl_area_endgl(GtkGLArea *gl_area)
-
-PARAMETERS
-
-gl_area
-	Specifies a gtkglarea widget.
-
-DESCRIPTION
-	*** Deprecated, use gtk_gl_area_make_current instead ***
-	gtk_gl_area_begingl must be called before rendering into
-	OpenGL widget, it returns TRUE if rendering to widget is
-	possible. Rendering is not possible if widget is not
-	GtkGLArea widget or widget is not realized. gtk_gl_area_endgl
-	is called to end opengl rendering.
-
-
-
-
----------------------------------------------------------
-
 C SPECIFICATION
 void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
 void gtk_gl_area_swapbuffers(GtkGLArea *gl_area)
