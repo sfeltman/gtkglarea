@@ -335,7 +335,7 @@ gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
     /* book if you don't already have an understanding of   */
     /* single vs. double buffered windows.                  */
 
-    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));
+    gtk_gl_area_swap_buffers (GTK_GL_AREA(widget));
 
   }
 

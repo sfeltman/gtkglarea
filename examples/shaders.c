@@ -303,7 +303,7 @@ gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
 
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glarea_draw_scene();
-    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));
+    gtk_gl_area_swap_buffers (GTK_GL_AREA(widget));
 
   }
 

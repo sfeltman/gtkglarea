@@ -59,7 +59,7 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
       glEnd();
 
       /* Swap backbuffer to front */
-      gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
+      gtk_gl_area_swap_buffers(GTK_GL_AREA(widget));
 
     }
 

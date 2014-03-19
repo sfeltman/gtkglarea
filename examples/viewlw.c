@@ -131,7 +131,7 @@ gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
     lw_object_show(info->lwobject);
 
     /* swap backbuffer to front */
-    gtk_gl_area_swapbuffers(glarea);
+    gtk_gl_area_swap_buffers(glarea);
   }
 
   return TRUE;

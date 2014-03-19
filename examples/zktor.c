@@ -770,7 +770,7 @@ gint draw(GtkWidget *widget, GdkEventExpose *event)
     game_render();
 
   /* Swap backbuffer to front */
-  gtk_gl_area_swapbuffers(GTK_GL_AREA(widget));
+  gtk_gl_area_swap_buffers(GTK_GL_AREA(widget));
 
   return TRUE;
 }
@@ -925,7 +925,7 @@ int main(int argc, char **argv)
   /* set minimum size */
   /*  gtk_widget_set_usize(GTK_WIDGET(glarea), 200,200); */
   /* set default size */
-  gtk_gl_area_size(GTK_GL_AREA(glarea), 640,400);
+  gtk_widget_set_size_request(glarea, 640, 400);
 
 
   /* Connect signal handlers */
