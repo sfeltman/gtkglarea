@@ -22,7 +22,7 @@
 
 #include <gdk/gdk.h>
 #include <gtkgl/gdkgl.h>
-#include <gtk/gtkdrawingarea.h>
+#include <gtk/gtk.h>
 
 
 G_BEGIN_DECLS
