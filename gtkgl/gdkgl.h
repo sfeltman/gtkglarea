@@ -98,23 +98,6 @@ void          gdk_gl_wait_gdk(void);
 void          gdk_gl_wait_gl(void);
 
 
-/* glpixmap stuff */
-
-#define GDK_TYPE_GL_PIXMAP            (gdk_gl_pixmap_get_type())
-#define GDK_GL_PIXMAP(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GDK_TYPE_GL_PIXMAP, GdkGLPixmap))
-#define GDK_GL_PIXMAP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDK_TYPE_GL_PIXMAP, GdkGLPixmapClass))
-#define GDK_IS_GL_PIXMAP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDK_TYPE_GL_PIXMAP))
-#define GDK_IS_GL_PIXMAP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDK_TYPE_GL_PIXMAP))
-#define GDK_GL_PIXMAP_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GDK_TYPE_GL_PIXMAP, GdkGLPixmap))
-
-typedef struct _GdkGLPixmap GdkGLPixmap;
-
-GType        gdk_gl_pixmap_get_type(void);
-GdkGLPixmap *gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap);
-
-gint         gdk_gl_pixmap_make_current(GdkGLPixmap *glpixmap, GdkGLContext *context);
-
-
 #ifndef GTKGL_DISABLE_DEPRECATED
 #  define gdk_gl_context_ref(context)   g_object_ref(context)
 #  define gdk_gl_context_unref(context) g_object_unref(context)

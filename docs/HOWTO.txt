@@ -47,21 +47,14 @@
 
 
 
-4. How do I render to an off-screen pixmap?
-
-    See examples/glpixmap.c, remember that pixmaps can not be rendered to with
-    direct context.
-
-
-
-5. Can I use gdk_gl functions and GtkGLArea widget in the same program?
+6. Can I use gdk_gl functions and GtkGLArea widget in the same program?
 
     Yes, just remember that gtk_gl_area_make_current() makes the GtkGLArea
     widget's internal context the current context and leaves it so.
 
 
 
-6. How do I capture keypress events for GtkGLArea widget?
+7. How do I capture keypress events for GtkGLArea widget?
 
     This is not a GtkGLArea specific question, but here is a solution:
 

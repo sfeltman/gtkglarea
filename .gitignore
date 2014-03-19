@@ -21,7 +21,6 @@ libtool
 stamp-*
 *-stamp
 po
-examples/glpixmap
 examples/gtkglarea_demo
 examples/makefile.mingw
 examples/shaders
