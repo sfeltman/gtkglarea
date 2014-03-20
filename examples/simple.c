@@ -152,7 +152,7 @@ int main(int argc, char **argv)
                    G_CALLBACK(init), NULL);
 
   /* set minimum size */
-  gtk_widget_set_usize(GTK_WIDGET(glarea), 100,100);
+  gtk_widget_set_size_request(GTK_WIDGET(glarea), 100,100);
 
   /* put glarea into window and show it all */
   gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(glarea));

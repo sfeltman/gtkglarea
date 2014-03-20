@@ -178,7 +178,7 @@ GtkWidget* create_glarea (void) {
   g_signal_connect (G_OBJECT(glarea), "destroy",
                     G_CALLBACK (glarea_destroy), NULL);
 
-  gtk_widget_set_usize(GTK_WIDGET(glarea), 256, 256);
+  gtk_widget_set_size_request(GTK_WIDGET(glarea), 256, 256);
 
   return (glarea);
 

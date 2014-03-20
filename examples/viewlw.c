@@ -335,7 +335,7 @@ gint show_lwobject(char const *lwobject_name)
   g_signal_connect (G_OBJECT(glarea), "destroy",
                     G_CALLBACK(glarea_destroy), NULL);
 
-  gtk_widget_set_usize(glarea, 200,200/VIEW_ASPECT); /* minimum size */
+  gtk_widget_set_size_request(glarea, 200,200/VIEW_ASPECT); /* minimum size */
 
   /* set up mesh info */
   info = (mesh_info*)g_malloc(sizeof(mesh_info));

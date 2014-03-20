@@ -928,7 +928,7 @@ int main(int argc, char **argv)
 			GDK_KEY_PRESS_MASK|
 			GDK_KEY_RELEASE_MASK);
   /* set minimum size */
-  /*  gtk_widget_set_usize(GTK_WIDGET(glarea), 200,200); */
+  /*  gtk_widget_set_size_request(GTK_WIDGET(glarea), 200,200); */
   /* set default size */
   gtk_widget_set_size_request(glarea, 640, 400);
 
