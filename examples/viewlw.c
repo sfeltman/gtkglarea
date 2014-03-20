@@ -246,9 +246,9 @@ void create_popup_menu(GtkWidget *widget)
   GtkWidget *quit_item     = gtk_menu_item_new_with_label("Quit");
   GtkWidget *quit_all_item = gtk_menu_item_new_with_label("Quit All");
 
-  gtk_menu_append(GTK_MENU(menu), open_item);
-  gtk_menu_append(GTK_MENU(menu), quit_item);
-  gtk_menu_append(GTK_MENU(menu), quit_all_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL(menu), open_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL(menu), quit_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL(menu), quit_all_item);
 
   gtk_widget_show(open_item);
   gtk_widget_show(quit_item);
