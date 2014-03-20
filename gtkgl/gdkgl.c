@@ -153,7 +153,8 @@ GdkVisual *gdk_gl_choose_visual(int *attrlist)
   if (!vi)
     return NULL;
 
-  visual = gdkx_visual_get(vi->visualid);
+  visual = gdk_x11_screen_lookup_visual (gdk_screen_get_default (),
+                                         vi->visualid);
   XFree(vi);
   return visual;
 #else
