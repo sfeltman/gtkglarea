@@ -23,46 +23,15 @@
 #include "gdkgl.h"
 #include "gtkglarea.h"
 
-static void gtk_gl_area_class_init    (GtkGLAreaClass *klass);
-static void gtk_gl_area_init          (GtkGLArea      *glarea);
 static void gtk_gl_area_destroy       (GtkObject      *object); /* change to finalize? */
 
-static GtkDrawingAreaClass *parent_class = NULL;
-
-
-GType
-gtk_gl_area_get_type (void)
-{
-  static GType object_type = 0;
-
-  if (!object_type)
-    {
-      static const GTypeInfo object_info =
-      {
-        sizeof (GtkGLAreaClass),
-        (GBaseInitFunc) NULL,
-        (GBaseFinalizeFunc) NULL,
-        (GClassInitFunc) gtk_gl_area_class_init,
-        NULL,           /* class_finalize */
-        NULL,           /* class_data */
-        sizeof (GtkGLArea),
-        0,              /* n_preallocs */
-        (GInstanceInitFunc) gtk_gl_area_init,
-      };
-
-      object_type = g_type_register_static (GTK_TYPE_DRAWING_AREA,
-                                            "GtkGLArea",
-                                            &object_info, 0);
-    }
-  return object_type;
-}
+G_DEFINE_TYPE (GtkGLArea, gtk_gl_area, GTK_TYPE_DRAWING_AREA);
 
 static void
 gtk_gl_area_class_init (GtkGLAreaClass *klass)
 {
   GtkObjectClass *object_class;
 
-  parent_class = g_type_class_peek_parent(klass);
   object_class = (GtkObjectClass*) klass;
 
   object_class->destroy = gtk_gl_area_destroy;
@@ -169,8 +138,7 @@ gtk_gl_area_destroy(GtkObject *object)
     g_object_unref(gl_area->glcontext);
   gl_area->glcontext = NULL;
 
-  if (GTK_OBJECT_CLASS (parent_class)->destroy)
-    (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
+  GTK_OBJECT_CLASS (gtk_gl_area_parent_class)->destroy;
 }
 
 
