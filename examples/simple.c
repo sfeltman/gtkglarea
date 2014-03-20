@@ -118,8 +118,8 @@ int main(int argc, char **argv)
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
 
   /* Quit form main if got delete event */
-  gtk_signal_connect(GTK_OBJECT(window), "delete_event",
-		     GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect(G_OBJECT(window), "delete-event",
+                   G_CALLBACK(gtk_main_quit), NULL);
 
 
   /* You should always delete gtk_gl_area widgets before exit or else
@@ -142,14 +142,14 @@ int main(int argc, char **argv)
 
   /* Connect signal handlers */
   /* Redraw image when exposed. */
-  gtk_signal_connect(GTK_OBJECT(glarea), "expose_event",
-		     GTK_SIGNAL_FUNC(draw), NULL);
+  g_signal_connect(G_OBJECT(glarea), "expose-event",
+                   G_CALLBACK(draw), NULL);
   /* When window is resized viewport needs to be resized also. */
-  gtk_signal_connect(GTK_OBJECT(glarea), "configure_event",
-		     GTK_SIGNAL_FUNC(reshape), NULL);
+  g_signal_connect(G_OBJECT(glarea), "configure-event",
+                   G_CALLBACK(reshape), NULL);
   /* Do initialization when widget has been realized. */
-  gtk_signal_connect(GTK_OBJECT(glarea), "realize",
-		     GTK_SIGNAL_FUNC(init), NULL);
+  g_signal_connect(G_OBJECT(glarea), "realize",
+                   G_CALLBACK(init), NULL);
 
   /* set minimum size */
   gtk_widget_set_usize(GTK_WIDGET(glarea), 100,100);

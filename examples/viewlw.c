@@ -255,21 +255,20 @@ void create_popup_menu(GtkWidget *widget)
   gtk_widget_show(quit_all_item);
 
   gtk_menu_attach_to_widget(GTK_MENU(menu),GTK_WIDGET(widget),popup_menu_detacher);
-  gtk_signal_connect_object(GTK_OBJECT(widget), "destroy",
-			    GTK_SIGNAL_FUNC(gtk_menu_detach), GTK_OBJECT(menu));
+  g_signal_connect_swapped (G_OBJECT(widget), "destroy",
+                            G_CALLBACK(gtk_menu_detach), menu);
 
- gtk_signal_connect_object(GTK_OBJECT(widget), "button_press_event",
-			    GTK_SIGNAL_FUNC(popup_menu_handler), GTK_OBJECT(menu));
+  g_signal_connect_swapped (G_OBJECT(widget), "button-press-event",
+                            G_CALLBACK(popup_menu_handler), menu);
 
+  g_signal_connect (G_OBJECT(open_item), "activate",
+                    G_CALLBACK(select_lwobject), NULL);
 
-  gtk_signal_connect(GTK_OBJECT(open_item), "activate",
-		     GTK_SIGNAL_FUNC(select_lwobject), NULL);
+  g_signal_connect_swapped (G_OBJECT(quit_item), "activate",
+                            G_CALLBACK(gtk_widget_destroy), widget);
 
-  gtk_signal_connect_object(GTK_OBJECT(quit_item), "activate",
-			    GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(widget));
-
-  gtk_signal_connect(GTK_OBJECT(quit_all_item), "activate",
-		     GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect(G_OBJECT(quit_all_item), "activate",
+                   G_CALLBACK(gtk_main_quit), NULL);
 }
 
 
@@ -325,16 +324,16 @@ gint show_lwobject(char const *lwobject_name)
 			GDK_BUTTON_RELEASE_MASK|
 			GDK_POINTER_MOTION_MASK|
 			GDK_POINTER_MOTION_HINT_MASK);
-  gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",
-		      GTK_SIGNAL_FUNC(glarea_expose), NULL);
-  gtk_signal_connect (GTK_OBJECT(glarea), "motion_notify_event",
-		      GTK_SIGNAL_FUNC(glarea_motion_notify), NULL);
-  gtk_signal_connect (GTK_OBJECT(glarea), "button_press_event",
-		      GTK_SIGNAL_FUNC(glarea_button_press), NULL);
-  gtk_signal_connect (GTK_OBJECT(glarea), "configure_event",
-		      GTK_SIGNAL_FUNC(glarea_configure), NULL);
-  gtk_signal_connect (GTK_OBJECT(glarea), "destroy",
-		      GTK_SIGNAL_FUNC (glarea_destroy), NULL);
+  g_signal_connect (G_OBJECT(glarea), "expose-event",
+                    G_CALLBACK(glarea_expose), NULL);
+  g_signal_connect (G_OBJECT(glarea), "motion-notify-event",
+                    G_CALLBACK(glarea_motion_notify), NULL);
+  g_signal_connect (G_OBJECT(glarea), "button-press-event",
+                    G_CALLBACK(glarea_button_press), NULL);
+  g_signal_connect (G_OBJECT(glarea), "configure-event",
+                    G_CALLBACK(glarea_configure), NULL);
+  g_signal_connect (G_OBJECT(glarea), "destroy",
+                    G_CALLBACK(glarea_destroy), NULL);
 
   gtk_widget_set_usize(glarea, 200,200/VIEW_ASPECT); /* minimum size */
 
@@ -354,8 +353,8 @@ gint show_lwobject(char const *lwobject_name)
   gtk_window_set_title(GTK_WINDOW(window), lwobject_name);
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
   create_popup_menu(window); /* add popup menu to window */
-  gtk_signal_connect (GTK_OBJECT(window), "destroy",
-		      GTK_SIGNAL_FUNC(window_destroy), NULL);
+  g_signal_connect (G_OBJECT(window), "destroy",
+                    G_CALLBACK(window_destroy), NULL);
   window_count++;
 
   /* destroy this window when exiting from gtk_main() */
@@ -384,14 +383,14 @@ void select_lwobject()
 {
   GtkWidget *filew = gtk_file_selection_new("Select LightWave 3D object");
 
-  gtk_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION (filew)->ok_button), "clicked",
-		     GTK_SIGNAL_FUNC(filew_ok), filew);
+  g_signal_connect (G_OBJECT(GTK_FILE_SELECTION (filew)->ok_button), "clicked",
+                    G_CALLBACK(filew_ok), filew);
 
-  gtk_signal_connect_object(GTK_OBJECT(GTK_FILE_SELECTION(filew)->cancel_button), "clicked",
-			    GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(filew));
+  g_signal_connect_swapped (G_OBJECT(GTK_FILE_SELECTION(filew)->cancel_button), "clicked",
+                            G_CALLBACK(gtk_widget_destroy), filew);
 
-  gtk_signal_connect (GTK_OBJECT(filew), "destroy",
-		      GTK_SIGNAL_FUNC(window_destroy), NULL);
+  g_signal_connect (G_OBJECT(filew), "destroy",
+                    G_CALLBACK(window_destroy), NULL);
   window_count++;
 
   gtk_widget_show(filew);

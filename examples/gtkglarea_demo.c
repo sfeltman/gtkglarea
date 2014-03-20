@@ -137,46 +137,46 @@ GtkWidget* create_glarea (void) {
   /* button_release_event - The user has released one of the  */
   /*                        mouse buttons in the window.      */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "button_release_event",
-                      GTK_SIGNAL_FUNC(glarea_button_release), NULL);
+  g_signal_connect (G_OBJECT(glarea), "button-release-event",
+                    G_CALLBACK(glarea_button_release), NULL);
 
   /* button_press_event - The user has pressed one of the     */
   /*                      mouse buttons in the window.        */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "button_press_event",
-                      GTK_SIGNAL_FUNC(glarea_button_press), NULL);
+  g_signal_connect (G_OBJECT(glarea), "button-press-event",
+                    G_CALLBACK(glarea_button_press), NULL);
 
   /* motion_notify_event - The mouse is moving in the window. */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "motion_notify_event",
-                      GTK_SIGNAL_FUNC(glarea_motion_notify), NULL);
+  g_signal_connect (G_OBJECT(glarea), "motion-notify-event",
+                    G_CALLBACK(glarea_motion_notify), NULL);
 
   /* expose_event - The window was exposed and the contents   */
   /*                need to be redrawn.                       */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",
-                      GTK_SIGNAL_FUNC(glarea_draw), NULL);
+  g_signal_connect (G_OBJECT(glarea), "expose-event",
+                    G_CALLBACK(glarea_draw), NULL);
 
   /* configure_event - The window has been resized. You will  */
   /*                   probably want to call your reshape     */
   /*                   function here.                         */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "configure_event",
-                      GTK_SIGNAL_FUNC(glarea_reshape), NULL);
+  g_signal_connect (G_OBJECT(glarea), "configure-event",
+                    G_CALLBACK(glarea_reshape), NULL);
 
   /* realize - The window has been created, this is where you */
   /*           can hook up your initialization routines.      */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "realize",
-                      GTK_SIGNAL_FUNC(glarea_init), NULL);
+  g_signal_connect (G_OBJECT(glarea), "realize",
+                    G_CALLBACK(glarea_init), NULL);
 
   /* destroy - The window has received a destroy event, this  */
   /*           is where you should do any cleanup that needs  */
   /*           to happen, such as de-allocating data objects  */
   /*           that you have added to your GtkGLArea.         */
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "destroy",
-                      GTK_SIGNAL_FUNC (glarea_destroy), NULL);
+  g_signal_connect (G_OBJECT(glarea), "destroy",
+                    G_CALLBACK (glarea_destroy), NULL);
 
   gtk_widget_set_usize(GTK_WIDGET(glarea), 256, 256);
 
@@ -458,8 +458,8 @@ int main (int argc, char** argv) {
 
   button_quit = gtk_button_new_with_label ("Quit");
 
-  gtk_signal_connect (GTK_OBJECT(button_quit), "clicked",
-                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT(button_quit), "clicked",
+                    G_CALLBACK(gtk_main_quit), NULL);
 
   /* Main window */
 
@@ -471,11 +471,11 @@ int main (int argc, char** argv) {
 
   gtk_quit_add_destroy (1, GTK_OBJECT(window));
 
-  gtk_signal_connect (GTK_OBJECT(window), "delete_event",
-                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT(window), "delete-event",
+                    G_CALLBACK(gtk_main_quit), NULL);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT (window), "destroy",
+                    G_CALLBACK(gtk_main_quit), NULL);
 
   gtk_container_set_border_width (GTK_CONTAINER(window), 10);
 

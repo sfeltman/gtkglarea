@@ -245,17 +245,17 @@ GtkWidget* create_glarea (void) {
 
   gtk_widget_set_events(GTK_WIDGET(glarea), GDK_EXPOSURE_MASK);
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",
-                      GTK_SIGNAL_FUNC(glarea_draw), NULL);
+  g_signal_connect (G_OBJECT(glarea), "expose-event",
+                    G_CALLBACK(glarea_draw), NULL);
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "configure_event",
-                      GTK_SIGNAL_FUNC(glarea_reshape), NULL);
+  g_signal_connect (G_OBJECT(glarea), "configure-event",
+                    G_CALLBACK(glarea_reshape), NULL);
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "realize",
-                      GTK_SIGNAL_FUNC(glarea_init), NULL);
+  g_signal_connect (G_OBJECT(glarea), "realize",
+                    G_CALLBACK(glarea_init), NULL);
 
-  gtk_signal_connect (GTK_OBJECT(glarea), "destroy",
-                      GTK_SIGNAL_FUNC (glarea_destroy), NULL);
+  g_signal_connect (G_OBJECT(glarea), "destroy",
+                    G_CALLBACK(glarea_destroy), NULL);
 
   gtk_widget_set_usize(GTK_WIDGET(glarea), 256, 256);
 
@@ -436,8 +436,8 @@ int main (int argc, char** argv) {
 
   button_quit = gtk_button_new_with_label ("Quit");
 
-  gtk_signal_connect (GTK_OBJECT(button_quit), "clicked",
-                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT(button_quit), "clicked",
+                    G_CALLBACK(gtk_main_quit), NULL);
 
   /* Main window */
 
@@ -449,11 +449,11 @@ int main (int argc, char** argv) {
 
   gtk_quit_add_destroy (1, GTK_OBJECT(window));
 
-  gtk_signal_connect (GTK_OBJECT(window), "delete_event",
-                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT(window), "delete-event",
+                    G_CALLBACK(gtk_main_quit), NULL);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT (window), "destroy",
+                    G_CALLBACK(gtk_main_quit), NULL);
 
   gtk_container_set_border_width (GTK_CONTAINER(window), 10);
 

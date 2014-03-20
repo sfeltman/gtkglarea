@@ -825,7 +825,8 @@ gint key_press_event(GtkWidget *widget, GdkEventKey *event)
     break;
   }
   /* prevent the default handler from being run */
-  gtk_signal_emit_stop_by_name(GTK_OBJECT(widget),"key_press_event");
+  g_signal_stop_emission_by_name(G_OBJECT(widget),"key-press-event");
+
   return TRUE;
 }
 
@@ -847,7 +848,7 @@ gint key_release_event(GtkWidget *widget, GdkEventKey *event)
     break;
   }
   /* prevent the default handler from being run */
-  gtk_signal_emit_stop_by_name(GTK_OBJECT(widget),"key_release_event");
+  g_signal_stop_emission_by_name(G_OBJECT(widget),"key-release-event");
   return TRUE;
 }
 
@@ -897,8 +898,8 @@ int main(int argc, char **argv)
   gtk_window_set_title(GTK_WINDOW(window), "Zktor");
 
   /* Quit form main if got delete event */
-  gtk_signal_connect(GTK_OBJECT(window), "delete_event",
-		     GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+  g_signal_connect(G_OBJECT(window), "delete-event",
+                   G_CALLBACK(gtk_main_quit), NULL);
 
 
   /* You should always delete gtk_gl_area widgets before exit or else
@@ -934,19 +935,19 @@ int main(int argc, char **argv)
 
   /* Connect signal handlers */
   /* Redraw image when exposed. */
-  gtk_signal_connect(GTK_OBJECT(glarea), "expose_event",
-		     GTK_SIGNAL_FUNC(draw), NULL);
+  g_signal_connect(G_OBJECT(glarea), "expose-event",
+                   G_CALLBACK(draw), NULL);
   /* When window is resized viewport needs to be resized also. */
-  gtk_signal_connect(GTK_OBJECT(glarea), "configure_event",
-		     GTK_SIGNAL_FUNC(reshape), NULL);
+  g_signal_connect(G_OBJECT(glarea), "configure-event",
+                   G_CALLBACK(reshape), NULL);
   /* Do initialization when widget has been realized. */
-  gtk_signal_connect(GTK_OBJECT(glarea), "realize",
-		     GTK_SIGNAL_FUNC(init), NULL);
+  g_signal_connect(G_OBJECT(glarea), "realize",
+                   G_CALLBACK(init), NULL);
   /* Capture keypress events */
-  gtk_signal_connect(GTK_OBJECT(glarea), "key_press_event",
-		     GTK_SIGNAL_FUNC(key_press_event), NULL);
-  gtk_signal_connect(GTK_OBJECT(glarea), "key_release_event",
-		     GTK_SIGNAL_FUNC(key_release_event), NULL);
+  g_signal_connect(G_OBJECT(glarea), "key-press-event",
+                   G_CALLBACK(key_press_event), NULL);
+  g_signal_connect(GTK_OBJECT(glarea), "key-release-event",
+                   G_CALLBACK(key_release_event), NULL);
 
   /* construct widget hierarchy  */
   gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(vbox));
