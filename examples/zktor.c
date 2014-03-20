@@ -946,7 +946,7 @@ int main(int argc, char **argv)
   /* Capture keypress events */
   g_signal_connect(G_OBJECT(glarea), "key-press-event",
                    G_CALLBACK(key_press_event), NULL);
-  g_signal_connect(GTK_OBJECT(glarea), "key-release-event",
+  g_signal_connect(G_OBJECT(glarea), "key-release-event",
                    G_CALLBACK(key_release_event), NULL);
 
   /* construct widget hierarchy  */
