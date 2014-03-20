@@ -855,7 +855,7 @@ gint key_release_event(GtkWidget *widget, GdkEventKey *event)
 gint animate(GtkWidget *glarea)
 {
   game_play();
-  gtk_widget_draw(GTK_WIDGET(glarea), NULL);
+  gtk_widget_queue_draw (glarea);
   return TRUE;
 }
 
