@@ -355,8 +355,10 @@ gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
 
 gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
 
-  int w = widget->allocation.width;
-  int h = widget->allocation.height;
+  GtkAllocation allocation;
+  gtk_widget_get_allocation (widget, &allocation);
+  int w = allocation.width;
+  int h = allocation.height;
 
   g_print ("Reshape Event\n");
 
