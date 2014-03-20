@@ -795,7 +795,7 @@ static XVisualInfo *get_xvisualinfo(GdkVisual *visual)
    */
   vinfo_template.visual   = GDK_VISUAL_XVISUAL(visual);
   vinfo_template.visualid = XVisualIDFromVisual(vinfo_template.visual);
-  vinfo_template.depth    = visual->depth;
+  vinfo_template.depth    = gdk_visual_get_depth(visual);
   vinfo_template.screen   = DefaultScreen(dpy);
   vi = XGetVisualInfo(dpy, VisualIDMask|VisualDepthMask|VisualScreenMask,
 		      &vinfo_template, &nitems_return);

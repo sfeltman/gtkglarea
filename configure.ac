@@ -71,7 +71,7 @@ AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
 dnl
 dnl  Check for GTK libraries
 dnl
-GTK_REQUIRED_VERSION=2.0.0
+GTK_REQUIRED_VERSION=2.22
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= $GTK_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION)
 
 dnl

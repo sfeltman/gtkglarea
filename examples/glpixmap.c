@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 
   /* pixmap */
   context  = gdk_gl_context_new(visual);
-  pixmap = gdk_pixmap_new(NULL, 80,80, visual->depth);
+  pixmap = gdk_pixmap_new(NULL, 80,80, gdk_visual_get_depth (visual));
   glpixmap = gdk_gl_pixmap_new(visual, pixmap);
   if (gdk_gl_pixmap_make_current(glpixmap, context)) {
     glMatrixMode(GL_PROJECTION);
