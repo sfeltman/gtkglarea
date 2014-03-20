@@ -109,7 +109,7 @@ gint gdk_gl_query(void)
 #if defined GDK_WINDOWING_WIN32
   return TRUE;
 #elif defined GDK_WINDOWING_X11
-  return (glXQueryExtension(GDK_DISPLAY(),NULL,NULL) == True) ? TRUE : FALSE;
+  return (glXQueryExtension(gdk_x11_get_default_xdisplay(),NULL,NULL) == True) ? TRUE : FALSE;
 #else
   return FALSE;
 #endif
@@ -124,9 +124,9 @@ gchar *gdk_gl_get_info()
   version = glGetString (GL_VERSION);
   extensions = glGetString (GL_EXTENSIONS);
 #elif defined GDK_WINDOWING_X11
-  vendor = glXGetClientString(GDK_DISPLAY(), GLX_VENDOR);
-  version = glXGetClientString(GDK_DISPLAY(), GLX_VERSION);
-  extensions = glXGetClientString(GDK_DISPLAY(), GLX_EXTENSIONS);
+  vendor = glXGetClientString(gdk_x11_get_default_xdisplay(), GLX_VENDOR);
+  version = glXGetClientString(gdk_x11_get_default_xdisplay(), GLX_VERSION);
+  extensions = glXGetClientString(gdk_x11_get_default_xdisplay(), GLX_EXTENSIONS);
 #else
   vendor = version = extensions = "unknown";
 #endif
@@ -148,7 +148,7 @@ GdkVisual *gdk_gl_choose_visual(int *attrlist)
 
   g_return_val_if_fail(attrlist != NULL, NULL);
 
-  dpy = GDK_DISPLAY();
+  dpy = gdk_x11_get_default_xdisplay();
   vi = glXChooseVisual(dpy, DefaultScreen(dpy), attrlist);
   if (!vi)
     return NULL;
@@ -172,7 +172,7 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
 
   g_return_val_if_fail(visual != NULL, -1);
 
-  dpy = GDK_DISPLAY();
+  dpy = gdk_x11_get_default_xdisplay();
 
   vi = get_xvisualinfo(visual);
 
@@ -319,7 +319,7 @@ gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct
   context->pfd.cDepthBits = 32;
   context->pfd.iLayerType = PFD_MAIN_PLANE;
 #elif defined GDK_WINDOWING_X11
-  dpy = GDK_DISPLAY();
+  dpy = gdk_x11_get_default_xdisplay();
 
   vi = get_xvisualinfo(visual);
 
@@ -582,7 +582,7 @@ gdk_gl_pixmap_new(GdkVisual *visual, GdkPixmap *pixmap)
   glpixmap->hbitmap = NULL;
   glpixmap->pixmap = gdk_pixmap_ref (pixmap);
 #elif defined GDK_WINDOWING_X11
-  dpy = GDK_DISPLAY();
+  dpy = gdk_x11_get_default_xdisplay();
   xpixmap = (Pixmap)GDK_DRAWABLE_XID(pixmap);
 
   g_return_val_if_fail(XGetGeometry(dpy, xpixmap, &root_return,
@@ -788,7 +788,7 @@ static XVisualInfo *get_xvisualinfo(GdkVisual *visual)
   XVisualInfo *vi;
   int nitems_return;
 
-  dpy = GDK_DISPLAY();
+  dpy = gdk_x11_get_default_xdisplay();
 
   /* 'GLX uses VisualInfo records because they uniquely identify
    * a (VisualID,screen,depth) tuple.'
