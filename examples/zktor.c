@@ -967,7 +967,7 @@ int main(int argc, char **argv)
   gtk_widget_grab_focus(GTK_WIDGET(glarea));
 
   /* animating */
-  gtk_idle_add((GSourceFunc)animate, glarea);
+  g_idle_add((GSourceFunc)animate, glarea);
 
   game_init();
   gtk_main();
