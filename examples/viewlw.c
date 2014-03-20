@@ -357,10 +357,6 @@ gint show_lwobject(char const *lwobject_name)
                     G_CALLBACK(window_destroy), NULL);
   window_count++;
 
-  /* destroy this window when exiting from gtk_main() */
-  gtk_quit_add_destroy(1, GTK_OBJECT(window));
-
-
   /* put glarea into window and show it all */
   gtk_container_add(GTK_CONTAINER(window), glarea);
 
@@ -370,25 +366,44 @@ gint show_lwobject(char const *lwobject_name)
   return TRUE;
 }
 
-
-
-gint filew_ok(GtkWidget *widget, GtkWidget *filew)
+void filew_ok (GtkDialog *dialog)
 {
-  if (show_lwobject(gtk_file_selection_get_filename(GTK_FILE_SELECTION(filew))) == TRUE)
-    gtk_widget_destroy(filew);
-  return TRUE;
+  GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+  gchar *filename = gtk_file_chooser_get_filename (chooser);
+
+  if (show_lwobject (filename) == TRUE)
+    gtk_widget_destroy (GTK_WIDGET (dialog));
+
+  g_free (filename);
+}
+
+void response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
+{
+  switch (response_id)
+  {
+    case GTK_RESPONSE_ACCEPT:
+      filew_ok (dialog);
+      break;
+    case GTK_RESPONSE_CANCEL:
+      gtk_widget_destroy (GTK_WIDGET (dialog));
+      break;
+    default:
+      break;
+  }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 void select_lwobject()
 {
-  GtkWidget *filew = gtk_file_selection_new("Select LightWave 3D object");
+  GtkWidget *filew = gtk_file_chooser_dialog_new ("Select LightWave 3D object",
+                                                  NULL,
+                                                  GTK_FILE_CHOOSER_ACTION_OPEN,
+                                                  "_Cancel", GTK_RESPONSE_CANCEL,
+                                                  "_Open", GTK_RESPONSE_ACCEPT,
+                                                  NULL);
 
-  g_signal_connect (G_OBJECT(GTK_FILE_SELECTION (filew)->ok_button), "clicked",
-                    G_CALLBACK(filew_ok), filew);
-
-  g_signal_connect_swapped (G_OBJECT(GTK_FILE_SELECTION(filew)->cancel_button), "clicked",
-                            G_CALLBACK(gtk_widget_destroy), filew);
-
+  g_signal_connect (G_OBJECT(filew), "response", G_CALLBACK (response_cb), NULL);
   g_signal_connect (G_OBJECT(filew), "destroy",
                     G_CALLBACK(window_destroy), NULL);
   window_count++;
