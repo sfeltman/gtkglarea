@@ -26,7 +26,9 @@ gint init(GtkWidget *widget)
   /* OpenGL functions can be called only if make_current returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
     {
-      glViewport(0,0, widget->allocation.width, widget->allocation.height);
+      GtkAllocation allocation;
+      gtk_widget_get_allocation (widget, &allocation);
+      glViewport(0, 0, allocation.width, allocation.height);
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
       glOrtho(0,100, 100,0, -1,1);
@@ -72,7 +74,9 @@ gint reshape(GtkWidget *widget, GdkEventConfigure *event)
   /* OpenGL functions can be called only if make_current returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
     {
-      glViewport(0,0, widget->allocation.width, widget->allocation.height);
+      GtkAllocation allocation;
+      gtk_widget_get_allocation (widget, &allocation);
+      glViewport(0, 0, allocation.width, allocation.height);
     }
   return TRUE;
 }

@@ -141,7 +141,9 @@ gint glarea_configure(GtkWidget *widget, GdkEventConfigure *event)
 {
   /* OpenGL calls can be done only if make_current returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
-    glViewport(0,0, widget->allocation.width, widget->allocation.height);
+      GtkAllocation allocation;
+      gtk_widget_get_allocation (widget, &allocation);
+      glViewport(0, 0, allocation.width, allocation.height);
   }
   return TRUE;
 }
@@ -174,6 +176,7 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
   int x, y;
   GdkRectangle area;
   GdkModifierType state;
+  GtkAllocation allocation;
   mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget), "mesh_info");
 
   if (event->is_hint) {
@@ -189,8 +192,9 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
 
   area.x = 0;
   area.y = 0;
-  area.width  = widget->allocation.width;
-  area.height = widget->allocation.height;
+  gtk_widget_get_allocation (widget, &allocation);
+  area.width  = allocation.width;
+  area.height = allocation.height;
 
   if (state & GDK_BUTTON1_MASK) {
     /* drag in progress, simulate trackball */

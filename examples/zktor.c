@@ -743,7 +743,9 @@ gint init(GtkWidget *widget)
 #endif
 
     /* set viewport */
-    glViewport(0,0, widget->allocation.width, widget->allocation.height);
+    GtkAllocation allocation;
+    gtk_widget_get_allocation (widget, &allocation);
+    glViewport(0, 0, allocation.width, allocation.height);
 
 #if !defined(WIN32)
     /* generate font display lists */
@@ -781,7 +783,9 @@ gint reshape(GtkWidget *widget, GdkEventConfigure *event)
   /* OpenGL functions can be called only if make_current returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
     {
-      glViewport(0,0, widget->allocation.width, widget->allocation.height);
+      GtkAllocation allocation;
+      gtk_widget_get_allocation (widget, &allocation);
+      glViewport(0, 0, allocation.width, allocation.height);
     }
   return TRUE;
 }
