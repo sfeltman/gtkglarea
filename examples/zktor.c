@@ -963,11 +963,11 @@ int main(int argc, char **argv)
   gtk_widget_show(window);
 
   /* set focus to glarea widget */
-  GTK_WIDGET_SET_FLAGS(glarea, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (glarea, TRUE);
   gtk_widget_grab_focus(GTK_WIDGET(glarea));
 
   /* animating */
-  gtk_idle_add((GtkFunction)animate, glarea);
+  gtk_idle_add((GSourceFunc)animate, glarea);
 
   game_init();
   gtk_main();
