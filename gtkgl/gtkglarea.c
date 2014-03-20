@@ -108,7 +108,6 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 #if defined GDK_WINDOWING_X11
   /* use colormap and visual suitable for OpenGL rendering */
   gtk_widget_push_colormap(gdk_colormap_new(visual,TRUE));
-  gtk_widget_push_visual(visual);
 #endif
 
   gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
@@ -116,7 +115,6 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 
 #if defined GDK_WINDOWING_X11
   /* pop back defaults */
-  gtk_widget_pop_visual();
   gtk_widget_pop_colormap();
 #endif
 

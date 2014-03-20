@@ -21,7 +21,6 @@
 
     /* set visual and colormap */
     gtk_widget_push__colormap(gdk_colormap_new(visual, TRUE));
-    gtk_widget_push_visual(visual);
 
     /* create your widget */
     widget = gtk_foobar_new();
@@ -30,7 +29,6 @@
     gtk_widget_set_double_buffered(widget, FALSE);
 
     /* restore old values */
-    gtk_widget_pop_visual();
     gtk_widget_pop_colormap();
 
 
