@@ -206,7 +206,7 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
 	      (     area.height -            2.0*y) / area.height);
     add_quats(spin_quat, info->quat, info->quat);
     /* orientation has changed, redraw mesh */
-    gtk_widget_draw(widget, &area);
+    gtk_widget_queue_draw_area (widget, area.x, area.y, area.width, area.height);
   }
 
   if (state & GDK_BUTTON2_MASK) {
@@ -215,7 +215,7 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
     if (info->zoom < 5) info->zoom = 5;
     if (info->zoom > 120) info->zoom = 120;
     /* zoom has changed, redraw mesh */
-    gtk_widget_draw(widget, &area);
+    gtk_widget_queue_draw_area (widget, area.x, area.y, area.width, area.height);
   }
   info->beginx = x;
   info->beginy = y;
