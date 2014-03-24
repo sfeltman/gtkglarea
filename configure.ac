@@ -17,7 +17,7 @@ AM_MAINTAINER_MODE([enable])
 AM_SILENT_RULES([yes])
 
 #shared library versioning
-GTKGL_LIBRARY_VERSION=1:1:0
+GTKGL_LIBRARY_VERSION=2:0:0
 #                     | | |
 #              +------+ | +---+
 #              |        |     |
