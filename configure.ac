@@ -180,7 +180,7 @@ AC_SUBST(GL_LIBS)
 
 AC_CONFIG_FILES([
   Makefile
-  gtkgl-2.0.pc
+  gtkgl-3.0.pc
   gtkgl/Makefile
   gtkgl/makefile.mingw
   docs/Makefile
