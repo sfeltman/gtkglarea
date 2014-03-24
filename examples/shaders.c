@@ -418,7 +418,7 @@ int main (int argc, char** argv) {
 
   /* Main widget container */
 
-  box_main = gtk_vbox_new (FALSE, 10);
+  box_main = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
 
   /* GTK GL Area */
 

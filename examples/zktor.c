@@ -885,7 +885,7 @@ int main(int argc, char **argv)
                    G_CALLBACK(gtk_main_quit), NULL);
 
 
-  vbox = GTK_WIDGET(gtk_vbox_new(FALSE, 0));
+  vbox = GTK_WIDGET(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   gtk_container_set_border_width(GTK_CONTAINER(vbox), 10);
 
 
