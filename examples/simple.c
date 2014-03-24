@@ -122,17 +122,6 @@ int main(int argc, char **argv)
                    G_CALLBACK(gtk_main_quit), NULL);
 
 
-  /* You should always delete gtk_gl_area widgets before exit or else
-     GLX contexts are left undeleted, this may cause problems (=core dump)
-     in some systems.
-     Destroy method of objects is not automatically called on exit.
-     You need to manually enable this feature. Do gtk_quit_add_destroy()
-     for all your top level windows unless you are certain that they get
-     destroy signal by other means.
-  */
-  gtk_quit_add_destroy(1, GTK_OBJECT(window));
-
-
   /* Create new OpenGL widget. */
   glarea = GTK_WIDGET(gtk_gl_area_new(attrlist));
   /* Events for widget must be set before X Window is created */

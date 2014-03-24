@@ -447,10 +447,6 @@ int main (int argc, char** argv) {
 
   gtk_window_set_title (GTK_WINDOW(window), "GtkGLArea Shader Demo");
 
-  /* destroy this window when exiting from gtk_main() */
-
-  gtk_quit_add_destroy (1, GTK_OBJECT(window));
-
   g_signal_connect (G_OBJECT(window), "delete-event",
                     G_CALLBACK(gtk_main_quit), NULL);
 
