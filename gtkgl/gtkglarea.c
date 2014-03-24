@@ -23,18 +23,18 @@
 #include "gdkgl.h"
 #include "gtkglarea.h"
 
-static void gtk_gl_area_destroy       (GtkObject      *object); /* change to finalize? */
+static void gtk_gl_area_finalize       (GObject      *object);
 
 G_DEFINE_TYPE (GtkGLArea, gtk_gl_area, GTK_TYPE_DRAWING_AREA);
 
 static void
 gtk_gl_area_class_init (GtkGLAreaClass *klass)
 {
-  GtkObjectClass *object_class;
+  GObjectClass *object_class;
 
-  object_class = (GtkObjectClass*) klass;
+  object_class = (GObjectClass*) klass;
 
-  object_class->destroy = gtk_gl_area_destroy;
+  object_class->finalize = gtk_gl_area_finalize;
 }
 
 
@@ -123,20 +123,15 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 
 
 static void
-gtk_gl_area_destroy(GtkObject *object)
+gtk_gl_area_finalize(GObject *object)
 {
-  GtkGLArea *gl_area;
-
-  g_return_if_fail (object != NULL);
-  g_return_if_fail (GTK_IS_GL_AREA(object));
-
-  gl_area = GTK_GL_AREA(object);
+  GtkGLArea *gl_area = GTK_GL_AREA(object);
 
   if (gl_area->glcontext)
     g_object_unref(gl_area->glcontext);
   gl_area->glcontext = NULL;
 
-  GTK_OBJECT_CLASS (gtk_gl_area_parent_class)->destroy;
+  G_OBJECT_CLASS (gtk_gl_area_parent_class)->finalize (object);
 }
 
 
