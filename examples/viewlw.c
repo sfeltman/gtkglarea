@@ -98,7 +98,7 @@ gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
   GLfloat m[4][4];
 
   GtkGLArea *glarea = GTK_GL_AREA(widget);
-  mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget), "mesh_info");
+  mesh_info *info = (mesh_info*) g_object_get_data (G_OBJECT (widget), "mesh_info");
 
   /* draw only last expose */
   if (event->count > 0) {
@@ -151,7 +151,7 @@ gint glarea_configure(GtkWidget *widget, GdkEventConfigure *event)
 gint glarea_destroy(GtkWidget *widget)
 {
   /* delete mesh info */
-  mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget),"mesh_info");
+  mesh_info *info = (mesh_info*) g_object_get_data(G_OBJECT (widget), "mesh_info");
   if (info) {
     lw_object_free(info->lwobject);
     g_free(info);
@@ -161,7 +161,7 @@ gint glarea_destroy(GtkWidget *widget)
 
 gint glarea_button_press(GtkWidget *widget, GdkEventButton *event)
 {
-  mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget), "mesh_info");
+  mesh_info *info = (mesh_info*) g_object_get_data(G_OBJECT (widget), "mesh_info");
   if (event->button == 1) {
     /* beginning of drag, reset mouse position */
     info->beginx = event->x;
@@ -177,7 +177,7 @@ gint glarea_motion_notify(GtkWidget *widget, GdkEventMotion *event)
   GdkRectangle area;
   GdkModifierType state;
   GtkAllocation allocation;
-  mesh_info *info = (mesh_info*)gtk_object_get_data(GTK_OBJECT(widget), "mesh_info");
+  mesh_info *info = (mesh_info*) g_object_get_data(G_OBJECT (widget), "mesh_info");
 
   if (event->is_hint) {
     /* fix this! */
@@ -345,7 +345,7 @@ gint show_lwobject(char const *lwobject_name)
   info->beginy = 0;
   info->zoom   = 45;
   trackball(info->quat , 0.0, 0.0, 0.0, 0.0);
-  gtk_object_set_data(GTK_OBJECT(glarea), "mesh_info", info);
+  g_object_set_data (G_OBJECT(glarea), "mesh_info", info);
 
 
   /* create new top level window */
