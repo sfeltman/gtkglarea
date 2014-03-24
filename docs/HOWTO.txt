@@ -12,24 +12,17 @@
 
 2. How do I make any widget opengl widget?
 
-    Your widget needs an OpenGL capable visual and you also need to set
-    a colormap for it. The widget must also have an X window (not all
-    widgets have it).
+    Your widget needs an OpenGL capable visual.
+    The widget must also have an X window (not all widgets have it).
 
     /* get visual using gdk_gl_choose_visual */
     visual = gdk_gl_choose_visual(visual_attributes);
-
-    /* set visual and colormap */
-    gtk_widget_push__colormap(gdk_colormap_new(visual, TRUE));
 
     /* create your widget */
     widget = gtk_foobar_new();
 
     /* disable backing store (only in GTK-1.4) */
     gtk_widget_set_double_buffered(widget, FALSE);
-
-    /* restore old values */
-    gtk_widget_pop_colormap();
 
 
 

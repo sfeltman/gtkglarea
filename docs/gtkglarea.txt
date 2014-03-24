@@ -25,7 +25,7 @@ share
 DESCRIPTION
 	Make an OpenGL widget, attrList is passed to glXChooseVisual
 	GLX call. See glXChooseVisual man page for explanation of
-	attrList. Widget is created with visual and colormap of the
+	attrList. Widget is created with visual of the
 	requested type and GLX context is created for this widget. You
 	can't do opengl calls on widget until it has X window. X window
 	is not created until widget is realized.

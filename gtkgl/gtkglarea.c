@@ -105,18 +105,8 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   if (glcontext == NULL)
     return NULL;
 
-#if defined GDK_WINDOWING_X11
-  /* use colormap and visual suitable for OpenGL rendering */
-  gtk_widget_push_colormap(gdk_colormap_new(visual,TRUE));
-#endif
-
   gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
   gl_area->glcontext = glcontext;
-
-#if defined GDK_WINDOWING_X11
-  /* pop back defaults */
-  gtk_widget_pop_colormap();
-#endif
 
   return GTK_WIDGET(gl_area);
 }
