@@ -781,33 +781,33 @@ gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 gint key_press_event(GtkWidget *widget, GdkEventKey *event)
 {
   switch (event->keyval) {
-  case GDK_Left:
+  case GDK_KEY_Left:
     control_spin = 1;
     break;
-  case GDK_Right:
+  case GDK_KEY_Right:
     control_spin = -1;
     break;
-  case GDK_Up:
-  case GDK_space:
+  case GDK_KEY_Up:
+  case GDK_KEY_space:
     control_fire = 1;
     break;
-  case GDK_Down:
+  case GDK_KEY_Down:
     control_speed = 1;
     break;
-  case GDK_r:
+  case GDK_KEY_r:
     game_init();
     break;
-  case GDK_q:
+  case GDK_KEY_q:
     gtk_main_quit();
     break;
 
 #ifdef FULLSCREEN_MESA_3DFX
-  case GDK_f:
+  case GDK_KEY_f:
     switch_fullscreen(widget);
     break;
 #endif
 
-  case GDK_d:
+  case GDK_KEY_d:
     draw_fast = (!draw_fast);
     break;
   }
@@ -820,17 +820,17 @@ gint key_press_event(GtkWidget *widget, GdkEventKey *event)
 gint key_release_event(GtkWidget *widget, GdkEventKey *event)
 {
   switch (event->keyval) {
-  case GDK_Left:
+  case GDK_KEY_Left:
     if (control_spin == 1) control_spin = 0;
     break;
-  case GDK_Right:
+  case GDK_KEY_Right:
     if (control_spin == -1) control_spin = 0;
     break;
-  case GDK_Up:
-  case GDK_space:
+  case GDK_KEY_Up:
+  case GDK_KEY_space:
     control_fire = 0;
     break;
-  case GDK_Down:
+  case GDK_KEY_Down:
     control_speed = 0;
     break;
   }
