@@ -41,7 +41,7 @@
 void       create_shader         (void);
 void       create_texture_2D     (void);
 GtkWidget* create_glarea         (void);
-gint       glarea_draw           (GtkWidget*, GdkEventExpose*);
+gint       glarea_draw           (GtkWidget*, cairo_t*, gpointer);
 gint       glarea_draw_scene     (void);
 gint       glarea_reshape        (GtkWidget*, GdkEventConfigure*);
 gint       glarea_init           (GtkWidget*);
@@ -245,7 +245,7 @@ GtkWidget* create_glarea (void) {
 
   gtk_widget_set_events(GTK_WIDGET(glarea), GDK_EXPOSURE_MASK);
 
-  g_signal_connect (G_OBJECT(glarea), "expose-event",
+  g_signal_connect (G_OBJECT(glarea), "draw",
                     G_CALLBACK(glarea_draw), NULL);
 
   g_signal_connect (G_OBJECT(glarea), "configure-event",
@@ -286,18 +286,14 @@ gint glarea_draw_scene (void) {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Function: glarea_draw (GtkWidget*, GdkEventExpose*)                       */
+/* Function: glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)*/
 /*                                                                           */
 /* This is the function that should render your scene to the GtkGLArea. It   */
-/* can be used as a callback to the 'Expose' event.                          */
+/* can be used as a callback to the 'draw' signal.                           */
 /*                                                                           */
 /*****************************************************************************/
 
-gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
-
-  if (event->count > 0) {
-    return(TRUE);
-  }
+gboolean glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data) {
 
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
 

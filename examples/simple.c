@@ -40,12 +40,8 @@ gint init(GtkWidget *widget)
 
 
 /* When widget is exposed it's contents are redrawn. */
-gint draw(GtkWidget *widget, GdkEventExpose *event)
+gboolean draw (GtkWidget *widget, cairo_t *cr, gpointer data)
 {
-  /* Draw only last expose. */
-  if (event->count > 0)
-    return TRUE;
-
   /* OpenGL functions can be called only if make_current returns true */
   if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
     {
@@ -131,7 +127,7 @@ int main(int argc, char **argv)
 
   /* Connect signal handlers */
   /* Redraw image when exposed. */
-  g_signal_connect(G_OBJECT(glarea), "expose-event",
+  g_signal_connect(G_OBJECT(glarea), "draw",
                    G_CALLBACK(draw), NULL);
   /* When window is resized viewport needs to be resized also. */
   g_signal_connect(G_OBJECT(glarea), "configure-event",

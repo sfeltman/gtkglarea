@@ -51,7 +51,7 @@ GtkWidget* create_glarea         (void);
 gint       glarea_button_release (GtkWidget*, GdkEventButton*);
 gint       glarea_button_press   (GtkWidget*, GdkEventButton*);
 gint       glarea_motion_notify  (GtkWidget*, GdkEventMotion*);
-gint       glarea_draw           (GtkWidget*, GdkEventExpose*);
+gint       glarea_draw           (GtkWidget*, cairo_t*, gpointer);
 gint       glarea_reshape        (GtkWidget*, GdkEventConfigure*);
 gint       glarea_init           (GtkWidget*);
 gint       glarea_destroy        (GtkWidget*);
@@ -151,10 +151,10 @@ GtkWidget* create_glarea (void) {
   g_signal_connect (G_OBJECT(glarea), "motion-notify-event",
                     G_CALLBACK(glarea_motion_notify), NULL);
 
-  /* expose_event - The window was exposed and the contents   */
-  /*                need to be redrawn.                       */
+  /* draw - The window was exposed and the contents           */
+  /*        need to be redrawn.                               */
 
-  g_signal_connect (G_OBJECT(glarea), "expose-event",
+  g_signal_connect (G_OBJECT(glarea), "draw",
                     G_CALLBACK(glarea_draw), NULL);
 
   /* configure_event - The window has been resized. You will  */
@@ -299,22 +299,16 @@ gint glarea_motion_notify (GtkWidget* widget, GdkEventMotion* event) {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Function: glarea_draw (GtkWidget*, GdkEventExpose*)                       */
+/* Function: glarea_draw (GtkWidget*, cairo_t *cr, gpointer user_data)       */
 /*                                                                           */
 /* This is the function that should render your scene to the GtkGLArea. It   */
-/* can be used as a callback to the 'Expose' event.                          */
+/* can be used as a callback to the 'draw' signal.                           */
 /*                                                                           */
 /*****************************************************************************/
 
-gint glarea_draw (GtkWidget* widget, GdkEventExpose* event) {
+gboolean glarea_draw (GtkWidget* widget, cairo_t *cr, gpointer user_data) {
 
-  /* Draw only on the last expose event. */
-
-  if (event->count > 0) {
-    return(TRUE);
-  }
-
-  g_print ("Expose Event\n");
+  g_print ("Draw Signal\n");
 
   /* gtk_gl_area_make_current MUST be called before rendering */
   /* into the GtkGLArea.                                      */
