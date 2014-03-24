@@ -272,7 +272,9 @@ gint glarea_motion_notify (GtkWidget* widget, GdkEventMotion* event) {
   GdkModifierType state;
 
   if (event->is_hint) {
-    gdk_window_get_pointer(event->window, &x, &y, &state);
+    GdkWindow *window = gdk_event_get_window ((GdkEvent *)event);
+    GdkDevice *device = gdk_event_get_device ((GdkEvent *)event);
+    gdk_window_get_device_position (window, device, &x, &y, &state);
   } else {
     x = event->x;
     y = event->y;
