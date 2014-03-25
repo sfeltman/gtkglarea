@@ -538,7 +538,7 @@ gdk_gl_pixmap_finalize(GObject *object)
   pixmap->front_left = NULL;
 #endif
 
-  (* glcontext_parent_class->finalize)(object);
+  (* glpixmap_parent_class->finalize)(object);
 }
 
 static void
