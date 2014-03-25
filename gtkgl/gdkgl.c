@@ -62,7 +62,6 @@ struct _GdkGLContextClass {
 };
 typedef struct _GdkGLContextClass GdkGLContextClass;
 
-static GObjectClass *glcontext_parent_class;
 static void gdk_gl_context_class_init (GdkGLContextClass *class);
 
 /*
@@ -195,32 +194,7 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
  *  GL context support
  */
 
-GType
-gdk_gl_context_get_type (void)
-{
-  static GType object_type = 0;
-
-  if (!object_type)
-    {
-      static const GTypeInfo object_info =
-      {
-        sizeof (GdkGLContextClass),
-        (GBaseInitFunc) NULL,
-        (GBaseFinalizeFunc) NULL,
-        (GClassInitFunc) gdk_gl_context_class_init,
-        NULL,           /* class_finalize */
-        NULL,           /* class_data */
-        sizeof (GdkGLContext),
-        0,              /* n_preallocs */
-        (GInstanceInitFunc) NULL,
-      };
-
-      object_type = g_type_register_static (G_TYPE_OBJECT,
-                                            "GdkGLContext",
-                                            &object_info, 0);
-    }
-  return object_type;
-}
+G_DEFINE_TYPE (GdkGLContext, gdk_gl_context, G_TYPE_OBJECT)
 
 static void
 gdk_gl_context_finalize(GObject *object)
@@ -249,7 +223,7 @@ gdk_gl_context_finalize(GObject *object)
   context->glxcontext = NULL;
 #endif
 
-  (* glcontext_parent_class->finalize)(object);
+  G_OBJECT_CLASS (gdk_gl_context_parent_class)->finalize (object);
 }
 
 
@@ -259,9 +233,14 @@ gdk_gl_context_class_init(GdkGLContextClass *class)
   GObjectClass *gobject_class;
 
   gobject_class = G_OBJECT_CLASS(class);
-  glcontext_parent_class = g_type_class_peek_parent(class);
 
   gobject_class->finalize = gdk_gl_context_finalize;
+}
+
+
+static void
+gdk_gl_context_init (GdkGLContext *gl_context)
+{
 }
 
 
