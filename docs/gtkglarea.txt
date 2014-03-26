@@ -1,4 +1,4 @@
-GtkGLArea widget is derived from GtkDrawingArea widget.
+GglaWidget widget is derived from GtkDrawingArea widget.
 
 examples/simple.c is a good starting point.
 
@@ -6,9 +6,9 @@ examples/simple.c is a good starting point.
 ---------------------------------------------------------
 C SPECIFICATION
 
-GtkWidget* gtk_gl_area_new(int *attrList)
-GtkWidget* gtk_gl_area_share_new(int *attrList, GtkGLArea *share)
-GtkWidget* gtk_gl_area_new_vargs(GtkGLArea *share, ...)
+GtkWidget* ggla_widgetnew(int *attrList)
+GtkWidget* ggla_widgetshare_new(int *attrList, GglaWidget *share)
+GtkWidget* ggla_widgetnew_vargs(GglaWidget *share, ...)
 
 PARAMETERS
 
@@ -29,14 +29,14 @@ DESCRIPTION
 	requested type and GLX context is created for this widget. You
 	can't do opengl calls on widget until it has X window. X window
 	is not created until widget is realized.
-	gtk_gl_area_new_vargs takes attrList as variable arguments,
+	ggla_widgetnew_vargs takes attrList as variable arguments,
 	last argument must still be zero.
 
 ---------------------------------------------------------
 
 C SPECIFICATION
 
-gint gtk_gl_area_make_current(GtkGLArea *gl_area)
+gint ggla_widgetmake_current(GglaWidget *gl_area)
 
 PARAMETERS
 
@@ -44,26 +44,26 @@ gl_area
 	Specifies a gtkglarea widget.
 
 DESCRIPTION
-	gtk_gl_area_make_current must be called before rendering into
+	ggla_widgetmake_current must be called before rendering into
 	OpenGL widget, it returns TRUE if rendering to widget is
 	possible. Rendering is not possible if widget is not
-	GtkGLArea widget or widget is not realized.
+	GglaWidget widget or widget is not realized.
 
 ---------------------------------------------------------
 
 C SPECIFICATION
-void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
-void gtk_gl_area_swapbuffers(GtkGLArea *gl_area)
+void ggla_widgetswap_buffers(GglaWidget *gl_area)
+void ggla_widgetswapbuffers(GglaWidget *gl_area)
 
 PARAMETERS
 
 gl_area
-	Specifies a GtkGLArea widget.
+	Specifies a GglaWidget widget.
 
 DESCRIPTION
-	*** gtk_gl_area_swapbuffers is deprecated (wrong spelling), use
-	gtk_gl_area_swap_buffers ***
-	Wrapper around gdk_gl_swap_buffers. Promotes contents of back buffer
+	*** ggla_widgetswapbuffers is deprecated (wrong spelling), use
+	ggla_widgetswap_buffers ***
+	Wrapper around ggla_swap_buffers. Promotes contents of back buffer
 	of widget to front buffer. The contents of front buffer become
 	undefined.
 

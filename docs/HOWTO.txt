@@ -15,8 +15,8 @@
     Your widget needs an OpenGL capable visual.
     The widget must also have an X window (not all widgets have it).
 
-    /* get visual using gdk_gl_choose_visual */
-    visual = gdk_gl_choose_visual(visual_attributes);
+    /* get visual using ggla_choose_visual */
+    visual = ggla_choose_visual(visual_attributes);
 
     /* create your widget */
     widget = gtk_foobar_new();
@@ -30,26 +30,26 @@
 
     Create a GL context and connect it to the widget's GdkDrawable.
 
-    context = gdk_gl_context(visual);
+    context = ggla_context(visual);
 
     /* connect to gdk window of widget */
-    if (gdk_gl_make_current(widget->window, context)) {
+    if (ggla_make_current(widget->window, context)) {
         /* do opengl stuff... */
 
     }
 
 
 
-6. Can I use gdk_gl functions and GtkGLArea widget in the same program?
+6. Can I use gdk_gl functions and GglaWidget widget in the same program?
 
-    Yes, just remember that gtk_gl_area_make_current() makes the GtkGLArea
+    Yes, just remember that ggla_widgetmake_current() makes the GglaWidget
     widget's internal context the current context and leaves it so.
 
 
 
-7. How do I capture keypress events for GtkGLArea widget?
+7. How do I capture keypress events for GglaWidget widget?
 
-    This is not a GtkGLArea specific question, but here is a solution:
+    This is not a GglaWidget specific question, but here is a solution:
 
     - Set an event mask:
          gtk_widget_set_events(glarea, GDK_KEY_PRESS_MASK);

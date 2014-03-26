@@ -1,5 +1,5 @@
 
-gdk_gl_* functions
+ggla_* functions
 	Quite straightforward wrapper around few necessary GLX calls and
 	should be easy to understand if you already know GLX.
 
@@ -7,13 +7,13 @@ gdk_gl_* functions
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_query - query for OpenGL capability
+	ggla_query - query for OpenGL capability
 
 C SPECIFICATION
-	gint gdk_gl_query( void )
+	gint ggla_query( void )
 
 DESCRIPTION
-	gdk_gl_query returns TRUE if OpenGL is supported.
+	ggla_query returns TRUE if OpenGL is supported.
 
 SEE ALSO
 	glXQueryExtension
@@ -22,10 +22,10 @@ SEE ALSO
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_choose_visual - return visual that matches given attributes
+	ggla_choose_visual - return visual that matches given attributes
 
 C SPECIFICATION
-	GdkVisual *gdk_gl_choose_visual( int *attrList )
+	GdkVisual *ggla_choose_visual( int *attrList )
 
 PARAMETERS
 
@@ -42,15 +42,15 @@ DESCRIPTION
 
 SEE ALSO
 	glXChooseVisual
-	gdk_gl_context_share_new
+	ggla_context_share_new
 	
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_get_config - return information about visuals
+	ggla_get_config - return information about visuals
 
 C SPECIFICATION
-	gint gdk_gl_get_config( GdkVisual *visual, int attrib )
+	gint ggla_get_config( GdkVisual *visual, int attrib )
 
 PARAMETERS
 
@@ -61,8 +61,8 @@ attrib
 	Specifies visual attribute to be returned
 
 DESCRIPTION
-	gdk_gl_get_config return value of attrib of windows or
-	gl pixmap created with respect to visual. gdk_gl_get_config
+	ggla_get_config return value of attrib of windows or
+	gl pixmap created with respect to visual. ggla_get_config
 	returns -1 if it fails. For explanation of attributes see
 	glXGetConfig man page. Note that GLX_ prefix is changed to
 	GDK_GL_.
@@ -75,10 +75,10 @@ SEE ALSO
 
 
 NAME
-	gdk_gl_context_new - create new OpenGL rendering context
+	ggla_context_new - create new OpenGL rendering context
 
 C SPECIFICATION
-	GdkGLContext *gdk_gl_context_new( GdkVisual *visual )
+	GglaContext *ggla_context_new( GdkVisual *visual )
 
 PARAMETERS
 
@@ -88,22 +88,22 @@ visual
 
 DESCRIPTION
 	This is backwards compatability/convinence
-	function equal to gdk_gl_context_share_new(visual, NULL, FALSE).
+	function equal to ggla_context_share_new(visual, NULL, FALSE).
 
 SEE ALSO
 	glXCreateContext
-	gdk_gl_choosevisual
-	gdk_gl_context_share_new
+	ggla_choosevisual
+	ggla_context_share_new
 
 
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_context_share_new - create new rendering context
+	ggla_context_share_new - create new rendering context
 
 C SPECIFICATION
-	GdkGLContext *gdk_gl_context_share_new( GdkVisual *visual,
-	                                        GdkGLContext *sharelist,
+	GglaContext *ggla_context_share_new( GdkVisual *visual,
+	                                        GglaContext *sharelist,
 	                                        gint direct )
 
 
@@ -123,41 +123,41 @@ direct
 
 
 DESCRIPTION
-	gdk_gl_context_share_new creates new rendering context
+	ggla_context_share_new creates new rendering context
 	with reference count of 1 and returns pointer to it.
 	If context creation fails NULL is returned.
 
 SEE ALSO
 	glXCreateContext
-	gdk_gl_context_new
-	gdk_gl_choose_visual
+	ggla_context_new
+	ggla_choose_visual
 
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_make_current - attach context to drawable
+	ggla_make_current - attach context to drawable
 
 C SPECIFICATION
-	gint gdk_gl_make_current( GdkDrawable *drawable,
-	                          GdkGLContext *context )
+	gint ggla_make_current( GdkDrawable *drawable,
+	                          GglaContext *context )
 DESCRIPTION
-	gdk_gl_make_current makes context current OpenGL rendering
+	ggla_make_current makes context current OpenGL rendering
 	context, and it attaches context to gdk drawable. Drawable
 	must have underlying X window and be created with the same
-	visual as context. gdk_gl_make_current returns TRUE if
+	visual as context. ggla_make_current returns TRUE if
 	successful.
 
 SEE ALSO
 	glXMakeCurrent
-	gdk_gl_pixmap_make_current
+	ggla_pixmap_make_current
 
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_swap_buffers - exchange front and back buffers
+	ggla_swap_buffers - exchange front and back buffers
 
 C SPECIFICATION
-	void gdk_gl_swap_buffers( GdkDrawable *drawable )
+	void ggla_swap_buffers( GdkDrawable *drawable )
 
 DESCRIPTION
 	Promotes back buffer of drawable to front.
@@ -169,33 +169,33 @@ SEE ALSO
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_wait_gdk - complete gdk execution
+	ggla_wait_gdk - complete gdk execution
 
 C SRECIFICATION
-	void gdk_gl_wait_gdk( void )
+	void ggla_wait_gdk( void )
 
 DESCRIPTION
 	Gdk rendering calls made prior to gtk_gl_wait_gdk are
 	guarateed to be executed before OpenGL calls made
-	after gdk_gl_wait_gdk.
+	after ggla_wait_gdk.
 
 SEE ALSO
 	glXWaitX
-	gdk_gl_wait_gl
+	ggla_wait_gl
 
 ---------------------------------------------------------------
 
 NAME
-	gdk_gl_wait_gl - complete OpenGL execution
+	ggla_wait_gl - complete OpenGL execution
 
 C SRECIFICATION
-	void gdk_gl_wait_gl( void )
+	void ggla_wait_gl( void )
 
 DESCRIPTION
 	OpenGL rendering calls made prior to gtk_gl_wait_gdk are
 	are guarateed to be executed before OpenGL calls made
-	after gdk_gl_wait_gdk.
+	after ggla_wait_gdk.
 
 SEE ALSO
 	glXWaitGL
-	gdk_gl_wait_gdk
+	ggla_wait_gdk
