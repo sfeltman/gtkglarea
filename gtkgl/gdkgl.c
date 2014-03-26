@@ -62,8 +62,6 @@ struct _GdkGLContextClass {
 };
 typedef struct _GdkGLContextClass GdkGLContextClass;
 
-static void gdk_gl_context_class_init (GdkGLContextClass *class);
-
 /*
  *  The GdkGLPixmap class
  */
