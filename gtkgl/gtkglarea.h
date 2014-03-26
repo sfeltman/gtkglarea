@@ -42,7 +42,7 @@ typedef struct _GglaWidgetClass  GglaWidgetClass;
 struct _GglaWidget
 {
   GtkDrawingArea  darea;
-  GdkGLContext *glcontext;
+  GglaContext *glcontext;
 };
 
 struct _GglaWidgetClass

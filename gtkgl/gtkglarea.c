@@ -57,7 +57,7 @@ ggla_widget_new_vargs(GglaWidget *share, ...)
 
   va_start(ap, share);
   i=1;
-  while (va_arg(ap, int) != GDK_GL_NONE) /* get number of arguments */
+  while (va_arg(ap, int) != GGLA_NONE) /* get number of arguments */
     i++;
   va_end(ap);
 
@@ -65,7 +65,7 @@ ggla_widget_new_vargs(GglaWidget *share, ...)
 
   va_start(ap,share);
   i=0;
-  while ( (attrlist[i] = va_arg(ap, int)) != GDK_GL_NONE) /* copy args to list */
+  while ( (attrlist[i] = va_arg(ap, int)) != GGLA_NONE) /* copy args to list */
     i++;
   va_end(ap);
 
@@ -85,7 +85,7 @@ ggla_widget_new (int *attrlist)
 GtkWidget*
 ggla_widget_share_new (int *attrlist, GglaWidget *share)
 {
-  GdkGLContext *glcontext;
+  GglaContext *glcontext;
   GglaWidget *gl_area;
 #if defined GDK_WINDOWING_X11
   GdkVisual *visual;
@@ -94,13 +94,13 @@ ggla_widget_share_new (int *attrlist, GglaWidget *share)
   g_return_val_if_fail(share == NULL || GGLA_IS_WIDGET(share), NULL);
 
 #if defined GDK_WINDOWING_X11
-  visual = gdk_gl_choose_visual(attrlist);
+  visual = ggla_choose_visual(attrlist);
   if (visual == NULL)
     return NULL;
 
-  glcontext = gdk_gl_context_share_new(visual, share ? share->glcontext : NULL, TRUE);
+  glcontext = ggla_context_share_new(visual, share ? share->glcontext : NULL, TRUE);
 #else
-  glcontext = gdk_gl_context_attrlist_share_new(attrlist, share ? share->glcontext : NULL, TRUE);
+  glcontext = ggla_context_attrlist_share_new(attrlist, share ? share->glcontext : NULL, TRUE);
 #endif
   if (glcontext == NULL)
     return NULL;
@@ -132,8 +132,8 @@ gint ggla_widget_make_current(GglaWidget *gl_area)
   GtkWidget *widget = GTK_WIDGET (gl_area);
   g_return_val_if_fail(gtk_widget_get_realized(widget), FALSE);
 
-  return gdk_gl_make_current(gtk_widget_get_window (widget),
-                             gl_area->glcontext);
+  return ggla_make_current(gtk_widget_get_window (widget),
+                          gl_area->glcontext);
 }
 
 void ggla_widget_swap_buffers(GglaWidget *gl_area)
@@ -143,5 +143,5 @@ void ggla_widget_swap_buffers(GglaWidget *gl_area)
   GtkWidget *widget = GTK_WIDGET (gl_area);
   g_return_if_fail(gtk_widget_get_realized(widget));
 
-  gdk_gl_swap_buffers(gtk_widget_get_window (widget));
+  ggla_swap_buffers(gtk_widget_get_window (widget));
 }

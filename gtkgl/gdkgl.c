@@ -40,16 +40,16 @@
 #endif
 
 /*
- *  The GdkGLContext class
+ *  The GglaContext class
  */
-struct _GdkGLContext {
+struct _GglaContext {
   GObject     parent;
 #if defined GDK_WINDOWING_WIN32
   gboolean  initialised;
   HGLRC     hglrc;
   HDC       hdc;
   HWND      hwnd;
-  GdkGLContext *share;
+  GglaContext *share;
   PIXELFORMATDESCRIPTOR pfd;
 #elif defined GDK_WINDOWING_X11
   Display    *xdisplay;
@@ -57,10 +57,10 @@ struct _GdkGLContext {
 #endif
 };
 
-struct _GdkGLContextClass {
+struct _GglaContextClass {
   GObjectClass parent_class;
 };
-typedef struct _GdkGLContextClass GdkGLContextClass;
+typedef struct _GglaContextClass GglaContextClass;
 
 /*
  *  Local helper functions
@@ -76,7 +76,7 @@ static XVisualInfo *get_xvisualinfo(GdkVisual *visual);
  *  Generic GL support
  */
 
-gint gdk_gl_query(void)
+gint ggla_query(void)
 {
 #if defined GDK_WINDOWING_WIN32
   return TRUE;
@@ -88,7 +88,7 @@ gint gdk_gl_query(void)
 }
 
 
-gchar *gdk_gl_get_info()
+gchar *ggla_get_info()
 {
   char const *vendor, *version, *extensions;
 #if defined GDK_WINDOWING_WIN32
@@ -109,7 +109,7 @@ gchar *gdk_gl_get_info()
 }
 
 
-GdkVisual *gdk_gl_choose_visual(int *attrlist)
+GdkVisual *ggla_choose_visual(int *attrlist)
 {
 #if defined GDK_WINDOWING_WIN32
   return gdk_visual_get_system ();
@@ -130,13 +130,13 @@ GdkVisual *gdk_gl_choose_visual(int *attrlist)
   XFree(vi);
   return visual;
 #else
-  g_warning ("gdk_gl_choose_visual not implemented on " PLATFORM);
+  g_warning ("ggla_choose_visual not implemented on " PLATFORM);
   return NULL;
 #endif
 }
 
 
-int gdk_gl_get_config(GdkVisual *visual, int attrib)
+int ggla_get_config(GdkVisual *visual, int attrib)
 {
 #if defined GDK_WINDOWING_X11
   Display *dpy;
@@ -157,7 +157,7 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
   XFree(vi);
   return -1;
 #else
-  g_warning ("gdk_gl_get_config not implemented on " PLATFORM);
+  g_warning ("ggla_get_config not implemented on " PLATFORM);
   return 0;
 #endif
 }
@@ -167,14 +167,14 @@ int gdk_gl_get_config(GdkVisual *visual, int attrib)
  *  GL context support
  */
 
-G_DEFINE_TYPE (GdkGLContext, gdk_gl_context, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GglaContext, ggla_context, G_TYPE_OBJECT)
 
 static void
-gdk_gl_context_finalize(GObject *object)
+ggla_context_finalize(GObject *object)
 {
-  GdkGLContext *context;
+  GglaContext *context;
 
-  context = GDK_GL_CONTEXT(object);
+  context = GGLA_CONTEXT(object);
 
 #if defined GDK_WINDOWING_WIN32
   if (context->hglrc == wglGetCurrentContext ())
@@ -196,57 +196,57 @@ gdk_gl_context_finalize(GObject *object)
   context->glxcontext = NULL;
 #endif
 
-  G_OBJECT_CLASS (gdk_gl_context_parent_class)->finalize (object);
+  G_OBJECT_CLASS (ggla_context_parent_class)->finalize (object);
 }
 
 
 static void
-gdk_gl_context_class_init(GdkGLContextClass *class)
+ggla_context_class_init(GglaContextClass *class)
 {
   GObjectClass *gobject_class;
 
   gobject_class = G_OBJECT_CLASS(class);
 
-  gobject_class->finalize = gdk_gl_context_finalize;
+  gobject_class->finalize = ggla_context_finalize;
 }
 
 
 static void
-gdk_gl_context_init (GdkGLContext *gl_context)
+ggla_context_init (GglaContext *gl_context)
 {
 }
 
 
-GdkGLContext *
-gdk_gl_context_new(GdkVisual *visual)
+GglaContext *
+ggla_context_new(GdkVisual *visual)
 {
 #if defined GDK_WINDOWING_WIN32 || defined GDK_WINDOWING_X11
-  return gdk_gl_context_share_new(visual, NULL, FALSE);
+  return ggla_context_share_new(visual, NULL, FALSE);
 #else
-  g_warning ("gdk_gl_context_new not implemented on " PLATFORM);
+  g_warning ("ggla_context_new not implemented on " PLATFORM);
   return NULL;
 #endif
 }
 
 
-GdkGLContext *
-gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct)
+GglaContext *
+ggla_context_share_new(GdkVisual *visual, GglaContext *sharelist, gint direct)
 {
 #if defined GDK_WINDOWING_WIN32
-  GdkGLContext *context;
+  GglaContext *context;
 #elif defined GDK_WINDOWING_X11
   Display *dpy;
   XVisualInfo *vi;
   GLXContext glxcontext;
-  GdkGLContext *context;
+  GglaContext *context;
 #else
-  g_warning ("gdk_gl_context_share_new not implemented on " PLATFORM);
+  g_warning ("ggla_context_share_new not implemented on " PLATFORM);
   return NULL;
 #endif
 
   g_return_val_if_fail (visual != NULL, NULL);
 
-  context = g_object_new(GDK_TYPE_GL_CONTEXT, NULL);
+  context = g_object_new(GGLA_TYPE_CONTEXT, NULL);
   if (!context)
     return NULL;
 
@@ -292,21 +292,21 @@ gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct
   return context;
 }
 
-GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct)
+GglaContext *ggla_context_attrlist_share_new(int *attrlist, GglaContext *sharelist, gint direct)
 {
 #if defined GDK_WINDOWING_WIN32
-  GdkGLContext *context;
+  GglaContext *context;
 #elif defined GDK_WINDOWING_X11
   GdkVisual *visual;
 #else
-  g_warning ("gdk_gl_context_attrlist_share_new not implemented on " PLATFORM);
+  g_warning ("ggla_context_attrlist_share_new not implemented on " PLATFORM);
   return NULL;
 #endif
 
   g_return_val_if_fail(attrlist != NULL, NULL);
 
 #if defined GDK_WINDOWING_WIN32
-  context = g_object_new(GDK_TYPE_GL_CONTEXT, NULL);
+  context = g_object_new(GGLA_TYPE_CONTEXT, NULL);
   if (!context)
     return NULL;
 
@@ -319,19 +319,19 @@ GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sha
 
   return context;
 #elif defined GDK_WINDOWING_X11
-  visual = gdk_gl_choose_visual(attrlist);
+  visual = ggla_choose_visual(attrlist);
   if (!visual)
     return NULL;
 
-  return gdk_gl_context_share_new(visual, sharelist, direct);
+  return ggla_context_share_new(visual, sharelist, direct);
 #endif
 }
 
 
-gint gdk_gl_make_current(GdkWindow *gdkwindow, GdkGLContext *context)
+gint ggla_make_current(GdkWindow *gdkwindow, GglaContext *context)
 {
   g_return_val_if_fail (GDK_IS_WINDOW(gdkwindow), FALSE);
-  g_return_val_if_fail (GDK_IS_GL_CONTEXT(context), FALSE);
+  g_return_val_if_fail (GGLA_IS_CONTEXT(context), FALSE);
 
 #if defined GDK_WINDOWING_WIN32
   if (!context->initialised)
@@ -384,11 +384,11 @@ gint gdk_gl_make_current(GdkWindow *gdkwindow, GdkGLContext *context)
     }
 #endif
 #else
-  g_warning ("gdk_gl_make_current not implemented on " PLATFORM);
+  g_warning ("ggla_make_current not implemented on " PLATFORM);
 #endif
 }
 
-void gdk_gl_swap_buffers(GdkWindow *gdkwindow)
+void ggla_swap_buffers(GdkWindow *gdkwindow)
 {
 #if defined GDK_WINDOWING_WIN32
   HDC   hdc;
@@ -402,7 +402,7 @@ void gdk_gl_swap_buffers(GdkWindow *gdkwindow)
   hdc  = GetDC (hwnd);
   if (hdc  == NULL)
   {
-     g_warning ("gdk_gl_swap_buffers: GetDC failed");
+     g_warning ("ggla_swap_buffers: GetDC failed");
      return;
   }
   SwapBuffers (hdc);
@@ -412,11 +412,11 @@ void gdk_gl_swap_buffers(GdkWindow *gdkwindow)
   glXSwapBuffers(gdk_x11_display_get_xdisplay (gdkdisplay),
                  gdk_x11_window_get_xid (gdkwindow));
 #else
-  g_warning ("gdk_gl_swap_buffers not implemented on " PLATFORM);
+  g_warning ("ggla_swap_buffers not implemented on " PLATFORM);
 #endif
 }
 
-void gdk_gl_wait_gdk(void)
+void ggla_wait_gdk(void)
 {
 #if defined GDK_WINDOWING_WIN32
   GdiFlush();
@@ -425,7 +425,7 @@ void gdk_gl_wait_gdk(void)
 #endif
 }
 
-void gdk_gl_wait_gl (void)
+void ggla_wait_gl (void)
 {
 #if defined GDK_WINDOWING_WIN32
   glFinish();
@@ -461,56 +461,56 @@ static void fill_pfd(PIXELFORMATDESCRIPTOR *pfd, int *attriblist)
 
   while (*p) {
     switch (*p) {
-    case GDK_GL_USE_GL:
+    case GGLA_USE_GL:
       pfd->dwFlags |= PFD_SUPPORT_OPENGL;
       break;
-    case GDK_GL_BUFFER_SIZE:
+    case GGLA_BUFFER_SIZE:
       pfd->cColorBits = *(++p);
       break;
-    case GDK_GL_LEVEL:
+    case GGLA_LEVEL:
       /* the bReserved flag of the pfd contains the
          overlay/underlay info. */
       pfd->bReserved = *(++p);
       break;
-    case GDK_GL_RGBA:
+    case GGLA_RGBA:
       pfd->iPixelType = PFD_TYPE_RGBA;
       break;
-    case GDK_GL_DOUBLEBUFFER:
+    case GGLA_DOUBLEBUFFER:
       pfd->dwFlags |= PFD_DOUBLEBUFFER;
       break;
-    case GDK_GL_STEREO:
+    case GGLA_STEREO:
       pfd->dwFlags |= PFD_STEREO;
       break;
-    case GDK_GL_AUX_BUFFERS:
+    case GGLA_AUX_BUFFERS:
       pfd->cAuxBuffers = *(++p);
       break;
-    case GDK_GL_RED_SIZE:
+    case GGLA_RED_SIZE:
       pfd->cRedBits = 8; /* Try to get the maximum. */
       ++p;
       break;
-    case GDK_GL_GREEN_SIZE:
+    case GGLA_GREEN_SIZE:
       pfd->cGreenBits = 8;
       ++p;
       break;
-    case GDK_GL_BLUE_SIZE:
+    case GGLA_BLUE_SIZE:
       pfd->cBlueBits = 8;
       ++p;
       break;
-    case GDK_GL_ALPHA_SIZE:
+    case GGLA_ALPHA_SIZE:
       pfd->cAlphaBits = 8;
       ++p;
       break;
-    case GDK_GL_DEPTH_SIZE:
+    case GGLA_DEPTH_SIZE:
       pfd->cDepthBits = 32;
       ++p;
       break;
-    case GDK_GL_STENCIL_SIZE:
+    case GGLA_STENCIL_SIZE:
       pfd->cStencilBits = *(++p);
       break;
-    case GDK_GL_ACCUM_RED_SIZE:
-    case GDK_GL_ACCUM_GREEN_SIZE:
-    case GDK_GL_ACCUM_BLUE_SIZE:
-    case GDK_GL_ACCUM_ALPHA_SIZE:
+    case GGLA_ACCUM_RED_SIZE:
+    case GGLA_ACCUM_GREEN_SIZE:
+    case GGLA_ACCUM_BLUE_SIZE:
+    case GGLA_ACCUM_ALPHA_SIZE:
       /* I believe that WGL only used the cAccumRedBits,
          cAccumBlueBits, cAccumGreenBits, and cAccumAlphaBits fields
          when returning info about the accumulation buffer precision.

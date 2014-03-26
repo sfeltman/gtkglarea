@@ -16,8 +16,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __GDK_GL_H__
-#define __GDK_GL_H__
+#ifndef __GGLA_CONTEXT_H__
+#define __GGLA_CONTEXT_H__
 
 #include <glib.h>
 
@@ -38,67 +38,67 @@ G_BEGIN_DECLS
  * supports lecacy systems like Windows. You can still use GLX_xxxx
  * attributes with these, but then you lose portability.
  */
-enum _GDK_GL_CONFIGS {
-        GDK_GL_NONE             = 0,
-	GDK_GL_USE_GL		= 1,
-	GDK_GL_BUFFER_SIZE	= 2,
-	GDK_GL_LEVEL		= 3,
-	GDK_GL_RGBA		= 4,
-	GDK_GL_DOUBLEBUFFER	= 5,
-	GDK_GL_STEREO		= 6,
-	GDK_GL_AUX_BUFFERS	= 7,
-	GDK_GL_RED_SIZE		= 8,
-	GDK_GL_GREEN_SIZE	= 9,
-	GDK_GL_BLUE_SIZE	= 10,
-	GDK_GL_ALPHA_SIZE	= 11,
-	GDK_GL_DEPTH_SIZE	= 12,
-	GDK_GL_STENCIL_SIZE	= 13,
-	GDK_GL_ACCUM_RED_SIZE	= 14,
-	GDK_GL_ACCUM_GREEN_SIZE	= 15,
-	GDK_GL_ACCUM_BLUE_SIZE	= 16,
-	GDK_GL_ACCUM_ALPHA_SIZE	= 17,
+enum _GGLA_CONFIGS {
+	GGLA_NONE		= 0,
+	GGLA_USE_GL		= 1,
+	GGLA_BUFFER_SIZE		= 2,
+	GGLA_LEVEL		= 3,
+	GGLA_RGBA		= 4,
+	GGLA_DOUBLEBUFFER	= 5,
+	GGLA_STEREO		= 6,
+	GGLA_AUX_BUFFERS		= 7,
+	GGLA_RED_SIZE		= 8,
+	GGLA_GREEN_SIZE		= 9,
+	GGLA_BLUE_SIZE		= 10,
+	GGLA_ALPHA_SIZE		= 11,
+	GGLA_DEPTH_SIZE		= 12,
+	GGLA_STENCIL_SIZE	= 13,
+	GGLA_ACCUM_RED_SIZE	= 14,
+	GGLA_ACCUM_GREEN_SIZE	= 15,
+	GGLA_ACCUM_BLUE_SIZE	= 16,
+	GGLA_ACCUM_ALPHA_SIZE	= 17,
 
 	/* GLX_EXT_visual_info extension */
-	GDK_GL_X_VISUAL_TYPE_EXT                = 0x22,
-	GDK_GL_TRANSPARENT_TYPE_EXT	        = 0x23,
-	GDK_GL_TRANSPARENT_INDEX_VALUE_EXT	= 0x24,
-	GDK_GL_TRANSPARENT_RED_VALUE_EXT	= 0x25,
-	GDK_GL_TRANSPARENT_GREEN_VALUE_EXT	= 0x26,
-	GDK_GL_TRANSPARENT_BLUE_VALUE_EXT	= 0x27,
-	GDK_GL_TRANSPARENT_ALPHA_VALUE_EXT	= 0x28
+	GGLA_X_VISUAL_TYPE_EXT		= 0x22,
+	GGLA_TRANSPARENT_TYPE_EXT	= 0x23,
+	GGLA_TRANSPARENT_INDEX_VALUE_EXT	= 0x24,
+	GGLA_TRANSPARENT_RED_VALUE_EXT	= 0x25,
+	GGLA_TRANSPARENT_GREEN_VALUE_EXT	= 0x26,
+	GGLA_TRANSPARENT_BLUE_VALUE_EXT	= 0x27,
+	GGLA_TRANSPARENT_ALPHA_VALUE_EXT	= 0x28
 };
 
 
-#define GDK_TYPE_GL_CONTEXT            (gdk_gl_context_get_type())
-#define GDK_GL_CONTEXT(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GDK_TYPE_GL_CONTEXT, GdkGLContext))
-#define GDK_GL_CONTEXT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDK_TYPE_GL_CONTEXT, GdkGLContextClass))
-#define GDK_IS_GL_CONTEXT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDK_TYPE_GL_CONTEXT))
-#define GDK_IS_GL_CONTEXT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDK_TYPE_GL_CONTEXT))
-#define GDK_GL_CONTEXT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GDK_TYPE_GL_CONTEXT, GdkGLContext))
+#define GGLA_TYPE_CONTEXT            (ggla_context_get_type())
+#define GGLA_CONTEXT(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GGLA_TYPE_CONTEXT, GglaContext))
+#define GGLA_CONTEXT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GGLA_TYPE_CONTEXT, GglaContextClass))
+#define GGLA_IS_CONTEXT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GGLA_TYPE_CONTEXT))
+#define GGLA_IS_CONTEXT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GGLA_TYPE_CONTEXT))
+#define GGLA_CONTEXT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GGLA_TYPE_CONTEXT, GglaContext))
 
-typedef struct _GdkGLContext GdkGLContext;
-
-
-gint          gdk_gl_query(void);
-gchar        *gdk_gl_get_info(void);
-
-GdkVisual    *gdk_gl_choose_visual(int *attrlist);
-int           gdk_gl_get_config(GdkVisual *visual, int attrib);
-
-GType         gdk_gl_context_get_type(void);
-GdkGLContext *gdk_gl_context_new(GdkVisual *visual);
-GdkGLContext *gdk_gl_context_share_new(GdkVisual *visual, GdkGLContext *sharelist, gint direct);
-GdkGLContext *gdk_gl_context_attrlist_share_new(int *attrlist, GdkGLContext *sharelist, gint direct);
-
-gint          gdk_gl_make_current(GdkWindow *gdkwindow, GdkGLContext *context);
-void          gdk_gl_swap_buffers(GdkWindow *gdkwindow);
+typedef struct _GglaContext GglaContext;
 
 
-void          gdk_gl_wait_gdk(void);
-void          gdk_gl_wait_gl(void);
+gint          ggla_query(void);
+gchar        *ggla_get_info(void);
+
+GdkVisual    *ggla_choose_visual(int *attrlist);
+int           ggla_get_config(GdkVisual *visual, int attrib);
+
+GType         ggla_context_get_type(void);
+GglaContext   *ggla_context_new(GdkVisual *visual);
+GglaContext   *ggla_context_share_new(GdkVisual *visual, GglaContext *sharelist, gint direct);
+GglaContext   *ggla_context_attrlist_share_new(int *attrlist, GglaContext *sharelist, gint direct);
+
+gint          ggla_make_current(GdkWindow *gdkwindow, GglaContext *context);
+void          ggla_swap_buffers(GdkWindow *gdkwindow);
+
+
+void          ggla_wait_gdk(void);
+void          ggla_wait_gl(void);
 
 
 G_END_DECLS
 
-#endif /* __GDK_GL_H__ */
+#endif /* __GGLA_CONTEXT_H__ */
 
