@@ -24,7 +24,7 @@
 gint init(GtkWidget *widget)
 {
   /* OpenGL functions can be called only if make_current returns true */
-  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+  if (ggla_widget_make_current(GGLA_WIDGET(widget)))
     {
       GtkAllocation allocation;
       gtk_widget_get_allocation (widget, &allocation);
@@ -43,7 +43,7 @@ gint init(GtkWidget *widget)
 gboolean draw (GtkWidget *widget, cairo_t *cr, gpointer data)
 {
   /* OpenGL functions can be called only if make_current returns true */
-  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+  if (ggla_widget_make_current(GGLA_WIDGET(widget)))
     {
 
       /* Draw simple triangle */
@@ -57,7 +57,7 @@ gboolean draw (GtkWidget *widget, cairo_t *cr, gpointer data)
       glEnd();
 
       /* Swap backbuffer to front */
-      gtk_gl_area_swap_buffers(GTK_GL_AREA(widget));
+      ggla_widget_swap_buffers(GGLA_WIDGET(widget));
 
     }
 
@@ -68,7 +68,7 @@ gboolean draw (GtkWidget *widget, cairo_t *cr, gpointer data)
 gint reshape(GtkWidget *widget, GdkEventConfigure *event)
 {
   /* OpenGL functions can be called only if make_current returns true */
-  if (gtk_gl_area_make_current(GTK_GL_AREA(widget)))
+  if (ggla_widget_make_current(GGLA_WIDGET(widget)))
     {
       GtkAllocation allocation;
       gtk_widget_get_allocation (widget, &allocation);
@@ -86,23 +86,23 @@ int main(int argc, char **argv)
   /* Attribute list for gtkglarea widget. Specifies a
      list of Boolean attributes and enum/integer
      attribute/value pairs. The last attribute must be
-     GDK_GL_NONE. See glXChooseVisual manpage for further
+     GGLA_NONE. See glXChooseVisual manpage for further
      explanation.
   */
   int attrlist[] = {
-    GDK_GL_RGBA,
-    GDK_GL_RED_SIZE,1,
-    GDK_GL_GREEN_SIZE,1,
-    GDK_GL_BLUE_SIZE,1,
-    GDK_GL_DOUBLEBUFFER,
-    GDK_GL_NONE
+    GGLA_RGBA,
+    GGLA_RED_SIZE,1,
+    GGLA_GREEN_SIZE,1,
+    GGLA_BLUE_SIZE,1,
+    GGLA_DOUBLEBUFFER,
+    GGLA_NONE
   };
 
   /* initialize gtk */
   gtk_init(&argc, &argv);
 
   /* Check if OpenGL is supported. */
-  if (gdk_gl_query() == FALSE) {
+  if (ggla_query() == FALSE) {
     g_print("OpenGL not supported\n");
     return 0;
   }
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
 
   /* Create new OpenGL widget. */
-  glarea = GTK_WIDGET(gtk_gl_area_new(attrlist));
+  glarea = GTK_WIDGET(ggla_widget_new(attrlist));
   /* Events for widget must be set before X Window is created */
   gtk_widget_set_events(GTK_WIDGET(glarea),
 			GDK_EXPOSURE_MASK|
@@ -145,7 +145,7 @@ int main(int argc, char **argv)
   gtk_widget_show(GTK_WIDGET(window));
 
   /* vendor dependent version info string */
-  info_str = gdk_gl_get_info();
+  info_str = ggla_get_info();
   g_print(info_str);
   g_free(info_str);
 

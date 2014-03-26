@@ -97,11 +97,11 @@ gboolean glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
   GLfloat m[4][4];
 
-  GtkGLArea *glarea = GTK_GL_AREA(widget);
+  GglaWidget *glarea = GGLA_WIDGET(widget);
   mesh_info *info = (mesh_info*) g_object_get_data (G_OBJECT (widget), "mesh_info");
 
   /* OpenGL calls can be done only if make_current returns true */
-  if (gtk_gl_area_make_current(glarea)) {
+  if (ggla_widget_make_current(glarea)) {
     /* basic initialization */
     if (info->do_init == TRUE) {
       initgl();
@@ -126,7 +126,7 @@ gboolean glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)
     lw_object_show(info->lwobject);
 
     /* swap backbuffer to front */
-    gtk_gl_area_swap_buffers(glarea);
+    ggla_widget_swap_buffers(glarea);
   }
 
   return TRUE;
@@ -135,7 +135,7 @@ gboolean glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)
 gint glarea_configure(GtkWidget *widget, GdkEventConfigure *event)
 {
   /* OpenGL calls can be done only if make_current returns true */
-  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
+  if (ggla_widget_make_current(GGLA_WIDGET(widget))) {
       GtkAllocation allocation;
       gtk_widget_get_allocation (widget, &allocation);
       glViewport(0, 0, allocation.width, allocation.height);
@@ -298,17 +298,17 @@ gint show_lwobject(char const *lwobject_name)
 
 
   /* create new OpenGL widget */
-  glarea = gtk_gl_area_new_vargs(NULL, /* no sharing */
-				 GDK_GL_RGBA,
-				 GDK_GL_RED_SIZE,1,
-				 GDK_GL_GREEN_SIZE,1,
-				 GDK_GL_BLUE_SIZE,1,
-				 GDK_GL_DEPTH_SIZE,1,
-				 GDK_GL_DOUBLEBUFFER,
-				 GDK_GL_NONE);  /* last argument must be GDK_GL_NONE */
+  glarea = ggla_widget_new_vargs(NULL, /* no sharing */
+				 GGLA_RGBA,
+				 GGLA_RED_SIZE,1,
+				 GGLA_GREEN_SIZE,1,
+				 GGLA_BLUE_SIZE,1,
+				 GGLA_DEPTH_SIZE,1,
+				 GGLA_DOUBLEBUFFER,
+				 GGLA_NONE);  /* last argument must be GDK_GL_NONE */
   if (glarea == NULL) {
     lw_object_free(lwobject);
-    g_print("Can't create GtkGLArea widget\n");
+    g_print("Can't create GglaWidget widget\n");
     return FALSE;
   }
   /* set up events and signals for OpenGL widget */
@@ -412,7 +412,7 @@ int main (int argc, char **argv)
   gtk_init( &argc, &argv );
 
   /* Check if OpenGL is supported. */
-  if (gdk_gl_query() == FALSE) {
+  if (ggla_query() == FALSE) {
     g_print("OpenGL not supported\n");
     return 0;
   }

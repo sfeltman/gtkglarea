@@ -19,7 +19,7 @@
  *                                                                            *
  ******************************************************************************
  *
- * This program creates a window with a GtkGLArea widget using a Vertex
+ * This program creates a window with a GglaWidget widget using a Vertex
  * Shader and a Fragment shader. It should display a coloured texture. A
  * grayscale result means the shaders are not supported.
  *
@@ -227,19 +227,19 @@ GtkWidget* create_glarea (void) {
   GtkWidget* glarea;
 
   int attrlist[] = {
-    GDK_GL_RGBA,
-    GDK_GL_DOUBLEBUFFER,
-    GDK_GL_DEPTH_SIZE, 1,
-    GDK_GL_NONE
+    GGLA_RGBA,
+    GGLA_DOUBLEBUFFER,
+    GGLA_DEPTH_SIZE, 1,
+    GGLA_NONE
   };
 
-  if(gdk_gl_query() == FALSE) {
+  if(ggla_query() == FALSE) {
     g_print("OpenGL not supported!\n");
     return NULL;
   }
 
-  if ((glarea = gtk_gl_area_new(attrlist)) == NULL) {
-    g_print("Error creating GtkGLArea!\n");
+  if ((glarea = ggla_widget_new(attrlist)) == NULL) {
+    g_print("Error creating GglaWidget!\n");
     return NULL;
   }
 
@@ -288,18 +288,18 @@ gint glarea_draw_scene (void) {
 /*                                                                           */
 /* Function: glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)*/
 /*                                                                           */
-/* This is the function that should render your scene to the GtkGLArea. It   */
+/* This is the function that should render your scene to the GglaWidget. It   */
 /* can be used as a callback to the 'draw' signal.                           */
 /*                                                                           */
 /*****************************************************************************/
 
 gboolean glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data) {
 
-  if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
+  if (ggla_widget_make_current(GGLA_WIDGET(widget))) {
 
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glarea_draw_scene();
-    gtk_gl_area_swap_buffers (GTK_GL_AREA(widget));
+    ggla_widget_swap_buffers (GGLA_WIDGET(widget));
 
   }
 
@@ -312,7 +312,7 @@ gboolean glarea_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data) {
 /* Function: glarea_reshape (GtkWidget*, GdkEventConfigure*)                 */
 /*                                                                           */
 /* This function performs the operations needed to maintain the viewing area */
-/* of the GtkGLArea. This should be called whenever the size of the area     */
+/* of the GglaWidget. This should be called whenever the size of the area     */
 /* is changed.                                                               */
 /*                                                                           */
 /*****************************************************************************/
@@ -324,7 +324,7 @@ gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
   int w = allocation.width;
   int h = allocation.height;
 
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
+  if (ggla_widget_make_current (GGLA_WIDGET(widget))) {
 
     glViewport (0, 0, w, h);
     glMatrixMode (GL_PROJECTION);
@@ -342,14 +342,14 @@ gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
 /*                                                                           */
 /* Function: glarea_init (GtkWidget*)                                        */
 /*                                                                           */
-/* This function is a callback for the realization of the GtkGLArea widtget. */
+/* This function is a callback for the realization of the GglaWidget widtget. */
 /* You should do any OpenGL initialization here.                             */
 /*                                                                           */
 /*****************************************************************************/
 
 gint glarea_init (GtkWidget* widget) {
 
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
+  if (ggla_widget_make_current (GGLA_WIDGET(widget))) {
 
     /* Procedural texture creation */
 
@@ -381,8 +381,8 @@ gint glarea_init (GtkWidget* widget) {
 /*                                                                           */
 /* Function: glarea_destroy (GtkWidget*)                                     */
 /*                                                                           */
-/* This function is a callback for the main GtkGLArea. It deletes should     */
-/* delete any data structures stored in the GtkGLArea.                       */
+/* This function is a callback for the main GglaWidget. It deletes should     */
+/* delete any data structures stored in the GglaWidget.                       */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -402,7 +402,7 @@ gint glarea_destroy (GtkWidget* widget) {
 /* Function: main (int, char**)                                              */
 /*                                                                           */
 /* The main function sets up our GUI and calls the functions needed to       */
-/* create our GtkGLArea.                                                     */
+/* create our GglaWidget.                                                     */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -441,7 +441,7 @@ int main (int argc, char** argv) {
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  gtk_window_set_title (GTK_WINDOW(window), "GtkGLArea Shader Demo");
+  gtk_window_set_title (GTK_WINDOW(window), "GglaWidget Shader Demo");
 
   g_signal_connect (G_OBJECT(window), "delete-event",
                     G_CALLBACK(gtk_main_quit), NULL);
