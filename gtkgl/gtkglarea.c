@@ -23,23 +23,23 @@
 #include "gdkgl.h"
 #include "gtkglarea.h"
 
-static void gtk_gl_area_finalize       (GObject      *object);
+static void ggla_widget_finalize       (GObject      *object);
 
-G_DEFINE_TYPE (GtkGLArea, gtk_gl_area, GTK_TYPE_DRAWING_AREA);
+G_DEFINE_TYPE (GglaWidget, ggla_widget, GTK_TYPE_DRAWING_AREA);
 
 static void
-gtk_gl_area_class_init (GtkGLAreaClass *klass)
+ggla_widget_class_init (GglaWidgetClass *klass)
 {
   GObjectClass *object_class;
 
   object_class = (GObjectClass*) klass;
 
-  object_class->finalize = gtk_gl_area_finalize;
+  object_class->finalize = ggla_widget_finalize;
 }
 
 
 static void
-gtk_gl_area_init (GtkGLArea *gl_area)
+ggla_widget_init (GglaWidget *gl_area)
 {
   gl_area->glcontext = NULL;
   gtk_widget_set_double_buffered(GTK_WIDGET(gl_area), FALSE);
@@ -48,7 +48,7 @@ gtk_gl_area_init (GtkGLArea *gl_area)
 
 
 GtkWidget*
-gtk_gl_area_new_vargs(GtkGLArea *share, ...)
+ggla_widget_new_vargs(GglaWidget *share, ...)
 {
   GtkWidget *glarea;
   va_list ap;
@@ -69,7 +69,7 @@ gtk_gl_area_new_vargs(GtkGLArea *share, ...)
     i++;
   va_end(ap);
 
-  glarea = gtk_gl_area_share_new(attrlist, share);
+  glarea = ggla_widget_share_new(attrlist, share);
 
   g_free(attrlist);
 
@@ -77,21 +77,21 @@ gtk_gl_area_new_vargs(GtkGLArea *share, ...)
 }
 
 GtkWidget*
-gtk_gl_area_new (int *attrlist)
+ggla_widget_new (int *attrlist)
 {
-  return gtk_gl_area_share_new(attrlist, NULL);
+  return ggla_widget_share_new(attrlist, NULL);
 }
 
 GtkWidget*
-gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
+ggla_widget_share_new (int *attrlist, GglaWidget *share)
 {
   GdkGLContext *glcontext;
-  GtkGLArea *gl_area;
+  GglaWidget *gl_area;
 #if defined GDK_WINDOWING_X11
   GdkVisual *visual;
 #endif
 
-  g_return_val_if_fail(share == NULL || GTK_IS_GL_AREA(share), NULL);
+  g_return_val_if_fail(share == NULL || GGLA_IS_WIDGET(share), NULL);
 
 #if defined GDK_WINDOWING_X11
   visual = gdk_gl_choose_visual(attrlist);
@@ -105,7 +105,7 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
   if (glcontext == NULL)
     return NULL;
 
-  gl_area = g_object_new(GTK_TYPE_GL_AREA, NULL);
+  gl_area = g_object_new(GGLA_TYPE_WIDGET, NULL);
   gl_area->glcontext = glcontext;
 
   return GTK_WIDGET(gl_area);
@@ -113,22 +113,22 @@ gtk_gl_area_share_new (int *attrlist, GtkGLArea *share)
 
 
 static void
-gtk_gl_area_finalize(GObject *object)
+ggla_widget_finalize(GObject *object)
 {
-  GtkGLArea *gl_area = GTK_GL_AREA(object);
+  GglaWidget *gl_area = GGLA_WIDGET(object);
 
   if (gl_area->glcontext)
     g_object_unref(gl_area->glcontext);
   gl_area->glcontext = NULL;
 
-  G_OBJECT_CLASS (gtk_gl_area_parent_class)->finalize (object);
+  G_OBJECT_CLASS (ggla_widget_parent_class)->finalize (object);
 }
 
 
-gint gtk_gl_area_make_current(GtkGLArea *gl_area)
+gint ggla_widget_make_current(GglaWidget *gl_area)
 {
   g_return_val_if_fail(gl_area != NULL, FALSE);
-  g_return_val_if_fail(GTK_IS_GL_AREA (gl_area), FALSE);
+  g_return_val_if_fail(GGLA_IS_WIDGET (gl_area), FALSE);
   GtkWidget *widget = GTK_WIDGET (gl_area);
   g_return_val_if_fail(gtk_widget_get_realized(widget), FALSE);
 
@@ -136,10 +136,10 @@ gint gtk_gl_area_make_current(GtkGLArea *gl_area)
                              gl_area->glcontext);
 }
 
-void gtk_gl_area_swap_buffers(GtkGLArea *gl_area)
+void ggla_widget_swap_buffers(GglaWidget *gl_area)
 {
   g_return_if_fail(gl_area != NULL);
-  g_return_if_fail(GTK_IS_GL_AREA(gl_area));
+  g_return_if_fail(GGLA_IS_WIDGET(gl_area));
   GtkWidget *widget = GTK_WIDGET (gl_area);
   g_return_if_fail(gtk_widget_get_realized(widget));
 

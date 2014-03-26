@@ -13,9 +13,9 @@ EXPORTS
 	gdk_gl_use_gdk_font
 	gdk_gl_wait_gdk
 	gdk_gl_wait_gl
-	gtk_gl_area_get_type
-	gtk_gl_area_make_current
-	gtk_gl_area_new
-	gtk_gl_area_new_vargs
-	gtk_gl_area_share_new
-	gtk_gl_area_swap_buffers
+	ggla_widget_get_type
+	ggla_widget_make_current
+	ggla_widget_new
+	ggla_widget_new_vargs
+	ggla_widget_share_new
+	ggla_widget_swap_buffers

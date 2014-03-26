@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 
 /*
  * These definitions are duplicated from GL/glx.h that comes with Mesa.
- * I don't want every program to include GL/glx.h because GtkGLArea
+ * I don't want every program to include GL/glx.h because GglaWidget
  * supports lecacy systems like Windows. You can still use GLX_xxxx
  * attributes with these, but then you lose portability.
  */
