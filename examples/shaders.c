@@ -30,7 +30,6 @@
 #endif
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>
 
@@ -333,7 +332,7 @@ gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event) {
     glViewport (0, 0, w, h);
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
-    gluOrtho2D (-(w>>1), (w>>1), -(h>>1), h>>1);
+    glOrtho (-(w>>1), (w>>1), -(h>>1), h>>1, -1, 1);
     glMatrixMode (GL_MODELVIEW);
 
   }

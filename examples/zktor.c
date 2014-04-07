@@ -30,7 +30,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #ifndef M_PI
 #define M_PI 3.14
@@ -509,7 +508,7 @@ void game_render()
   /* view */
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluOrtho2D(-115,115,-115,115);
+  glOrtho(-115,115,-115,115,-1,1);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 

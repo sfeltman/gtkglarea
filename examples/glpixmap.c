@@ -25,7 +25,6 @@
 #include <windows.h>
 #endif
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <gdk/gdk.h>
 #include <gtkgl/gdkgl.h>
@@ -79,7 +78,7 @@ int main(int argc, char **argv)
   if (gdk_gl_pixmap_make_current(glpixmap, context)) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0,100,100,0);
+    glOrtho(0,100,100,0,-1,1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
