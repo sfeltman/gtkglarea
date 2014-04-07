@@ -125,7 +125,7 @@ LIBS="$saved_LIBS"
 if test "x$with_lib_GL" = "xyes"; then
 
  if test "x$have_GL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lGLU -lGL"
+  GL_LIBS="$GL_LDOPTS -lGL"
  else
   AC_MSG_ERROR([Missing GL library])
  fi
@@ -133,9 +133,9 @@ if test "x$with_lib_GL" = "xyes"; then
 elif test "x$with_lib_MesaGL" = "xyes"; then
 
  if test "x$have_MesaGL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGLU -lMesaGL"
+  GL_LIBS="$GL_LDOPTS -lMesaGL"
  elif test "x$have_MesaGL_pthread" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGLU -lMesaGL -lpthread"
+  GL_LIBS="$GL_LDOPTS -lMesaGL -lpthread"
  else
   AC_MSG_ERROR([Missing MesaGL library])
  fi
@@ -143,7 +143,7 @@ elif test "x$with_lib_MesaGL" = "xyes"; then
 elif test "x$with_lib_opengl32" = "xyes"; then
 
  if test "x$have_opengl32" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lglu32 -lopengl32"
+  GL_LIBS="$GL_LDOPTS -lopengl32"
  else
   AC_MSG_ERROR([Missing OpenGL32 library])
  fi
@@ -151,13 +151,13 @@ elif test "x$with_lib_opengl32" = "xyes"; then
 else
 
  if test "x$have_opengl32" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lglu32 -lopengl32"
+  GL_LIBS="$GL_LDOPTS -lopengl32"
  elif test "x$have_GL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lGLU -lGL"
+  GL_LIBS="$GL_LDOPTS -lGL"
  elif test "x$have_MesaGL" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGLU -lMesaGL"
+  GL_LIBS="$GL_LDOPTS -lMesaGL"
  elif test "x$have_MesaGL_pthread" = "xyes"; then
-  GL_LIBS="$GL_LDOPTS -lMesaGLU -lMesaGL -lpthread"
+  GL_LIBS="$GL_LDOPTS -lMesaGL -lpthread"
  else
   AC_MSG_ERROR([You need GL or MesaGL libraries])
  fi
