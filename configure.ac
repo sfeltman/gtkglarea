@@ -85,8 +85,8 @@ PKG_CHECK_MODULES([GL],[
 saved_LIBS="$LIBS"
 AC_MSG_CHECKING([OpenGL shaders])
 LIBS="$saved_LIBS $GL_LIBS"
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
-                                [[ char glCreateProgram(); glCreateProgram(); ]])],
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <epoxy/gl.h>]],
+                                [[glCreateShader(GL_VERTEX_SHADER);]])],
                [have_shaders=yes],[have_shaders=no])
 AC_MSG_RESULT($have_shaders)
 LIBS="$saved_LIBS"
