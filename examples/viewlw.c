@@ -22,7 +22,6 @@
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 
 #include "trackball.h"
@@ -93,6 +92,15 @@ void initgl(void)
   glEnable(GL_COLOR_MATERIAL);
 }
 
+void perspectiveGL(GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar)
+{
+    GLdouble fW, fH;
+
+    fH = tan(fovY / 360 * M_PI) * zNear;
+    fW = fH * aspect;
+    glFrustum(-fW, fW, -fH, fH, zNear, zFar);
+}
+
 gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
 {
   GLfloat m[4][4];
@@ -116,7 +124,7 @@ gint glarea_expose(GtkWidget *widget, GdkEventExpose *event)
     /* view */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(info->zoom, VIEW_ASPECT, 1,100);
+    perspectiveGL(info->zoom, VIEW_ASPECT, 1, 100);
     glMatrixMode(GL_MODELVIEW);
 
     /* draw object */
