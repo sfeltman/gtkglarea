@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([gtkgl],
-        [2.0.2],
+        [2.1.0],
         [https://bugzilla.gnome.org/enter_bug.cgi?product=gtkglarea],
         [gtkglarea],
         [http://mono-project.com/GtkGLArea])
@@ -17,7 +17,7 @@ AM_MAINTAINER_MODE([enable])
 AM_SILENT_RULES([yes])
 
 #shared library versioning
-GTKGL_LIBRARY_VERSION=1:1:0
+GTKGL_LIBRARY_VERSION=1:2:0
 #                     | | |
 #              +------+ | +---+
 #              |        |     |
